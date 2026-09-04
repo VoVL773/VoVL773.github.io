@@ -368,4 +368,120 @@ class Double_Link(List):
         self._size -= 1
 ```
 
+## 五：装饰器与上下文管理器
+
+```py
+
+#装饰器
+import os
+from functools import wraps
+
+SOURCE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'source')
+os.makedirs(SOURCE_DIR, exist_ok=True)
+def log(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f"调用 {func.__name__}")
+        result = func(*args, **kwargs)
+        print(f"{func.__name__} 完成")
+        return result
+    return wrapper
+
+@log
+def add(a:int,b:int)->int:
+    """两数之和"""
+    return a+b
+print(add(3,5))
+
+def repeat(times):
+    def decorator(func):
+        @wraps(func)
+        def wapper(*args, **kwargs):
+            for _ in range(times):
+                result = func(*args,**kwargs)
+            return result
+        return wapper
+    return decorator
+
+@repeat(3)
+def hello(name):
+    print(f"hello,{name}!")
+hello("LOSER")
+
+import time
+
+class Timer:
+    def __enter__(self):
+        self.start_time = time.time()
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        elapsed = time.time() - self.start_time
+        print(f"耗时: {elapsed:.4f} 秒")
+        return False  # 不处理异常
+
+# 测试
+with Timer() as timer:
+    total = 0
+    for i in range(1000000):
+        total += i
+    print(f"计算结果: {total}")
+class TempFile:
+    def __init__(self, name):
+        # 文件统一写入 source 目录
+        self.name = os.path.join(SOURCE_DIR, name)
+        self.file = None
+    
+    def __enter__(self):
+        # 进入时创建文件
+        self.file = open(self.name, 'w', encoding='utf-8')
+        return self.file
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # 退出时关闭文件并删除
+        if self.file and not self.file.closed:
+            self.file.close()
+        
+        if os.path.exists(self.name):
+            os.remove(self.name)
+            print(f"🗑️  文件 {self.name} 已删除")
+        
+        # 不处理异常，让它继续传播
+        return False
+if __name__ == "__main__":
+    print("=== 测试 TempFile ===")
+    
+    # 测试1：正常写入
+    print("\n--- 正常写入 ---")
+    with TempFile("test.txt") as f:
+        f.write("Hello, World!\n")
+        f.write("这是第二行内容\n")
+        f.write("这是第三行内容")
+        print("✅ 写入完成")
+    
+    # 验证文件是否存在
+    print(f"文件 test.txt 是否存在: {os.path.exists(os.path.join(SOURCE_DIR, 'test.txt'))}")
+    
+    # 测试2：异常场景
+    print("\n--- 异常场景 ---")
+    try:
+        with TempFile("error.txt") as f:
+            f.write("写入一些内容\n")
+            f.write("更多内容")
+            raise ValueError("模拟异常发生")  # 触发异常
+    except ValueError as e:
+        print(f"✅ 捕获异常: {e}")
+    
+    print(f"文件 error.txt 是否存在: {os.path.exists(os.path.join(SOURCE_DIR, 'error.txt'))}")
+    
+    # 测试3：批量写入
+    print("\n--- 批量写入 ---")
+    with TempFile("data.txt") as f:
+        for i in range(5):
+            f.write(f"第 {i+1} 行数据\n")
+        print("✅ 批量写入完成")
+    
+    print(f"文件 data.txt 是否存在: {os.path.exists(os.path.join(SOURCE_DIR, 'data.txt'))}")
+```
+
 之后可能会进行补充目前的就这些了
