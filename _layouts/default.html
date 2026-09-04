@@ -21,6 +21,17 @@
     })();
   </script>
 
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '{{ "/assets/images/banner-1.jpg" | relative_url }}',
+      '{{ "/assets/images/banner-2.jpg" | relative_url }}',
+      '{{ "/assets/images/banner-3.jpg" | relative_url }}'
+    ];
+  </script>
+
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 </head>
 <body>

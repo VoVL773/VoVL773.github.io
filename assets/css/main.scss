@@ -15,6 +15,18 @@
   --border: #d0d7de;
   --code-bg: #f6f8fa;
   --max-width: 720px;
+
+  /* ===== Banner 相关 =====
+       背景图默认用渐变兜底,实际图片由 theme.js 设置 --hero-bg
+       (从 bannerPreset 列表循环选取或 localStorage 恢复)。
+       遮罩 --hero-overlay 保证浅色模式下白色文字在亮/暗图上都可读。 */
+  --hero-bg: none;
+  --hero-overlay: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.55) 60%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
 }
 
 [data-theme="dark"] {
@@ -24,7 +36,19 @@
   --link: #58a6ff;
   --border: #30363d;
   --code-bg: #161b22;
+
+  /* 暗色模式下遮罩加深,让白色文字在暗色图上仍清晰 */
+  --hero-overlay: linear-gradient(
+    to bottom,
+    rgba(13, 17, 23, 0.35) 0%,
+    rgba(13, 17, 23, 0.7) 60%,
+    rgba(13, 17, 23, 0.95) 100%
+  );
 }
+
+/* Banner 预设图列表:JS 循环切换时使用。
+   JS 运行时通过 document.documentElement.style.setProperty('--hero-bg', ...)
+   动态设置,以兼容项目站点(baseurl 非空)。 */
 
 * {
   box-sizing: border-box;
@@ -88,6 +112,12 @@ a:hover {
 }
 
 /* 主题切换按钮 */
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .theme-toggle {
   background: none;
   border: 1px solid var(--border);
@@ -101,6 +131,67 @@ a:hover {
 
 .theme-toggle:hover {
   border-color: var(--muted);
+}
+
+/* ===== Banner 切换按钮 ===== */
+.banner-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.banner-toggle:hover {
+  border-color: var(--muted);
+}
+
+/* ===== 首页 Banner(Hero) ===== */
+.home-banner {
+  position: relative;
+  width: 100%;
+  /* 背景图由 JS 动态设置 --hero-bg,无图时用渐变兜底 */
+  background-image: var(--hero-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* 无图时的渐变兜底(浅色模式是白色渐变,深色模式是深色渐变) */
+  background-color: var(--bg);
+}
+
+/* 渐变遮罩层:叠在背景图上,让底部文字无论背景亮暗都可读 */
+.home-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--hero-overlay);
+  pointer-events: none;
+}
+
+.home-banner-inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 4rem 1.5rem 5rem;
+  text-align: center;
+}
+
+.home-banner-title {
+  font-size: 2rem;
+  margin: 0 0 0.5rem;
+  /* 白色/浅色文字在任意背景上都清晰 */
+  color: var(--text);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.home-banner-subtitle {
+  font-size: 1rem;
+  margin: 0;
+  color: var(--muted);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 /* ===== 主体 ===== */

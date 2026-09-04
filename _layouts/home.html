@@ -2,6 +2,19 @@
 layout: default
 ---
 <div class="home">
+  <!-- 首页 Banner:用 CSS 变量 --hero-bg 设背景图,
+       由 theme.js 根据 localStorage 偏好动态更新 -->
+  <section class="home-banner">
+    <div class="home-banner-inner">
+      <h1 class="home-banner-title">{{ site.title }}</h1>
+      {% if site.description %}
+      <p class="home-banner-subtitle">{{ site.description }}</p>
+      {% endif %}
+    </div>
+    <!-- 渐变遮罩:保证无论背景图亮暗,白色文字都可读 -->
+    <div class="home-banner-overlay"></div>
+  </section>
+
   <!-- index.md 里写的简介会渲染到这里(可选) -->
   {% if content != "" %}
   <div class="home-intro">
