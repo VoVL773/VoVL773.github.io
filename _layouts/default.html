@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="{{ '/assets/images/favicon.png' | relative_url }}">
+  <link rel="shortcut icon" href="{{ '/assets/images/favicon.png' | relative_url }}">
   <title>
     {% if page.title %}{{ page.title }} – {{ site.title }}{% else %}{{ site.title }}{% endif %}
   </title>
@@ -26,9 +29,9 @@
     // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
     // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
     window.bannerPresets = [
-      '{{ "/assets/images/banner-1.jpg" | relative_url }}',
-      '{{ "/assets/images/banner-2.jpg" | relative_url }}',
-      '{{ "/assets/images/banner-3.jpg" | relative_url }}'
+      '{{ "/assets/images/0.jpg" | relative_url }}',
+      '{{ "/assets/images/1.jpg" | relative_url }}',
+      '{{ "/assets/images/2.png" | relative_url }}'
     ];
   </script>
 
