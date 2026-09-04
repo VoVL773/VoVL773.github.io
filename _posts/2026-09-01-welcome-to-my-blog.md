@@ -16,7 +16,10 @@ tags: [随笔, 公告]
 
 ## 怎么使用
 
-之后补充
+1. 配置文件 _config.yml 修改title description author 和 url 四个参数 即可全面更改
+2.  上传文章 在_posts文件夹下按本文件的命名格式和1-6行的标签设置创建或上传markdown文件即可
+3.  图片更换 assets内更换图标和主页图片 若需要多个图片而不是默认的三个 修改_layouts下的default.html文件对应位置即可
+4.  更多修改 _layouts下是页面文件 _includes下是页头页尾 asset下是js和css以及图片资源
 
 
 欢迎在「关于」页面了解更多。
