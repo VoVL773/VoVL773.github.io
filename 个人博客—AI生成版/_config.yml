@@ -1,0 +1,46 @@
+# =============================================================================
+# Jekyll 站点配置文件
+# 文档:https://jekyllrb.com/docs/configuration/
+# =============================================================================
+
+# ===== 站点基本信息(请替换为你的信息)=====
+title: Tix的博客
+description: 间接性踌躇满志，持续性记录生活。
+author: VoVL773
+
+# ===== URL(部署到 GitHub Pages 后替换,二选一)=====
+# 情况 A:用户站点(仓库名必须为 your-username.github.io)
+#   访问地址:https://your-username.github.io
+url: "https://VoVL773.github.io"
+baseurl: ""
+
+# 情况 B:项目站点(仓库名任意,如 your-blog-repo)
+#   访问地址:https://your-username.github.io/your-blog-repo
+# url: "https://your-username.github.io"
+# baseurl: "/your-blog-repo"
+# 注意:baseurl 不要带结尾斜杠
+
+# ===== 构建相关 =====
+markdown: kramdown                              # GitHub Pages 默认 Markdown 引擎,勿改
+highlighter: rouge                              # 默认代码高亮,勿改
+permalink: /:year/:month/:day/:title/           # 文章 URL 风格(如 /2026/09/01/标题/)
+theme: null                                     # 不使用外部主题,全部布局自写
+
+# ===== 插件(仅 GitHub Pages 白名单内可用)=====
+plugins: []                                     # 本方案不依赖任何插件
+
+# ===== 默认布局(自动给文章/页面赋 layout,减少 front matter 重复)=====
+defaults:
+  - scope:
+      path: ""           # 所有路径
+      type: "posts"      # 仅对 _posts 下的文章生效
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+      type: "pages"      # 仅对页面(index/about/archive/tags)生效
+    values:
+      layout: "page"
+
+# ===== 杂项 =====
+lang: zh-CN

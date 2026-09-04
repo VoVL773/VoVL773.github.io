@@ -1,0 +1,25 @@
+---
+layout: default
+---
+<div class="home">
+  <!-- index.md 里写的简介会渲染到这里(可选) -->
+  {% if content != "" %}
+  <div class="home-intro">
+    {{ content }}
+  </div>
+  {% endif %}
+
+  <h1 class="post-list-heading">文章</h1>
+
+  <!-- site.posts 默认按日期倒序排列 -->
+  {% for post in site.posts %}
+  <article class="post-list-item">
+    <h2 class="post-list-title">
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    </h2>
+    <time class="post-list-date">{{ post.date | date: "%Y-%m-%d" }}</time>
+    <!-- excerpt 是 Jekyll 自动取的首段 -->
+    <div class="post-list-excerpt">{{ post.excerpt }}</div>
+  </article>
+  {% endfor %}
+</div>

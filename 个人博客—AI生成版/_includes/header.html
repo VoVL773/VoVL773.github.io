@@ -1,0 +1,16 @@
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+
+    <nav class="site-nav">
+      <a href="{{ '/' | relative_url }}">首页</a>
+      <a href="{{ '/archive/' | relative_url }}">归档</a>
+      <a href="{{ '/tags/' | relative_url }}">标签</a>
+      <a href="{{ '/about/' | relative_url }}">关于</a>
+    </nav>
+
+    <!-- 主题切换按钮:初始图标(🌙/☀️)由 theme.js 根据 data-theme 设置,
+         这样不会与 default.html 里的防闪烁脚本冲突。 -->
+    <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">🌙</button>
+  </div>
+</header>
