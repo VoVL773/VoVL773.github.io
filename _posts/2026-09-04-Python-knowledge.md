@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "欢迎来到我的博客"
+title: "Python基础练习"
 tags: [Python,学习总结]
 ---
 
