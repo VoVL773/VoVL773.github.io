@@ -311,7 +311,7 @@ a:hover {
   flex-wrap: wrap;
 }
 
-/* ===== 留言区(Giscus)===== */
+/* ===== 留言区(Twikoo)===== */
 .post-comments {
   margin-top: 3rem;
   padding-top: 2rem;
@@ -323,14 +323,9 @@ a:hover {
   font-size: 1.5rem;
 }
 
-/* Giscus iframe 容器 */
-#giscus-container {
+/* Twikoo 容器 */
+#twikoo {
   width: 100%;
-}
-
-#giscus-container iframe {
-  width: 100%;
-  border: none;
 }
 
 /* ===== 普通页面 ===== */

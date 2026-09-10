@@ -2,20 +2,16 @@
 // 职责:
 // - 主题切换:按钮点击翻转 data-theme,写入 localStorage 记忆
 // - Banner 切换:按钮点击循环切换预设图,写入 localStorage 记忆
-// - Giscus 主题同步:切换主题时同步更新留言区主题
+// - Twikoo 主题同步:切换主题时重新初始化留言区以匹配深浅色
 // 注意:首屏的初始主题已由 _layouts/default.html 里的内联脚本设置好,
 // 本文件只负责按钮的点击交互与偏好持久化(职责分离)。
 
-// ===== 同步 Giscus 留言区主题 =====
-// Giscus 通过 postMessage 接收主题切换指令。
-// 当 Giscus iframe 尚未加载完成时会自动忽略,不影响功能。
-function syncGiscusTheme(theme) {
-  var iframe = document.querySelector('iframe.giscus-frame');
-  if (iframe && iframe.contentWindow) {
-    iframe.contentWindow.postMessage(
-      { giscus: { type: 'set-theme', theme: theme } },
-      'https://giscus.app'
-    );
+// ===== 刷新 Twikoo 留言区主题 =====
+// Twikoo 通过重新初始化切换深浅色(initTwikoo 定义在 comments.html 中)。
+// 非文章页没有留言区,函数不存在时直接跳过。
+function refreshTwikooTheme() {
+  if (typeof window.initTwikoo === 'function') {
+    window.initTwikoo();
   }
 }
 
@@ -39,8 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
       root.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       updateThemeButton();
-      // 同步 Giscus 留言区主题
-      syncGiscusTheme(next);
+      // 刷新 Twikoo 留言区主题
+      refreshTwikooTheme();
     });
 
     // 页面加载后初始化按钮图标(与防闪烁脚本设好的主题保持一致)
