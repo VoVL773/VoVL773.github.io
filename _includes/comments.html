@@ -1,0 +1,36 @@
+<!-- =============================================================================
+     Giscus 留言区(基于 GitHub Discussions)
+     配置文档:https://giscus.app
+     说明:repo-id 和 category-id 需要你在 giscus.app 页面生成后填入。
+     ============================================================================= -->
+<section class="post-comments">
+  <h2 class="comments-title">留言</h2>
+  <div id="giscus-container"></div>
+</section>
+
+<script>
+  (function () {
+    // 读取当前博客主题(浅色/深色),让 Giscus 初始主题与之匹配
+    var currentTheme = document.documentElement.getAttribute('data-theme') === 'dark'
+      ? 'dark'
+      : 'light';
+
+    var container = document.getElementById('giscus-container');
+    var script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', 'VoVL773/VoVL773.github.io');
+    script.setAttribute('data-repo-id', 'R_kgDOUOAOAA');
+    script.setAttribute('data-category', 'Announcements');
+    script.setAttribute('data-category-id', 'DIC_kwDOUOAOAM4DFTd6');
+    script.setAttribute('data-mapping', 'pathname');
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'bottom');
+    script.setAttribute('data-theme', currentTheme);
+    script.setAttribute('data-lang', 'zh-CN');
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+    container.appendChild(script);
+  })();
+</script>

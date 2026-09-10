@@ -29,4 +29,7 @@ layout: default
     <a class="post-nav-next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} →</a>
     {% endif %}
   </nav>
+
+  <!-- 留言区(Giscus) -->
+  {% include comments.html %}
 </article>
