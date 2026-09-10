@@ -1,32 +1,36 @@
 <!-- =============================================================================
-     Twikoo 留言区(基于腾讯云开发 CloudBase)
-     文档:https://twikoo.js.org
-     说明:envId 需要在腾讯云开发一键部署 Twikoo 后填入(见下方说明)。
-     优势:评论数据存腾讯云,国内访问快,支持匿名评论。
+     Giscus 留言区(基于 GitHub Discussions)
+     配置文档:https://giscus.app
+     说明:repo-id 和 category-id 需要你在 giscus.app 页面生成后填入。
      ============================================================================= -->
 <section class="post-comments">
   <h2 class="comments-title">留言</h2>
-  <div id="twikoo"></div>
+  <div id="giscus-container"></div>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/twikoo@1.7.22/dist/twikoo.all.min.js"></script>
 <script>
-  // 根据当前博客主题初始化/刷新 Twikoo
-  window.initTwikoo = function () {
-    if (typeof twikoo === 'undefined') return;
-    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    var container = document.getElementById('twikoo');
-    if (!container) return;
-    // 清空容器,切换主题时干净地重新初始化
-    container.innerHTML = '';
-    twikoo.init({
-      envId: 'blog-comment-d8govtixo1a88b506',
-      el: '#twikoo',
-      lang: 'zh-CN',
-      darkmode: isDark,
-    });
-  };
+  (function () {
+    // 读取当前博客主题(浅色/深色),让 Giscus 初始主题与之匹配
+    var currentTheme = document.documentElement.getAttribute('data-theme') === 'dark'
+      ? 'dark'
+      : 'light';
 
-  // Twikoo 脚本加载完成后初始化(经典脚本按顺序执行,此处 twikoo 已就绪)
-  window.initTwikoo();
+    var container = document.getElementById('giscus-container');
+    var script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', 'VoVL773/VoVL773.github.io');
+    script.setAttribute('data-repo-id', 'R_kgDOUOAOAA');
+    script.setAttribute('data-category', 'Announcements');
+    script.setAttribute('data-category-id', 'DIC_kwDOUOAOAM4DFTd6');
+    script.setAttribute('data-mapping', 'pathname');
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'bottom');
+    script.setAttribute('data-theme', currentTheme);
+    script.setAttribute('data-lang', 'zh-CN');
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+    container.appendChild(script);
+  })();
 </script>
