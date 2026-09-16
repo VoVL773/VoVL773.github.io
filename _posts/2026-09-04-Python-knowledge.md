@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Python基础练习"
-tags: [Python,学习总结]
+title: "Python笔记"
+tags: [Python,笔记]
 ---
 
 这是学习Python后的总结(主要是对练习进行总结)
