@@ -41,9 +41,14 @@
   {% include header.html %}
 
   <main class="site-main">
-    <div class="container">
+    {% if page.layout == 'post' %}
+      {%- comment -%}文章页由 post.html 自己用 .post-layout 控制两栏宽度,不套默认 .container{%- endcomment -%}
       {{ content }}
-    </div>
+    {% else %}
+      <div class="container">
+        {{ content }}
+      </div>
+    {% endif %}
   </main>
 
   {% include footer.html %}

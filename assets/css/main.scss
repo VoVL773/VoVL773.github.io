@@ -237,7 +237,20 @@ a:hover {
   color: var(--muted);
 }
 
-/* ===== 文章详情 ===== */
+/* ===== 文章详情 =====
+   文章页采用两栏布局:主内容 + 右侧目录。
+   .post-layout 突破默认 .container 的 720px 限制,改为 1000px 容器,
+   主内容保持窄列利于阅读,右侧 220px 给目录。 */
+.post-layout {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 3rem;
+  align-items: start;
+}
+
 .post-header {
   margin-bottom: 2rem;
 }
@@ -309,6 +322,70 @@ a:hover {
   gap: 1rem;
   margin-top: 2rem;
   flex-wrap: wrap;
+}
+
+/* ===== 右侧目录(TOC) =====
+   粘性定位:滚动时固定在视口右侧,跟随阅读进度。
+   高亮当前章节由 post.html 内联脚本通过 .is-active 切换。 */
+.toc {
+  position: sticky;
+  top: 2rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+
+.toc-inner {
+  border-left: 2px solid var(--border);
+  padding-left: 1rem;
+}
+
+.toc-title {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.toc-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.toc-nav a {
+  display: block;
+  padding: 0.25rem 0.5rem;
+  margin-left: -1rem;       /* 拉齐到 toc-inner 左边框,让激活态左边框覆盖原边框 */
+  border-left: 2px solid transparent;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.toc-nav a:hover {
+  color: var(--text);
+  text-decoration: none;
+  background: var(--code-bg);
+}
+
+.toc-nav a.is-active {
+  color: var(--link);
+  border-left-color: var(--link);
+  font-weight: 500;
+}
+
+/* 三级标题缩进,字号略小 */
+.toc-nav a.toc-level-3 {
+  padding-left: 1.5rem;
+  font-size: 0.8125rem;
+}
+
+.toc-nav a.toc-level-3.is-active {
+  margin-left: -1rem;
+  padding-left: 1.5rem;
 }
 
 /* ===== 留言区(Giscus)===== */
@@ -391,6 +468,17 @@ a:hover {
 }
 
 /* ===== 响应式 ===== */
+/* 中等屏:右侧目录无空间,隐藏并回退为单栏阅读 */
+@media (max-width: 1024px) {
+  .post-layout {
+    display: block;
+  }
+
+  .toc {
+    display: none;
+  }
+}
+
 @media (max-width: 600px) {
   .site-header-inner {
     flex-direction: column;

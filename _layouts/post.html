@@ -1,35 +1,130 @@
 ---
 layout: default
 ---
-<article class="post">
-  <header class="post-header">
-    <h1 class="post-title">{{ page.title }}</h1>
-    <time class="post-date">{{ page.date | date: "%Y-%m-%d" }}</time>
-  </header>
+<div class="post-layout">
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">{{ page.title }}</h1>
+      <time class="post-date">{{ page.date | date: "%Y-%m-%d" }}</time>
+    </header>
 
-  <div class="post-content">
-    {{ content }}
-  </div>
+    <div class="post-content">
+      {{ content }}
+    </div>
 
-  {% if page.tags.size > 0 %}
-  <footer class="post-tags">
-    <span>标签:</span>
-    {% for tag in page.tags %}
-    <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a>{% unless forloop.last %} {% endunless %}
-    {% endfor %}
-  </footer>
-  {% endif %}
-
-  <!-- 上一篇 / 下一篇(Jekyll 内置,按文章顺序) -->
-  <nav class="post-nav">
-    {% if page.previous %}
-    <a class="post-nav-prev" href="{{ page.previous.url | relative_url }}">← {{ page.previous.title }}</a>
+    {% if page.tags.size > 0 %}
+    <footer class="post-tags">
+      <span>标签:</span>
+      {% for tag in page.tags %}
+      <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a>{% unless forloop.last %} {% endunless %}
+      {% endfor %}
+    </footer>
     {% endif %}
-    {% if page.next %}
-    <a class="post-nav-next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} →</a>
-    {% endif %}
-  </nav>
 
-  <!-- 留言区(Giscus) -->
-  {% include comments.html %}
-</article>
+    <!-- 上一篇 / 下一篇(Jekyll 内置,按文章顺序) -->
+    <nav class="post-nav">
+      {% if page.previous %}
+      <a class="post-nav-prev" href="{{ page.previous.url | relative_url }}">← {{ page.previous.title }}</a>
+      {% endif %}
+      {% if page.next %}
+      <a class="post-nav-next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} →</a>
+      {% endif %}
+    </nav>
+
+    <!-- 留言区(Giscus) -->
+    {% include comments.html %}
+  </article>
+
+  <!-- 右侧目录(TOC):由下方脚本从 .post-content 内的 h2/h3 自动生成,
+       窄屏(<=1024px)由 CSS 隐藏,不影响移动端阅读。 -->
+  <aside class="toc" aria-label="文章目录">
+    <div class="toc-inner">
+      <div class="toc-title">目录</div>
+      <nav id="toc-nav" class="toc-nav"></nav>
+    </div>
+  </aside>
+</div>
+
+<!-- ===== 文章目录(TOC)交互脚本 =====
+     职责:从 .post-content 抓取 h2/h3 自动生成右侧目录链接,
+     点击平滑跳转、滚动时高亮当前章节。
+     内联在此处而非外链:TOC 逻辑与 TOC 结构强相关,且仅文章页需要。 -->
+<script>
+  (function () {
+    var content = document.querySelector('.post-content');
+    var nav = document.getElementById('toc-nav');
+    var tocAside = document.querySelector('.toc');
+    if (!content || !nav) return;
+
+    // 收集文章正文中的二级、三级标题(kramdown 已自动生成 id)
+    var headings = Array.prototype.slice.call(content.querySelectorAll('h2, h3'));
+
+    // 文章没有标题时,隐藏整个目录侧栏,布局自动回退为单栏
+    if (headings.length === 0) {
+      if (tocAside) tocAside.style.display = 'none';
+      return;
+    }
+
+    // 兜底:为没有 id 的标题补一个,避免点击跳转失效
+    headings.forEach(function (h, i) {
+      if (!h.id) h.id = 'toc-heading-' + i;
+    });
+
+    // 生成目录链接:h2 顶格,h3 缩进
+    var frag = document.createDocumentFragment();
+    headings.forEach(function (h) {
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      a.className = 'toc-level-' + h.tagName.toLowerCase().slice(1);
+      a.setAttribute('data-target', h.id);
+      frag.appendChild(a);
+    });
+    nav.appendChild(frag);
+
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+    var linksById = {};
+    links.forEach(function (a) { linksById[a.getAttribute('data-target')] = a; });
+
+    // 点击:平滑滚动到对应标题,并更新地址栏 hash(不触发跳转)
+    links.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = document.getElementById(a.getAttribute('data-target'));
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', '#' + a.getAttribute('data-target'));
+      });
+    });
+
+    // 滚动高亮:找到离视口顶部最近(且已滚过)的标题,用 rAF 节流
+    var OFFSET = 100; // 顶部留白,避免标题贴着视口顶就算"当前"
+    var ticking = false;
+
+    function updateActive() {
+      ticking = false;
+      var scrollY = window.scrollY;
+      var current = null;
+      for (var i = 0; i < headings.length; i++) {
+        if (headings[i].getBoundingClientRect().top + scrollY - OFFSET <= scrollY) {
+          current = headings[i];
+        }
+      }
+      links.forEach(function (l) { l.classList.remove('is-active'); });
+      if (current && linksById[current.id]) {
+        linksById[current.id].classList.add('is-active');
+      }
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActive);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateActive();
+  })();
+</script>
