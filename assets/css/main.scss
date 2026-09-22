@@ -237,6 +237,90 @@ a:hover {
   color: var(--muted);
 }
 
+/* 首页文章列表:每篇文章下方的标签(胶囊样式,链接到 /tags/ 对应锚点) */
+.post-list-tags {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.post-list-tags a {
+  display: inline-block;
+  margin: 0.15rem 0.4rem 0.15rem 0;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.post-list-tags a:hover {
+  color: var(--link);
+  border-color: var(--link);
+  text-decoration: none;
+}
+
+/* ===== 首页分页导航 ===== */
+.pagination-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+.pagination-prev,
+.pagination-next {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.pagination-prev:hover,
+.pagination-next:hover {
+  color: var(--link);
+  border-color: var(--link);
+  text-decoration: none;
+}
+
+/* 上一页/下一页禁用态(已在首页或末页) */
+.pagination-prev.is-disabled,
+.pagination-next.is-disabled {
+  opacity: 0.4;
+}
+
+.pagination-pages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.pagination-num {
+  min-width: 2rem;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.pagination-num:hover {
+  color: var(--link);
+  border-color: var(--link);
+  text-decoration: none;
+}
+
+/* 当前页码:反色高亮 */
+.pagination-num.is-current {
+  background: var(--link);
+  border-color: var(--link);
+  color: #fff;
+}
+
 /* ===== 文章详情 =====
    文章页采用两栏布局:主内容 + 右侧目录。
    .post-layout 突破默认 .container 的 720px 限制,改为 1000px 容器,

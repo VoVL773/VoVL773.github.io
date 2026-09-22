@@ -15,7 +15,7 @@ layout: default
     <div class="home-banner-overlay"></div>
   </section>
 
-  <!-- index.md 里写的简介会渲染到这里(可选) -->
+  <!-- index.html 里写的简介会渲染到这里(可选) -->
   {% if content != "" %}
   <div class="home-intro">
     {{ content }}
@@ -24,8 +24,9 @@ layout: default
 
   <h1 class="post-list-heading">文章</h1>
 
-  <!-- site.posts 默认按日期倒序排列 -->
-  {% for post in site.posts %}
+  <!-- 分页已启用:paginator.posts 为当前页的文章切片(按日期倒序) -->
+  {% if paginator %}
+  {% for post in paginator.posts %}
   <article class="post-list-item">
     <h2 class="post-list-title">
       <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
@@ -33,6 +34,50 @@ layout: default
     <time class="post-list-date">{{ post.date | date: "%Y-%m-%d" }}</time>
     <!-- excerpt 是 Jekyll 自动取的首段 -->
     <div class="post-list-excerpt">{{ post.excerpt }}</div>
+    <!-- 文章标签:链接到标签页对应锚点 -->
+    {% if post.tags.size > 0 %}
+    <div class="post-list-tags">
+      {% for tag in post.tags %}
+      <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">#{{ tag }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
   </article>
   {% endfor %}
+
+  <!-- 分页导航:页码全部由 Liquid 自行拼接,兼容项目站点的 baseurl -->
+  {% if paginator.total_pages > 1 %}
+  <nav class="pagination-nav" aria-label="分页">
+    {% if paginator.previous_page %}
+    {% assign prev_num = paginator.previous_page %}
+    {% if prev_num == 1 %}
+    {% assign prev_href = '/' | relative_url %}
+    {% else %}
+    {% assign prev_href = site.paginate_path | replace: ':num', prev_num | relative_url %}
+    {% endif %}
+    <a class="pagination-prev" href="{{ prev_href }}">← 上一页</a>
+    {% else %}
+    <span class="pagination-prev is-disabled">← 上一页</span>
+    {% endif %}
+
+    <span class="pagination-pages">
+      {% for num in (1..paginator.total_pages) %}
+      {% if num == paginator.page %}
+      <span class="pagination-num is-current">{{ num }}</span>
+      {% elsif num == 1 %}
+      <a class="pagination-num" href="{{ '/' | relative_url }}">{{ num }}</a>
+      {% else %}
+      <a class="pagination-num" href="{{ site.paginate_path | replace: ':num', num | relative_url }}">{{ num }}</a>
+      {% endif %}
+      {% endfor %}
+    </span>
+
+    {% if paginator.next_page %}
+    <a class="pagination-next" href="{{ site.paginate_path | replace: ':num', paginator.next_page | relative_url }}">下一页 →</a>
+    {% else %}
+    <span class="pagination-next is-disabled">下一页 →</span>
+    {% endif %}
+  </nav>
+  {% endif %}
+  {% endif %}
 </div>
