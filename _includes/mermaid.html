@@ -1,0 +1,104 @@
+{%- comment -%}
+  ===== Mermaid 图表渲染 =====
+
+  职责:把文章里的 ```mermaid 代码块在浏览器端渲染成流程图。
+
+  为什么需要:
+    GitHub Pages 的插件白名单里没有 mermaid(_config.yml 只能启用 jekyll-paginate),
+    kramdown 也没有 mermaid 词法器,所以 ```mermaid 最终只会原样输出成一段
+    纯文本 <pre><code class="language-mermaid">。这里用前端脚本把图补上。
+
+  为什么懒加载:
+    mermaid.min.js 约 3.5MB。只有真正含图的文章才需要,所以由本脚本在检测到
+    图表之后再动态插入 <script>,其余页面完全不下载、零开销。
+
+  为什么监听 data-theme:
+    站点有暗色模式。主题切换后必须用新配色重绘,否则暗色页面里会留一张
+    白底亮图。这里不侵入 theme.js,而是观察 <html> 上 data-theme 的变化。
+{%- endcomment -%}
+<script>
+  (function () {
+    // kramdown 对未知语言只输出 <pre><code class="language-mermaid">,没有 highlighter 包裹。
+    // closest 兜底是为了兼容以后万一变回 <div class="language-mermaid highlighter-rouge"> 的结构。
+    var codes = Array.prototype.slice.call(
+      document.querySelectorAll('pre > code.language-mermaid')
+    );
+    if (codes.length === 0) return;
+
+    // 换成 mermaid 需要的 <div class="mermaid">。
+    // 原始文本存进 data-src:主题切换后要用它重绘,库加载失败时要用它还原代码块。
+    var nodes = codes.map(function (code) {
+      var div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code.textContent.trim();   // textContent 会把 &gt; 自动还原成 >
+      div.setAttribute('data-src', div.textContent);
+
+      var block = (code.closest && code.closest('div.highlighter-rouge, div.language-mermaid'))
+        || code.parentNode;                        // 通常就是 <pre>
+      block.parentNode.replaceChild(div, block);
+      return div;
+    });
+
+    function themeName() {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
+    }
+
+    // 库加载失败时把图表还原成普通代码块 —— 宁可难看,也不能让内容凭空消失
+    function restoreSources() {
+      nodes.forEach(function (node) {
+        var pre = document.createElement('pre');
+        var code = document.createElement('code');
+        code.className = 'language-mermaid';
+        code.textContent = node.getAttribute('data-src');
+        pre.appendChild(code);
+        if (node.parentNode) node.parentNode.replaceChild(pre, node);
+      });
+    }
+
+    function render() {
+      nodes.forEach(function (node) {
+        node.removeAttribute('data-processed');    // 复位,允许重复渲染
+        node.textContent = node.getAttribute('data-src');
+      });
+
+      window.mermaid.initialize({
+        startOnLoad: false,                        // 由我们手动控制渲染时机
+        theme: themeName(),
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif',
+        securityLevel: 'loose',                    // 图表由本站作者编写,允许 htmlLabels
+        flowchart: { useMaxWidth: true, htmlLabels: true }
+      });
+
+      // v10 起用 run(),旧版回退到 init();suppressErrors 保证一张图出错不影响其余的图
+      var done = window.mermaid.run
+        ? window.mermaid.run({ nodes: nodes, suppressErrors: true })
+        : window.mermaid.init(undefined, nodes);
+
+      return Promise.resolve(done).catch(function () { /* 单图语法错误时静默保留其余图表 */ });
+    }
+
+    // 串行化渲染,避免快速反复切主题时多次渲染互相打断
+    var queue = Promise.resolve();
+    function scheduleRender() {
+      queue = queue.then(render).catch(function () {});
+      return queue;
+    }
+
+    var script = document.createElement('script');
+    script.src = '{{ "/assets/js/mermaid.min.js" | relative_url }}';
+    script.onload = function () {
+      scheduleRender();
+
+      // theme.js 只负责改 <html data-theme>,这里观察它的变化来重绘
+      var last = themeName();
+      new MutationObserver(function () {
+        if (themeName() !== last) {
+          last = themeName();
+          scheduleRender();
+        }
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    };
+    script.onerror = restoreSources;
+    document.head.appendChild(script);
+  })();
+</script>

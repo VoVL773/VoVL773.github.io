@@ -578,3 +578,21 @@ a:hover {
     flex-direction: column;
   }
 }
+
+/* ==========================================================================
+   Mermaid 图表
+   由 _includes/mermaid.html 在含 ```mermaid 的文章里按需渲染。
+   说明:渲染前这里是 <pre><code>,渲染后变成 <div class="mermaid"><svg>。
+   宽图允许横向滚动,避免把正文栏撑破;SVG 用 max-width 跟随容器自适应。
+   ========================================================================== */
+
+.mermaid {
+  margin: 1.6em 0;
+  text-align: center;
+  overflow-x: auto;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}

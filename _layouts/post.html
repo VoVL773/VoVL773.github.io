@@ -128,3 +128,10 @@ layout: default
     updateActive();
   })();
 </script>
+
+<!-- ===== Mermaid 图表(按需加载)=====
+     仅当本文真的有 ```mermaid 代码块时才引入,避免其它文章白白下载 3.5MB 的库。
+     content 在这里是已渲染完的 HTML,所以直接按 class 判断即可。 -->
+{% if content contains 'language-mermaid' %}
+{% include mermaid.html %}
+{% endif %}
