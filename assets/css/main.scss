@@ -16,6 +16,11 @@
   --code-bg: #f6f8fa;
   --max-width: 720px;
 
+  /* 标签页选择条 */
+  --tagbar-bg: #f5f7fa;
+  --tag-active-bg: #ffffff;
+  --tag-shadow: 0 1px 4px rgba(15, 23, 42, 0.1);
+
   /* ===== Banner 相关 =====
        背景图默认用渐变兜底,实际图片由 theme.js 设置 --hero-bg
        (从 bannerPreset 列表循环选取或 localStorage 恢复)。
@@ -36,6 +41,11 @@
   --link: #58a6ff;
   --border: #30363d;
   --code-bg: #161b22;
+
+  /* 标签页选择条 */
+  --tagbar-bg: #161b22;
+  --tag-active-bg: #21262d;
+  --tag-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 
   /* 暗色模式下遮罩加深,让白色文字在暗色图上仍清晰 */
   --hero-overlay: linear-gradient(
@@ -516,23 +526,195 @@ a:hover {
   min-width: 3rem;
 }
 
-/* 标签页 */
-.tag-heading {
-  margin-top: 1.5rem;
+/* ===== 标签页:横向选择条 =====
+   浅色/暗色都用变量,和站点主题保持一致。
+   结构:tag-tabs > tag-tabs-scroll(可横向滚动) + 左右箭头;
+   下方 tag-panel 每个标签一个,由 tags.js 控制显隐。 */
+.tag-tabs {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 1.5rem 0 1.75rem;
+  padding: 6px;
+  background: var(--tagbar-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
 }
 
-.tag-count {
+.tag-tabs[hidden] {
+  display: none;
+}
+
+.tag-tabs-scroll {
+  display: flex;
+  flex: 1;
+  gap: 2px;
+  padding: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tag-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* 左右两侧的渐隐,让被箭头遮住一半的标签看起来是"还有更多" */
+.tag-tabs::before,
+.tag-tabs::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  z-index: 0;
+  width: 56px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.tag-tabs::before {
+  left: 1px;
+  border-radius: 13px 0 0 13px;
+  background: linear-gradient(to right, var(--tagbar-bg) 30%, transparent);
+}
+
+.tag-tabs::after {
+  right: 1px;
+  border-radius: 0 13px 13px 0;
+  background: linear-gradient(to left, var(--tagbar-bg) 30%, transparent);
+}
+
+.tag-tabs.has-overflow-left::before,
+.tag-tabs.has-overflow-right::after {
+  opacity: 1;
+}
+
+/* 箭头出现时给两侧留出空间,避免最后一个标签被箭头盖住 */
+.tag-tabs.has-overflow-left .tag-tabs-scroll {
+  padding-left: 2.4rem;
+}
+
+.tag-tabs.has-overflow-right .tag-tabs-scroll {
+  padding-right: 2.4rem;
+}
+
+.tag-tab {
+  flex: none;
+  padding: 0.45rem 1.05rem;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.tag-tab:hover {
+  color: var(--link);
+}
+
+.tag-tab:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.tag-tab.is-active {
+  background: var(--tag-active-bg);
+  color: var(--link);
+  font-weight: 600;
+  box-shadow: var(--tag-shadow);
+}
+
+.tag-tabs-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--tag-active-bg);
   color: var(--muted);
+  box-shadow: var(--tag-shadow);
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.tag-tabs-arrow[hidden] {
+  display: none;
+}
+
+.tag-tabs-arrow:hover {
+  color: var(--link);
+}
+
+.tag-tabs-arrow--left {
+  left: 8px;
+}
+
+.tag-tabs-arrow--right {
+  right: 8px;
+}
+
+/* 标签对应的文章面板 */
+.tag-panel[hidden] {
+  display: none;
+}
+
+.tag-panel-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+}
+
+.tag-panel-heading small {
+  color: var(--muted);
+  font-size: 0.8rem;
   font-weight: normal;
-  font-size: 0.875rem;
 }
 
-.tag-list {
-  padding-left: 1.5rem;
+.tag-post-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
 }
 
-.tag-list li {
-  margin: 0.25rem 0;
+.tag-post-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tag-post-list a {
+  color: var(--text);
+}
+
+.tag-post-list a:hover {
+  color: var(--link);
+}
+
+.tag-post-list time {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 /* ===== 页脚 ===== */
@@ -576,6 +758,21 @@ a:hover {
 
   .post-nav {
     flex-direction: column;
+  }
+
+  .tag-tab {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.875rem;
+  }
+
+  .tag-post-list li {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+  }
+
+  .tag-post-list time {
+    margin-left: 0;
+    width: 100%;
   }
 }
 
