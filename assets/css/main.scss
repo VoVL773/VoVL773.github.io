@@ -222,18 +222,45 @@ a:hover {
 }
 
 .post-list-item {
-  padding-bottom: 1.5rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border);
+  position: relative;
+  padding: 1.2rem 1.3rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.post-list-item:hover {
+  border-color: var(--link);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* 覆盖整张卡片的跳转链接:绝对定位铺满,使整卡可点击 */
+.post-card-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .post-list-item:last-child {
-  border-bottom: none;
+  margin-bottom: 0;
 }
 
 .post-list-title {
   margin: 0 0 0.25rem;
   font-size: 1.25rem;
+  position: relative;
+  z-index: 2;
+}
+
+.post-list-title a {
+  color: var(--text);
+}
+
+.post-list-item:hover .post-list-title a {
+  color: var(--link);
 }
 
 .post-list-date {
@@ -241,16 +268,22 @@ a:hover {
   color: var(--muted);
   font-size: 0.875rem;
   margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 2;
 }
 
 .post-list-excerpt {
   color: var(--muted);
+  position: relative;
+  z-index: 2;
 }
 
 /* 首页文章列表:每篇文章下方的标签(胶囊样式,链接到 /tags/ 对应锚点) */
 .post-list-tags {
   margin-top: 0.5rem;
   font-size: 0.8125rem;
+  position: relative;
+  z-index: 2;
 }
 
 .post-list-tags a {

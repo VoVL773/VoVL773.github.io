@@ -28,6 +28,8 @@ layout: default
   {% if paginator %}
   {% for post in paginator.posts %}
   <article class="post-list-item">
+    <!-- 整张卡片可点击的覆盖层(标签因其 z-index 更高仍可单独点击) -->
+    <a class="post-card-link" href="{{ post.url | relative_url }}" aria-label="阅读文章:{{ post.title }}"></a>
     <h2 class="post-list-title">
       <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
     </h2>
