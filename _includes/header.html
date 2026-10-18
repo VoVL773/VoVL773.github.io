@@ -6,16 +6,18 @@
       <a href="{{ '/' | relative_url }}">首页</a>
       <a href="{{ '/projects/' | relative_url }}">项目</a>
       <a href="{{ '/algorithm/' | relative_url }}">算法</a>
-      <a href="{{ '/archive/' | relative_url }}">归档</a>
-      <a href="{{ '/tags/' | relative_url }}">标签</a>
+      <a href="{{ '/posts/' | relative_url }}">文章</a>
       <a href="{{ '/about/' | relative_url }}">关于</a>
     </nav>
 
-    <!-- 主题切换按钮:初始图标(🌙/☀️)由 theme.js 根据 data-theme 设置,
-         这样不会与 default.html 里的防闪烁脚本冲突。 -->
+    <!-- 主题切换 + Banner 切换 -->
     <div class="header-actions">
-      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">🖼️</button>
-      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">🌙</button>
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="{{ '/assets/images/icons/banner.png' | relative_url }}" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="{{ '/assets/images/icons/moon.png' | relative_url }}" alt="切换主题">
+      </button>
     </div>
   </div>
 </header>

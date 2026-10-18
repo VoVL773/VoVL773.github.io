@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    那行被删掉的 `pop()`，才是回溯的命根子 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    <div class="post-layout">
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">那行被删掉的 `pop()`，才是回溯的命根子</h1>
+      <time class="post-date">2026-09-26</time>
+    </header>
+
+    <div class="post-content">
+      <blockquote>
+  <p>一道面试高频送命题。这篇文章要做的，是帮你把那种“说不清但能感觉到”的直觉，变成一句能说清楚的话。</p>
+</blockquote>
+
+<p>面试官：“递归和回溯有什么区别？”</p>
+
+<p>你：“回溯……就是用递归去试错吧？”</p>
+
+<p>面试官点点头，没说话。你也不知道自己说对了没有。</p>
+
+<p>这个场景太常见了。大多数人并不是不知道它们不一样——你心里其实清楚：归并排序和全排列虽然都用了递归，写起来的感觉却完全不同。一个顺顺当当往下拆，一个总在小心翼翼地“改回去”。</p>
+
+<p>可一旦要你用一句话说清楚，就卡住了。</p>
+
+<p>卡住的原因很简单：几乎所有教程都在告诉你“回溯用递归实现”，却很少有人告诉你——<strong>递归只是骨架，真正让回溯成为回溯的，是那个看起来最不起眼的动作：撤销。</strong></p>
+
+<p>递归是<strong>实现手段</strong>，回答的是“代码怎么写”；回溯是<strong>算法思想</strong>，回答的是“问题怎么解”。归并排序是纯递归，全排列才是回溯：前者没有任何“撤销”动作，后者少写一行 <code class="language-plaintext highlighter-rouge">pop()</code>，答案就全乱了。</p>
+
+<hr />
+
+<h2 id="0-先把概念摆正递归和回溯不在一个层次上">0. 先把概念摆正：递归和回溯不在一个层次上</h2>
+
+<p>初学者的最大混淆点，是把它们当成两个并列的、“二选一”的东西。其实它们回答的是两个完全不同的问题：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>维度</th>
+      <th>递归（Recursion）</th>
+      <th>回溯（Backtracking）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>是什么</td>
+      <td>一种<strong>编程手段</strong>：函数调用自身</td>
+      <td>一种<strong>搜索策略</strong>：在解空间里试探，走不通就退</td>
+    </tr>
+    <tr>
+      <td>层次</td>
+      <td>语法 / 结构层</td>
+      <td>算法思想层</td>
+    </tr>
+    <tr>
+      <td>关系</td>
+      <td>是<strong>实现工具</strong></td>
+      <td><strong>用递归来实现</strong></td>
+    </tr>
+    <tr>
+      <td>类比</td>
+      <td>像“循环”</td>
+      <td>像“枚举 + 剪枝”</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>放到同一张图里看，它们根本不在同一层：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>算法思想层（回答“问题怎么解”）
+├─ 暴力枚举 / 搜索
+│     └─ 回溯 = 决策树 + DFS + 撤销 + 剪枝
+├─ 分治
+└─ 动态规划
+        │
+        │ 都可以用递归落地（DP 也常用递推 / 记忆化搜索）
+        ▼
+程序实现层（回答“代码怎么写”）
+├─ 递归：函数调用自身 + 调用栈
+└─ 迭代 + 显式栈（递归的等价改写）
+</code></pre></div></div>
+
+<p>一句话记住：</p>
+
+<blockquote>
+  <p><strong>回溯 = 递归 + 撤销选择（状态恢复）</strong></p>
+</blockquote>
+
+<p>纯递归不一定要撤销（求阶乘、斐波那契、树的前序遍历都不需要）；<strong>需要“撤销”的递归，才是回溯。</strong></p>
+
+<blockquote>
+  <p>光看定义不好体会。下面用两道真题做对照：LeetCode 695（纯递归）与 LeetCode 46 全排列（回溯）。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="1-递归把问题交给小一号的自己">1. 递归：把问题交给小一号的自己</h2>
+
+<h3 id="11-递归的本质把问题缩小成同类子问题">1.1 递归的本质：把问题缩小成同类子问题</h3>
+
+<p>递归能成立，靠的是一个信念：</p>
+
+<blockquote>
+  <p><strong>如果子问题解决了，那么当前问题就解决了。</strong></p>
+</blockquote>
+
+<p>以 <code class="language-plaintext highlighter-rouge">n!</code> 为例：</p>
+
+<ul>
+  <li>大问题：<code class="language-plaintext highlighter-rouge">3!</code> 是多少？</li>
+  <li>小一号的同类问题：<code class="language-plaintext highlighter-rouge">2!</code> 是多少？</li>
+  <li>关系：<code class="language-plaintext highlighter-rouge">3! = 3 × 2!</code></li>
+</ul>
+
+<p>只要 <code class="language-plaintext highlighter-rouge">2!</code> 能被算出来，<code class="language-plaintext highlighter-rouge">3!</code> 就出来了。而 <code class="language-plaintext highlighter-rouge">2!</code> 又依赖于 <code class="language-plaintext highlighter-rouge">1!</code>……一直退到 <code class="language-plaintext highlighter-rouge">0! = 1</code>（到这一层不用再缩了，答案直接就知道）。</p>
+
+<p>于是递归自然成形：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>          <span class="c1"># 终止条件：不用再缩了
+</span>        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>    <span class="c1"># 递推关系：把 n 的问题变成 n-1 的问题
+</span></code></pre></div></div>
+
+<h3 id="12-递归三要素">1.2 递归三要素</h3>
+
+<p>写任何递归之前，先回答这三个问题：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>要素</th>
+      <th>问自己</th>
+      <th>全排列里对应什么</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>终止条件</strong></td>
+      <td>什么时候不用再递归了？</td>
+      <td><code class="language-plaintext highlighter-rouge">len(path) == len(nums)</code></td>
+    </tr>
+    <tr>
+      <td><strong>递推关系</strong></td>
+      <td>当前问题怎么靠子问题解决？</td>
+      <td>选一个数，再递归填下一个位置</td>
+    </tr>
+    <tr>
+      <td><strong>本层做什么</strong></td>
+      <td>这一层需要处理的、不交给子问题的事</td>
+      <td>遍历候选、做选择、撤销选择</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>新手最常犯的错：写递归时试图在脑子里跑完整棵树。</strong> 那是徒劳的，原因见 1.4。</p>
+
+<h3 id="13-执行模型调用栈">1.3 执行模型：调用栈</h3>
+
+<p>递归的真实执行，是运行时替你维护了一个“调用栈”。以 <code class="language-plaintext highlighter-rouge">factorial(3)</code> 为例：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>【递】压栈：一层层往下调用
+factorial(3)
+└─ 3 * factorial(2)
+   └─ 2 * factorial(1)
+      └─ 1 * factorial(0)
+         └─ return 1      ← 触底（终止条件）
+
+【归】弹栈：触底后一层层返回，逐层算结果
+         ┌─ 1 * 1 = 1
+      ┌─ 2 * 1 = 2
+   ┌─ 3 * 2 = 6
+└─ factorial(3) = 6
+</code></pre></div></div>
+
+<p>也就是说，递归有<strong>两个阶段</strong>，一定要分清：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>阶段</th>
+      <th>动作</th>
+      <th>类比</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>递</strong></td>
+      <td>一层层往下调用，压栈</td>
+      <td>往下走</td>
+    </tr>
+    <tr>
+      <td><strong>归</strong></td>
+      <td>触底后一层层返回，弹栈</td>
+      <td>往回退</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="14-为什么人脑模拟递归会晕以及递归信条">1.4 为什么人脑模拟递归会晕——以及“递归信条”</h3>
+
+<p>因为你在用<strong>串行思维</strong>去模拟一个<strong>栈结构</strong>。心理学上的估计是：人一次只能稳稳握住 4 个左右的“组块”（Miller 的经典说法是 7±2），而递归树很快就超出这个量级。</p>
+
+<p>正确的姿势是<strong>信任递归</strong>（编程界叫 “recursion fairy” / 递归信条）：</p>
+
+<blockquote>
+  <p><strong>写 <code class="language-plaintext highlighter-rouge">backtrack()</code> 的时候，就假设“它的子调用一定能正确完成它该做的事”。</strong>
+你只负责两件事：</p>
+
+  <ol>
+    <li>这一层该做什么（做选择、撤销选择）；</li>
+    <li>什么时候停（终止条件）。</li>
+  </ol>
+
+  <p><strong>不要去展开子调用内部是怎么跑的。</strong></p>
+</blockquote>
+
+<p>这就像写 <code class="language-plaintext highlighter-rouge">for</code> 循环时你不会去想“第 3 次迭代时 CPU 寄存器是什么”——你相信循环会按语义执行。递归也一样。</p>
+
+<h3 id="15-递归的两种思维模式">1.5 递归的两种思维模式</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>模式</th>
+      <th>怎么想</th>
+      <th>典型题</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>分解式</strong>（自顶向下）</td>
+      <td>大问题 = 小问题 + 一步</td>
+      <td>阶乘、斐波那契、归并排序</td>
+    </tr>
+    <tr>
+      <td><strong>遍历式</strong>（搜索）</td>
+      <td>在一棵树上走，每到一个节点做判断</td>
+      <td><strong>回溯</strong>、DFS、树的遍历</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>回溯属于“遍历式”</strong>：你不是在“计算一个值”，而是在“遍历一棵决策树，收集符合条件的节点”。这个视角转换非常重要——用“求值”的思路去做回溯，必然卡住。</p>
+
+<h3 id="16-纯递归实例leetcode-695-岛屿的最大面积">1.6 纯递归实例：LeetCode 695 岛屿的最大面积</h3>
+
+<p>先看一个<strong>不需要撤销</strong>的递归，作为后面回溯的对照：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">maxAreaOfIsland</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">LeetCode 695：纯递归（DFS 洪水填充）</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">grid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">grid</span><span class="p">),</span> <span class="nf">len</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">sign_map</span> <span class="o">=</span> <span class="p">{}</span>          <span class="c1"># 记录“这个格子已经访问过”，避免重复计数和死循环
+</span>
+        <span class="k">def</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+            <span class="c1"># 越界、是水(0)、或已经访问过 → 这一格不贡献面积，返回 0
+</span>            <span class="nf">if </span><span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">rows</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="n">cols</span>
+                    <span class="ow">or</span> <span class="n">grid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+                    <span class="ow">or</span> <span class="n">sign_map</span><span class="p">.</span><span class="nf">get</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))):</span>
+                <span class="k">return</span> <span class="mi">0</span>
+
+            <span class="n">sign_map</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">True</span>     <span class="c1"># 标记已访问（这里不需要撤销）
+</span>            <span class="c1"># 自己算 1 格，再加上下左右四个方向递归回来的面积
+</span>            <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">max_area</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+                <span class="c1"># 遇到“没访问过的陆地”，就从这里出发把整块量一遍
+</span>                <span class="k">if</span> <span class="n">grid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">sign_map</span><span class="p">.</span><span class="nf">get</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)):</span>
+                    <span class="n">max_area</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">max_area</span><span class="p">,</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">max_area</span>
+</code></pre></div></div>
+
+<p>注意 <code class="language-plaintext highlighter-rouge">sign_map</code> <strong>故意不撤销</strong>：一个格子只需要被统计一次，撤销标记反而会导致重复计数、指数级回溯。</p>
+
+<p>对比一下就清楚了：<code class="language-plaintext highlighter-rouge">sign_map</code> 是“<strong>全局只允许用一次</strong>”的标记；而下一节全排列里的 <code class="language-plaintext highlighter-rouge">used</code> 是“<strong>每条路径各允许用一次</strong>”，所以必须撤销。这条判别口诀在 2.7 和最后的总结里还会各出现一次。</p>
+
+<blockquote>
+  <p>顺带一提：朴素斐波那契也是纯递归，只是存在大量重复计算——那是动态规划要解决的问题，与回溯无关。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="2-回溯在决策树上试错">2. 回溯：在决策树上试错</h2>
+
+<h3 id="21-回溯解决什么问题">2.1 回溯解决什么问题</h3>
+
+<p>一句话：<strong>在一棵“决策树”上，找出所有满足条件的路径（或节点）。</strong></p>
+
+<p>典型特征：</p>
+
+<ul>
+  <li>答案是<strong>一组</strong>，不是一个数；</li>
+  <li>需要<strong>枚举所有可能</strong>；</li>
+  <li>每一步有<strong>多个候选</strong>，且选了一个会影响后面的候选；</li>
+  <li>规模不大（通常 n ≤ 20 左右，因为复杂度是指数级的）。</li>
+</ul>
+
+<p>常见题型：全排列、子集、组合、分割字符串、N 皇后、解数独、复原 IP、单词搜索。</p>
+
+<h3 id="22-解空间树决策树">2.2 解空间树（决策树）</h3>
+
+<p>把“每一步的选择”画成一棵树：根是初始状态，每条边是一个选择，叶子是最终状态（有些题里中间节点也是答案）。</p>
+
+<p><strong>这棵树的大小，决定了算法的复杂度上限。</strong> 回溯的本质就是<strong>遍历这棵树</strong>，边走边记录路径。</p>
+
+<p>以全排列（<code class="language-plaintext highlighter-rouge">nums = [1,2,3]</code>）为例，决策树长这样：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>path = []
+├─ 选 1 → [1]
+│   ├─ 选 2 → [1,2]
+│   │   └─ 选 3 → [1,2,3]   ✅
+│   └─ 选 3 → [1,3]
+│       └─ 选 2 → [1,3,2]   ✅
+├─ 选 2 → [2]
+│   ├─ 选 1 → [2,1]
+│   │   └─ 选 3 → [2,1,3]   ✅
+│   └─ 选 3 → [2,3]
+│       └─ 选 1 → [2,3,1]   ✅
+└─ 选 3 → [3]
+    ├─ 选 1 → [3,1]
+    │   └─ 选 2 → [3,1,2]   ✅
+    └─ 选 2 → [3,2]
+        └─ 选 1 → [3,2,1]   ✅
+
+（同一层缩进 = 同一次选择；共 6 个叶子，就是 6 个排列）
+</code></pre></div></div>
+
+<p>想要拿到全部 6 个叶子，就必须在“走完一条分支”之后<strong>退回分叉点</strong>，再换下一个候选。这个动作就是回溯。</p>
+
+<h3 id="23-回溯--递归--撤销选择">2.3 回溯 = 递归 + 撤销选择</h3>
+
+<p>我们盯着 <code class="language-plaintext highlighter-rouge">path = [1]</code> 这一层看。它下面的 <code class="language-plaintext highlighter-rouge">for</code> 循环要做两件事：先探索“选 2”的分支，回来后探索“选 3”的分支。</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>depth1 的 for 循环（此时 path=[1]，1 已经定下来了）：
+
+  ┌─ i=1 取 2 ─→ path=[1,2] ─→ 递归走完 ─→ pop() 撤销 2 ─→ path=[1]
+  └─ i=2 取 3 ─→ path=[1,3] ─→ 递归走完 ─→ pop() 撤销 3 ─→ path=[1]
+       ↑
+       这就是“换候选 3”：i=1 那条分支（[1,2,3]）走完并撤销后，同一层取下一个候选
+</code></pre></div></div>
+
+<p>所以从 <code class="language-plaintext highlighter-rouge">[1,2]</code> 到 <code class="language-plaintext highlighter-rouge">[1,3]</code> 是<strong>两步</strong>，不是一步：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1,2]  --pop()--&gt;  [1]  --push(3)--&gt;  [1,3]
+       撤销 2           换候选
+</code></pre></div></div>
+
+<p>把 <code class="language-plaintext highlighter-rouge">for</code> 循环体看成“一回合”，它的节拍是固定的三步：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>① 做选择   used[i] = True、path.append(nums[i])
+      │
+      ▼
+② 递归     backtrack()：把这条分支的全部后续走完
+      │
+      ▼
+③ 撤销     path.pop()、used[i] = False
+      │
+      ├─ 还有候选 ─→ 回到 ①（for 进入下一轮）
+      └─ 候选用尽 ─→ return，回到上一层
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>关键结论：<code class="language-plaintext highlighter-rouge">path.pop()</code> 写在 <code class="language-plaintext highlighter-rouge">for</code> 循环体的末尾，作用是“把本轮的选择清掉”，好让下一轮从干净的状态重新开始。</strong></p>
+</blockquote>
+
+<p>对应到代码里，就是这三行：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">used</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="k">continue</span>
+    <span class="n">used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>           <span class="c1"># ① 出手：做选择
+</span>    <span class="n">path</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="nf">backtrack</span><span class="p">()</span>              <span class="c1"># ② 打完：递归探索所有后续
+</span>    <span class="n">path</span><span class="p">.</span><span class="nf">pop</span><span class="p">()</span>               <span class="c1"># ③ 收手：撤销，把位置还回去
+</span>    <span class="n">used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="c1"># ── 回合结束，下一轮从这里带着干净的状态重新开始 ──
+</span></code></pre></div></div>
+
+<h4 id="少写一行-pop会发生什么">少写一行 <code class="language-plaintext highlighter-rouge">pop()</code>，会发生什么？</h4>
+
+<p><strong>下一轮就不是“替换”，而是“追加”。</strong> 两种情况的差别一图可见：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>写了 pop()：替换
+  [1,2] ──pop() 撤销 2──▶ [1] ──push(3)──▶ [1,3]            ✅
+
+没写 pop()：追加
+  [1,2] ──直接接上 3──▶ [1,2,3,3] ──再往下──▶ [1,2,3,3,2,…]  ❌
+</code></pre></div></div>
+
+<p>实测（<code class="language-plaintext highlighter-rouge">nums = [1,2,3]</code>，只删掉 <code class="language-plaintext highlighter-rouge">path.pop()</code>，其余不变），<code class="language-plaintext highlighter-rouge">path</code> 的变化是这样的：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>path=[]
+选 1 → path=[1]                  ← 第 1 次 append
+选 2 → path=[1,2]                ← 第 2 次
+选 3 → path=[1,2,3]              ← 第 3 次：收集到答案后返回
+选 3 → path=[1,2,3,3]            ← 第 4 次：不是“替换”，而是“追加”
+选 2 → path=[1,2,3,3,2]
+选 2 → path=[1,2,3,3,2,2]
+选 1 → path=[1,2,3,3,2,2,1]
+……  path 只增不减，递归一路加深，直到 RecursionError
+</code></pre></div></div>
+
+<p>后果有两条，而且都很致命：</p>
+
+<ol>
+  <li><strong>结果集里只剩 <code class="language-plaintext highlighter-rouge">[1,2,3]</code> 一个答案</strong>——因为此后 <code class="language-plaintext highlighter-rouge">path</code> 只增不减，长度再也不会等于 n，<code class="language-plaintext highlighter-rouge">len(path) == n</code> 这个终止条件彻底失效；</li>
+  <li><strong>递归一路加深</strong>，<code class="language-plaintext highlighter-rouge">path</code> 无限制膨胀，最终以 <code class="language-plaintext highlighter-rouge">RecursionError</code>（栈溢出）收场。</li>
+</ol>
+
+<blockquote>
+  <p><strong>所以“回溯”这个动作的本质是：每探索完一个分支，就把状态恢复到进入该分支之前的样子。</strong>
+恢复得越干净，各分支之间就越互不干扰——这正是“回溯”这个名字的来源。</p>
+</blockquote>
+
+<p><strong>而 <code class="language-plaintext highlighter-rouge">path.pop()</code>，正是状态恢复的命根子。</strong></p>
+
+<h3 id="24-全排列完整代码">2.4 全排列：完整代码</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">permute</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">used</span> <span class="o">=</span> <span class="p">[</span><span class="bp">False</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+
+        <span class="k">def</span> <span class="nf">backtrack</span><span class="p">():</span>
+            <span class="c1"># ① 终止条件：路径长度够了 → 拼出一个完整答案
+</span>            <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">path</span><span class="p">[:])</span>     <span class="c1"># 必须拷贝，否则最后全是空列表
+</span>                <span class="k">return</span>
+
+            <span class="c1"># ② 在候选集合里逐个尝试
+</span>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">used</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>             <span class="c1"># 这个数已在本路径里，跳过（剪枝）
+</span>                    <span class="k">continue</span>
+
+                <span class="c1"># ③ 做选择
+</span>                <span class="n">used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">path</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+                <span class="c1"># ④ 递归：带着刚才的选择，去填下一个位置
+</span>                <span class="nf">backtrack</span><span class="p">()</span>
+
+                <span class="c1"># ⑤ 撤销选择（回溯！）—— 撤回到进入 ③ 之前的状态
+</span>                <span class="n">path</span><span class="p">.</span><span class="nf">pop</span><span class="p">()</span>
+                <span class="n">used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="nf">backtrack</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">res</span>
+</code></pre></div></div>
+
+<p>两个容易写错的地方：<code class="language-plaintext highlighter-rouge">res.append(path[:])</code> 一定要切片拷贝，否则结果里全是同一个列表的引用；<code class="language-plaintext highlighter-rouge">path.pop()</code> 与 <code class="language-plaintext highlighter-rouge">used[i] = False</code> 必须同时出现，缺一个都会让状态在分支之间“串味”。</p>
+
+<h3 id="25-回溯通用模板">2.5 回溯通用模板</h3>
+
+<p>所有回溯题，都是这个骨架（伪代码，中文标识符只为好记）。<strong>背下来。</strong></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def solve(题目参数):
+    结果集 = []
+    路径 = []
+
+    def backtrack(路径, 选择列表相关参数):
+        if 满足结束条件:
+            结果集.append(路径[:])          # 记得拷贝
+            return
+
+        for 选择 in 选择列表:
+            if 需要剪枝(选择):              # 可选
+                continue
+
+            做选择(路径, 选择)              # ① 修改状态
+            backtrack(路径, 下一层的参数)   # ② 递归
+            撤销选择(路径, 选择)            # ③ 恢复状态  ← 与 ① 严格对称
+
+    backtrack(初始路径, 初始参数)
+    return 结果集
+</code></pre></div></div>
+
+<p>做题时，逐个填空四要素：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>要素</th>
+      <th>问自己</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>路径</strong></td>
+      <td>我要收集的是什么？（组合、排列、切割方案……）</td>
+    </tr>
+    <tr>
+      <td><strong>选择列表</strong></td>
+      <td>当前这一步有哪些候选？</td>
+    </tr>
+    <tr>
+      <td><strong>结束条件</strong></td>
+      <td>什么时候算一个完整答案？</td>
+    </tr>
+    <tr>
+      <td><strong>剪枝</strong></td>
+      <td>哪些分支明显不可能，可以提前砍掉？</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>套到常见题型上，差异其实只在几个细节：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>题型</th>
+      <th>候选集合</th>
+      <th>结束条件</th>
+      <th>是否用 <code class="language-plaintext highlighter-rouge">used</code></th>
+      <th>关键差异</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>排列</strong>（46）</td>
+      <td>所有未使用的数</td>
+      <td><code class="language-plaintext highlighter-rouge">len(path) == n</code></td>
+      <td>✅ 用</td>
+      <td>顺序有关，<code class="language-plaintext highlighter-rouge">[1,2]</code> 和 <code class="language-plaintext highlighter-rouge">[2,1]</code> 不同</td>
+    </tr>
+    <tr>
+      <td><strong>组合</strong>（77）</td>
+      <td><code class="language-plaintext highlighter-rouge">start</code> 之后的数</td>
+      <td><code class="language-plaintext highlighter-rouge">len(path) == k</code></td>
+      <td>❌ 不用</td>
+      <td>顺序无关，靠 <code class="language-plaintext highlighter-rouge">start</code> 保证不回头</td>
+    </tr>
+    <tr>
+      <td><strong>子集</strong>（78）</td>
+      <td><code class="language-plaintext highlighter-rouge">start</code> 之后的数</td>
+      <td><strong>无</strong>（每个节点都是答案）</td>
+      <td>❌ 不用</td>
+      <td>边遍历边收集，不用等到叶子</td>
+    </tr>
+    <tr>
+      <td><strong>分割</strong>（131）</td>
+      <td>从 <code class="language-plaintext highlighter-rouge">start</code> 起的切点</td>
+      <td><code class="language-plaintext highlighter-rouge">start == len(s)</code></td>
+      <td>❌ 不用</td>
+      <td>边切边判断合法性</td>
+    </tr>
+    <tr>
+      <td><strong>棋盘</strong>（51 N 皇后）</td>
+      <td>当前行的每一列</td>
+      <td><code class="language-plaintext highlighter-rouge">row == n</code></td>
+      <td>✅ 用（列 / 对角线）</td>
+      <td>二维选择 + 合法性校验</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>复杂度心里要有数：全排列约 <code class="language-plaintext highlighter-rouge">O(n·n!)</code>，子集约 <code class="language-plaintext highlighter-rouge">O(n·2ⁿ)</code>；另外别忘了 <code class="language-plaintext highlighter-rouge">path[:]</code> 拷贝本身的开销，它常常是复杂度里的主导项之一。</p>
+</blockquote>
+
+<h3 id="26-什么时候该想到回溯判据清单">2.6 什么时候该想到回溯？（判据清单）</h3>
+
+<p>出现下列信号，基本就该上回溯：</p>
+
+<ul>
+  <li>要求<strong>枚举所有方案 / 所有可行解 / 所有组合方式</strong>（“请返回所有……”）；</li>
+  <li>求解过程可以表示成<strong>一串选择</strong>，且每个选择会缩小后续可选范围；</li>
+  <li>需要<strong>试错</strong>：某个选择可能导致后面走不通，必须能“退回来换一个”；</li>
+  <li>问题规模不大但组合爆炸（n ≤ 10~20 的排列 / 子集类），暴力 + 剪枝刚好够用；</li>
+  <li>要求最优解，但没法用 DP（状态无法压缩，或需要输出具体方案而不仅是数值）。</li>
+</ul>
+
+<p>反过来：“能用递推关系描述、子问题答案可以直接合并”→ 用普通递归 / 分治；“子问题大量重叠且有最优子结构”→ 上动态规划。</p>
+
+<h3 id="27-最容易踩的几个坑">2.7 最容易踩的几个坑</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>坑</th>
+      <th>错误写法</th>
+      <th>修正</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>忘了撤销，或撤销位置错</td>
+      <td>改了状态就 <code class="language-plaintext highlighter-rouge">return</code>，跳过 <code class="language-plaintext highlighter-rouge">pop()</code></td>
+      <td>让“做选择”和“撤销”严格对称地待在递归调用两侧</td>
+    </tr>
+    <tr>
+      <td>结果全是空列表</td>
+      <td><code class="language-plaintext highlighter-rouge">res.append(path)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">res.append(path[:])</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">continue</code> 跳过了撤销</td>
+      <td>状态已改，才在 <code class="language-plaintext highlighter-rouge">if</code> 里 <code class="language-plaintext highlighter-rouge">continue</code></td>
+      <td><code class="language-plaintext highlighter-rouge">continue</code> 必须发生在做选择<strong>之前</strong></td>
+    </tr>
+    <tr>
+      <td>终止条件忘了收集答案</td>
+      <td><code class="language-plaintext highlighter-rouge">if 结束: return</code></td>
+      <td>先 <code class="language-plaintext highlighter-rouge">append</code> 再 <code class="language-plaintext highlighter-rouge">return</code></td>
+    </tr>
+    <tr>
+      <td>该撤销的和不该撤销的搞混</td>
+      <td>图 DFS 里撤销了 <code class="language-plaintext highlighter-rouge">visited</code></td>
+      <td>全局只用一次的不撤销（<code class="language-plaintext highlighter-rouge">visited</code>），每条路径各用一次的必须撤销（<code class="language-plaintext highlighter-rouge">used</code>）</td>
+    </tr>
+    <tr>
+      <td>去重漏解 / 多解（如 47）</td>
+      <td>只判 <code class="language-plaintext highlighter-rouge">nums[i] == nums[i-1]</code></td>
+      <td>先排序，再加 <code class="language-plaintext highlighter-rouge">and not used[i-1]</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="3-总结">3. 总结</h2>
+
+<ul>
+  <li><strong>递归</strong>是机制：靠调用栈把问题分解为同类子问题，信息通过<strong>返回值</strong>向上流动，对应数学归纳法。</li>
+  <li><strong>回溯</strong>是策略：把求解变成决策树上的 DFS，靠<strong>做选择 → 递归 → 撤销选择</strong>在共享状态上系统化地试错，靠<strong>剪枝</strong>把暴力变得可用。</li>
+  <li>二者是“手段”与“思想”的关系：<strong>回溯通常由递归承载，但递归远不止于回溯</strong>。</li>
+</ul>
+
+<p>判断一段代码到底是不是回溯，只需要问一句：<strong>它有没有一份“所有分支共享、改完必须改回去”的状态？</strong></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>有没有一份“所有分支共享、改完必须改回去”的状态？
+├─ 有 ──────────────────────→ 回溯（used 必须撤销）
+├─ 没有，只有参数和返回值 ──→ 纯递归（如归并排序）
+└─ 有，但故意不撤销 ────────→ 遍历（如图 DFS 的 visited）
+</code></pre></div></div>
+
+<p>最后用一句最朴素的话收尾：</p>
+
+<blockquote>
+  <p><strong>递归是把问题变小，回溯是把选择试遍；前者要“相信子问题”，后者要“记得擦脚印”。</strong></p>
+</blockquote>
+
+    </div>
+
+    
+    <footer class="post-tags">
+      <span>标签:</span>
+      
+      <a href="/tags/#算法">算法</a>
+      
+    </footer>
+    
+
+    <!-- 上一篇 / 下一篇(Jekyll 内置,按文章顺序) -->
+    <nav class="post-nav">
+      
+      <a class="post-nav-prev" href="/2026/09/19/news/">← 《当机器人学会踩球，AI安全却还没学会刹车》</a>
+      
+      
+      <a class="post-nav-next" href="/2026/10/08/chatgpt&Containers/">ChatGPT 与 Container Tools 插件的配置记录 →</a>
+      
+    </nav>
+
+    <!-- 留言区(Giscus) -->
+    <!-- =============================================================================
+     Giscus 留言区(基于 GitHub Discussions)
+     配置文档:https://giscus.app
+     说明:repo-id 和 category-id 需要你在 giscus.app 页面生成后填入。
+     ============================================================================= -->
+<section class="post-comments">
+  <h2 class="comments-title">留言</h2>
+  <div id="giscus-container"></div>
+</section>
+
+<script>
+  (function () {
+    // 读取当前博客主题(浅色/深色),让 Giscus 初始主题与之匹配
+    var currentTheme = document.documentElement.getAttribute('data-theme') === 'dark'
+      ? 'dark'
+      : 'light';
+
+    var container = document.getElementById('giscus-container');
+    var script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', 'VoVL773/VoVL773.github.io');
+    script.setAttribute('data-repo-id', 'R_kgDOUOAOAA');
+    script.setAttribute('data-category', 'Announcements');
+    script.setAttribute('data-category-id', 'DIC_kwDOUOAOAM4DFTd6');
+    script.setAttribute('data-mapping', 'pathname');
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'bottom');
+    script.setAttribute('data-theme', currentTheme);
+    script.setAttribute('data-lang', 'zh-CN');
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+    container.appendChild(script);
+  })();
+</script>
+
+  </article>
+
+  <!-- 右侧目录(TOC):由下方脚本从 .post-content 内的 h2/h3 自动生成,
+       窄屏(<=1024px)由 CSS 隐藏,不影响移动端阅读。 -->
+  <aside class="toc" aria-label="文章目录">
+    <div class="toc-inner">
+      <div class="toc-title">目录</div>
+      <nav id="toc-nav" class="toc-nav"></nav>
+    </div>
+  </aside>
+</div>
+
+<!-- ===== 文章目录(TOC)交互脚本 =====
+     职责:从 .post-content 抓取 h2/h3 自动生成右侧目录链接,
+     点击平滑跳转、滚动时高亮当前章节。
+     内联在此处而非外链:TOC 逻辑与 TOC 结构强相关,且仅文章页需要。 -->
+<script>
+  (function () {
+    var content = document.querySelector('.post-content');
+    var nav = document.getElementById('toc-nav');
+    var tocAside = document.querySelector('.toc');
+    if (!content || !nav) return;
+
+    // 收集文章正文中的二级、三级标题(kramdown 已自动生成 id)
+    var headings = Array.prototype.slice.call(content.querySelectorAll('h2, h3'));
+
+    // 文章没有标题时,隐藏整个目录侧栏,布局自动回退为单栏
+    if (headings.length === 0) {
+      if (tocAside) tocAside.style.display = 'none';
+      return;
+    }
+
+    // 兜底:为没有 id 的标题补一个,避免点击跳转失效
+    headings.forEach(function (h, i) {
+      if (!h.id) h.id = 'toc-heading-' + i;
+    });
+
+    // 生成目录链接:h2 顶格,h3 缩进
+    var frag = document.createDocumentFragment();
+    headings.forEach(function (h) {
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      a.className = 'toc-level-' + h.tagName.toLowerCase().slice(1);
+      a.setAttribute('data-target', h.id);
+      frag.appendChild(a);
+    });
+    nav.appendChild(frag);
+
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+    var linksById = {};
+    links.forEach(function (a) { linksById[a.getAttribute('data-target')] = a; });
+
+    // 点击:平滑滚动到对应标题,并更新地址栏 hash(不触发跳转)
+    links.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = document.getElementById(a.getAttribute('data-target'));
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', '#' + a.getAttribute('data-target'));
+      });
+    });
+
+    // 滚动高亮:找到离视口顶部最近(且已滚过)的标题,用 rAF 节流
+    var OFFSET = 100; // 顶部留白,避免标题贴着视口顶就算"当前"
+    var ticking = false;
+
+    function updateActive() {
+      ticking = false;
+      var scrollY = window.scrollY;
+      var current = null;
+      for (var i = 0; i < headings.length; i++) {
+        if (headings[i].getBoundingClientRect().top + scrollY - OFFSET <= scrollY) {
+          current = headings[i];
+        }
+      }
+      links.forEach(function (l) { l.classList.remove('is-active'); });
+      if (current && linksById[current.id]) {
+        linksById[current.id].classList.add('is-active');
+      }
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActive);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateActive();
+  })();
+</script>
+
+<!-- ===== Mermaid 图表(按需加载)=====
+     仅当本文真的有 ```mermaid 代码块时才引入,避免其它文章白白下载 3.5MB 的库。
+     content 在这里是已渲染完的 HTML,所以直接按 class 判断即可。 -->
+
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        <a href="https://space.bilibili.com/" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+</body>
+</html>

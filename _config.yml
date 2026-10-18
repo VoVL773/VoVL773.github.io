@@ -27,12 +27,10 @@ permalink: /:year/:month/:day/:title/           # 文章 URL 风格(如 /2026/09
 theme: null                                     # 不使用外部主题,全部布局自写
 
 # ===== 插件(仅 GitHub Pages 白名单内可用)=====
-plugins:
-  - jekyll-paginate                             # 首页分页,github-pages gem 自带,GH Pages 白名单内
+plugins: []
 
 # ===== 分页 =====
-paginate: 5                                     # 首页每页文章数
-paginate_path: "/page:num/"                     # 第 2 页地址为 /page2/(分页仅对根目录 index.html 生效)
+# 首页不再使用服务端分页,全部文章页(/posts/)使用客户端 JS 分页
 
 # ===== 自定义集合(Collections)=====
 # 和 _posts 机制一样:往对应目录丢 .md 文件,Jekyll 自动收集。

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    有效的括号 – 算法题解
+  </title>
+
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+  <header class="site-header algo-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/algorithm/">算法题解</a>
+
+    <nav class="site-nav">
+      <a href="/algorithm/">首页</a>
+      <a href="/algorithm/insights/">见解</a>
+      <a href="/">博客</a>
+      <a href="/algorithm/about/">关于</a>
+    </nav>
+
+    <div class="header-actions">
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">🌙</button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    <div class="container">
+      <article class="algo-detail">
+  <a class="algo-back" href="/algorithm/">← 返回题解列表</a>
+
+  <header class="algo-problem-head">
+    <h1 class="algo-problem-title">有效的括号</h1>
+    <div class="algo-problem-meta">
+      
+      <span class="algo-card-diff algo-diff-简单">简单</span>
+      
+      
+      <div class="algo-card-tags">
+        <span class="algo-tag">栈</span><span class="algo-tag">字符串</span>
+      </div>
+      
+    </div>
+  </header>
+
+  <div class="algo-problem-content">
+    <h2 id="题目描述">题目描述</h2>
+
+<p>给定一个只包括 <code class="language-plaintext highlighter-rouge">(</code>、<code class="language-plaintext highlighter-rouge">)</code>、<code class="language-plaintext highlighter-rouge">{</code>、<code class="language-plaintext highlighter-rouge">}</code>、<code class="language-plaintext highlighter-rouge">[</code>、<code class="language-plaintext highlighter-rouge">]</code> 的字符串 <code class="language-plaintext highlighter-rouge">s</code>，判断字符串是否有效。</p>
+
+<p>有效字符串需满足：</p>
+<ol>
+  <li>左括号必须用相同类型的右括号闭合。</li>
+  <li>左括号必须以正确的顺序闭合。</li>
+  <li>每个右括号都有一个对应的相同类型的左括号。</li>
+</ol>
+
+<h2 id="思路">思路</h2>
+
+<p>用栈匹配括号。遇到左括号入栈，遇到右括号则检查栈顶是否为对应的左括号：若是则弹栈，否则无效。最后栈必须为空。</p>
+
+<ul>
+  <li>时间复杂度：O(n)</li>
+  <li>空间复杂度：O(n)</li>
+</ul>
+
+<h2 id="c-解法">C++ 解法</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stack&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">bool</span> <span class="n">isValid</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">stack</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">st</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">char</span> <span class="n">c</span> <span class="o">:</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'('</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">'{'</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">'['</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">st</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">st</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+                <span class="kt">char</span> <span class="n">top</span> <span class="o">=</span> <span class="n">st</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">((</span><span class="n">c</span> <span class="o">==</span> <span class="sc">')'</span> <span class="o">&amp;&amp;</span> <span class="n">top</span> <span class="o">!=</span> <span class="sc">'('</span><span class="p">)</span> <span class="o">||</span>
+                    <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'}'</span> <span class="o">&amp;&amp;</span> <span class="n">top</span> <span class="o">!=</span> <span class="sc">'{'</span><span class="p">)</span> <span class="o">||</span>
+                    <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">']'</span> <span class="o">&amp;&amp;</span> <span class="n">top</span> <span class="o">!=</span> <span class="sc">'['</span><span class="p">))</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+                <span class="n">st</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">st</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="python-解法">Python 解法</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="p">{</span><span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">}</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">{</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">]</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">[</span><span class="sh">'</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">stack</span> <span class="ow">or</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pairs</span><span class="p">[</span><span class="n">ch</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="bp">False</span>
+                <span class="n">stack</span><span class="p">.</span><span class="nf">pop</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stack</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">stack</span>
+</code></pre></div></div>
+
+  </div>
+</article>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        <a href="https://space.bilibili.com/" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <script src="/assets/js/theme.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    机器人是怎么读懂 ican 提供的"二维码"的 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    <div class="post-layout">
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">机器人是怎么读懂 ican 提供的"二维码"的</h1>
+      <time class="post-date">2026-10-13</time>
+    </header>
+
+    <div class="post-content">
+      <blockquote>
+  <p>本博客只作学习交流，涉及到部分ican比赛的相关内容，如有侵权，立刻删除</p>
+</blockquote>
+
+<h2 id="引言">引言：</h2>
+
+<p>假如现在有一个需求：用比赛官方提供的 24 张二维码，读出对应的任务投放顺序——比如顺序 ID 1 对应“红、黄、黑、白”。4 种颜色做全排列正好 4! = 24 种，全部靠读码获得。</p>
+
+<p>先澄清一个容易含糊的地方：官方手册管它叫”二维码”，但它不是 QR 码。 QR 码里编码的是任意文本，要靠纠错算法把内容”解”出来；而窗户上这张是 ArUco 基准标记（fiducial marker），图案来自一个预先定义好的字典——代码里的 DICT_4X4_50 一共只有 50 个固定图案。识别结果不是”内容”，而是图案在字典里的编号 0~49。 这个区别决定了两件事：一是代码里没有”解码字符串”这一步，只有 detectMarkers() 返回的 ids；二是标记本身不携带任何颜色信息，颜色顺序只能查表得到——查的就是官方《判分细则 V1.0》第 7 章的表 8</p>
+
+<p><img src="/assets/images/2026_10_13/24个ArUco标记与颜色顺序图表.png" alt="'二维码'示例" /></p>
+
+<p>？ 我要怎么通过这个’二维码’获取到背后的颜色顺序呢 如果你也有这样的疑问，那接下来这个代码就是一个实现方法了</p>
+
+<h2 id="正式开始qr_detectorpy-讲解">正式开始：qr_detector.py 讲解</h2>
+
+<p>整个程序是怎么工作的：</p>
+<pre><code class="language-mermaid">flowchart TD
+    A["安装资源 setup.py"] --&gt; B["加载 ArUco 字典与检测参数"]
+    B --&gt; C["建立 24 种颜色排列映射表"]
+    C --&gt; D["输入摄像头图像"]
+    D --&gt; E["QrDetector.detect()"]
+    E --&gt; F{"识别到标记？"}
+    F -- 是 --&gt; G["获得 marker_id"]
+    F -- 否 --&gt; H["寻找疑似面板"]
+    H --&gt; I["裁剪图像，再次检测"]
+    I --&gt; J{"补救识别成功？"}
+    J -- 是 --&gt; G
+    J -- 否 --&gt; K["返回 None"]
+    G --&gt; L["marker_id + 1"]
+    L --&gt; M["得到程序内部编号 1~24"]
+    M --&gt; N["colors_for_id() 查询颜色顺序"]
+    N --&gt; O["供后续任务调度使用"]
+</code></pre>
+<h3 id="先看开头-全排列生成与转化">先看开头 全排列生成与转化</h3>
+
+<p>关键防线:sorted 全排列只是”恰好与官方一致”的推导 这里已经做了证明，如果不一致的话需要另外设置一个对照表</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span>
+<span class="kn">from</span> <span class="n">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>       <span class="c1">#导入未来特性让 Python 延迟处理类型说明 它让 Python 延迟处理类型注解，避免大型工程中因为类型未定义、导入顺序、循环引用导致的问题, 而 Optional 才是处理一个返回值可能有多种情况的工具。
+</span><span class="kn">import</span> <span class="n">itertools</span> <span class="c1">#生成排列 24种二维码的排列
+</span><span class="kn">from</span> <span class="n">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span> <span class="c1">#字典 列表 处理多返回值 元组
+</span>
+<span class="kn">import</span> <span class="n">cv2</span>   <span class="c1">#Opencv图像识别库
+</span><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span> <span class="c1">#科学计算库 处理图像数据
+</span>
+<span class="n">COLOR_TO_NUM</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="sh">"</span><span class="s">red</span><span class="sh">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="sh">"</span><span class="s">yellow</span><span class="sh">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="sh">"</span><span class="s">black</span><span class="sh">"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="sh">"</span><span class="s">white</span><span class="sh">"</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span> <span class="c1">#给颜色设置编号 方便之后全排列
+</span><span class="n">NUM_TO_COLOR</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">COLOR_TO_NUM</span><span class="p">.</span><span class="nf">items</span><span class="p">()}</span>  <span class="c1">#字典推导式 翻转字典键值对
+</span>
+<span class="n">_PERMS</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="p">...]]</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">itertools</span><span class="p">.</span><span class="nf">permutations</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]))</span> <span class="c1">#生成全排列
+</span><span class="n">ID_TO_NUMS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="p">...]]</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span> <span class="n">p</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">_PERMS</span><span class="p">)}</span> <span class="c1">#建立顺序 ID 与数字序列的映射
+</span><span class="n">ID_TO_COLORS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="p">...]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">k</span><span class="p">:</span> <span class="nf">tuple</span><span class="p">(</span><span class="n">NUM_TO_COLOR</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ID_TO_NUMS</span><span class="p">.</span><span class="nf">items</span><span class="p">()</span>
+<span class="p">}</span> <span class="c1">#把数字序列转换成颜色序列
+</span><span class="n">NUMS_TO_ID</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="p">...],</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ID_TO_NUMS</span><span class="p">.</span><span class="nf">items</span><span class="p">()}</span> <span class="c1">#这样就能根据数字排列反查 ID。例如 (1, 2, 3, 4) 对应 ID 1。
+</span>
+
+<span class="k">def</span> <span class="nf">colors_for_id</span><span class="p">(</span><span class="n">order_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="p">...]:</span>
+    <span class="k">return</span> <span class="n">ID_TO_COLORS</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">order_id</span><span class="p">,</span> <span class="p">())</span>         <span class="c1">#根据顺序ID 获取 颜色顺序
+</span>
+
+<span class="k">def</span> <span class="nf">id_for_colors</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>    <span class="c1">#根据颜色序列查询 ID 
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">nums</span> <span class="o">=</span> <span class="nf">tuple</span><span class="p">(</span><span class="n">COLOR_TO_NUM</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">)</span>
+    <span class="nf">except </span><span class="p">(</span><span class="nb">KeyError</span><span class="p">,</span> <span class="nb">TypeError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="n">NUMS_TO_ID</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+
+</code></pre></div></div>
+<p>这部分相当于提前制作了一本编号查询字典，而不是每次识别图片时重新计算排列。
+举个例子，下面只是映射机制的示例：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>编号</th>
+      <th>数字排列</th>
+      <th>颜色排列</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>(1, 2, 3, 4)</td>
+      <td>red、yellow、black、white</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>(1, 2, 4, 3)</td>
+      <td>red、yellow、white、black</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>(1, 3, 2, 4)</td>
+      <td>red、black、yellow、white</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>这几部分代码分别干什么</p>
+
+<p><img src="/assets/images/2026_10_13/sometosome.png" alt="TO&amp;for" /></p>
+
+<p>简单说就是给颜色顺序全排列</p>
+
+<h3 id="图像识别类-初始化-告诉opencv图片怎么识别">图像识别类 初始化 (告诉Opencv图片怎么识别)</h3>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">QrDetector</span><span class="p">:</span>
+    <span class="n">MIN_MARKER_PX</span> <span class="o">=</span> <span class="mi">24</span> <span class="c1">#识别的ArUco的边长起码24像素  二维码过远就开始识别影响结果
+</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">dict_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">aruco</span><span class="p">.</span><span class="n">DICT_4X4_50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span> <span class="c1">#根据 ArUco标记集合获取ID匹配图片 这里比赛官方按DICT_4x4_50 里面已经有按前24(0~23)个的项的编码黑白图生成好并按顺序排好的图片了，只需要识别出来按黑白图的编码对应就知道ID为多少就知道指定的是那个图了 之后按ID对应颜色序号即可
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">dictionary</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">aruco</span><span class="p">.</span><span class="nc">Dictionary_get</span><span class="p">(</span><span class="n">dict_id</span><span class="p">)</span> <span class="c1">#根据字典标识获取真正用于识别的字典对象
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">aruco</span><span class="p">.</span><span class="nc">DetectorParameters_create</span><span class="p">()</span> <span class="c1">#创建一组检测配置参数
+</span>        <span class="c1">#=========检测前预处理========
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">adaptiveThreshWinSizeMin</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1">#自适应阈值 窗口大小从5到45之间选择最适合的那个大小图像处理  
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">adaptiveThreshWinSizeMax</span> <span class="o">=</span> <span class="mi">45</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">adaptiveThreshWinSizeStep</span> <span class="o">=</span> <span class="mi">6</span> <span class="c1">#递进的尝试6次(5-11-17-23-...41)
+</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">minMarkerPerimeterRate</span> <span class="o">=</span> <span class="mf">0.02</span>      <span class="c1">#筛选合适的二维码 最小周长不能太小
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">maxMarkerPerimeterRate</span> <span class="o">=</span> <span class="mf">4.0</span>        <span class="c1"># 最大周长 就是不能超过摄像头的范围 所以是四 例如摄像头为800*800的 4是保证周长为800*4的图片能在候选轮廓里，但是实际的最优应该通过测试寻找最优的参数
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">polygonalApproxAccuracyRate</span> <span class="o">=</span> <span class="mf">0.05</span>    <span class="c1">#判断摄像头识别出来的边缘是否可以用一个四边形来近似(实际在仿真中摄像头拍到的轮廓不一定就是规整的正方形) 这里允许角度误差为假设某个轮廓周长是 400 px： 400 * 0.05 = 20 px 可以把 20 px 理解为近似过程使用的误差尺度，而不是“允许二维码有 5% 的面积错误”，也不是“只要四个角偏差小于 20 px 就一定通过”。参数较小： 近似更严格，复杂边缘可能难以简化。参数较大： 近似更宽松，复杂轮廓可能更容易被简化，但也可能让不合适的形状进入候选阶段。
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">cornerRefinementMethod</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">aruco</span><span class="p">.</span><span class="n">CORNER_REFINE_SUBPIX</span>   <span class="c1">#精确识别到的图像的四个角 (端点) 角度优化 就是近似到精准的小数角点优化可以提高：ID识别稳定性，远距离检测成功率，边缘模糊情况下的可靠性
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">last_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>    <span class="c1"># 记录最近检测成功状态与结果防止下次未检验到时目标与信息丢失
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">last_size_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+</code></pre></div></div>
+<p>对于DICT_4x4_50为什么可以匹配，我们拿个流程图理解一下</p>
+
+<p><img src="/assets/images/2026_10_13/ArUco识别原理流程图解.png" alt="DICT_4x4_50" /></p>
+
+<p>如果还是不太明白的话我们接着往下看</p>
+
+<h3 id="图像识别类方法-_detect_in-如何从图像中找到标记">图像识别类方法 _detect_in() (如何从图像中找到标记)</h3>
+<p>函数逻辑</p>
+
+<pre><code class="language-mermaid">
+flowchart TD
+    A["_detect_in(gray)"] --&gt; B["cv2.aruco.detectMarkers()"]
+    B --&gt; C["寻找候选轮廓和四边形"]
+    C --&gt; D["解码标记内部黑白图案"]
+    D --&gt; E["与 DICT_4X4_50 字典匹配"]
+    E --&gt; F{"ids 是否为空？"}
+    F -- 是 --&gt; G["返回 None"]
+    F -- 否 --&gt; H["遍历所有识别结果"]
+    H --&gt; I["计算每个标记的一条边长"]
+    I --&gt; J["选择边长最大的标记"]
+    J --&gt; K{"最大边长 ≥ 24 px？"}
+    K -- 否 --&gt; G
+    K -- 是 --&gt; L["返回 marker_id 和边长"]
+
+
+</code></pre>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_detect_in</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">gray</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">):</span>  <span class="c1">#定义一个类内部函数 在给定灰度图上找码 (从输入的灰度图上找到对应的码从而在DICT_4x4_50里找到匹配的码)
+</span>        <span class="sh">"""</span><span class="s">
+        输入：gray ： 摄像头看到的图片
+            self.dictionary: 告诉 OpenCV：用哪一本密码本。 也就是 DICT_4x4_50
+            self.params: 告诉它怎么找
+        ---        
+        输出：
+            corners: 四个角的坐标
+            ids: 使用密码本匹配到的ID
+            ——：被拒绝的候选点。(第三个不要)
+        </span><span class="sh">"""</span>
+        <span class="n">corners</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">aruco</span><span class="p">.</span><span class="nf">detectMarkers</span><span class="p">(</span> 
+            <span class="n">gray</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">params</span><span class="p">)</span> <span class="c1">#调用 OpenCV ArUco算法进行识别。 输入灰度图 gray-&gt;寻找候选轮廓和四边形-&gt;提取标记内部的黑白编码-&gt;与 self.dictionary 中的编码进行匹配-&gt;返回 corners、ids、rejected
+</span>        <span class="k">if</span> <span class="n">ids</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nf">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">#判断有没有返回ids
+</span>            <span class="k">return</span> <span class="bp">None</span>    
+        <span class="c1">#=====选择最大边长的二维码识别结果=====  
+</span>        <span class="n">best_id</span><span class="p">,</span> <span class="n">best_size</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">pts</span><span class="p">,</span> <span class="n">mid</span> <span class="ow">in</span> <span class="nf">zip</span><span class="p">(</span><span class="n">corners</span><span class="p">,</span> <span class="n">ids</span><span class="p">.</span><span class="nf">flatten</span><span class="p">()):</span>
+            <span class="n">side</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="nf">norm</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">side</span> <span class="o">&gt;</span> <span class="n">best_size</span><span class="p">:</span>
+                <span class="n">best_size</span><span class="p">,</span> <span class="n">best_id</span> <span class="o">=</span> <span class="n">side</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">best_id</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">best_size</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">MIN_MARKER_PX</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="n">best_id</span><span class="p">,</span> <span class="n">best_size</span>
+
+</code></pre></div></div>
+
+<p>到这步还有一个问题</p>
+
+<p><img src="/assets/images/2026_10_13/误判.png" alt="误判情况" /></p>
+
+<p>窗框本身也是矩形，会不会被当成二维码面板？ 答案是：会有可能</p>
+
+<h3 id="图像识别类方法-_panel_boxes-使用了形状筛选和二次识别来降低误判">图像识别类方法 _panel_boxes() (使用了形状筛选和二次识别来降低误判)</h3>
+
+<p>具体实现思路</p>
+<pre><code class="language-mermaid">flowchart TD
+    A["_panel_boxes(gray)"] --&gt; B["OTSU 自动阈值二值化"]
+    B --&gt; C["findContours 查找外部轮廓"]
+    C --&gt; D["按面积从大到小排序"]
+    D --&gt; E["最多检查前 18 个轮廓"]
+    E --&gt; F{"宽、高都 ≥ 30 px？"}
+    F -- 否 --&gt; X["丢弃"]
+    F -- 是 --&gt; G{"宽高比在 0.7~1.45？"}
+    G -- 否 --&gt; X
+    G -- 是 --&gt; H{"面积 ≤ 图像的 40%？"}
+    H -- 否 --&gt; X
+    H -- 是 --&gt; I["加入候选面板列表"]
+    I --&gt; J{"已收集 6 个？"}
+    J -- 否 --&gt; E
+    J -- 是 --&gt; K["返回候选矩形"]
+    K --&gt; L["裁剪候选区域"]
+    L --&gt; M["_detect_in() 重新识别编码"]
+    M --&gt; N{"编码匹配成功？"}
+    N -- 是 --&gt; O["接受识别结果"]
+    N -- 否 --&gt; P["尝试其他候选区域"]
+
+</code></pre>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#找“可能贴二维码的白色面板”
+</span>    <span class="nd">@staticmethod</span>  <span class="c1">#不依赖于类，属于工具函数
+</span>    <span class="k">def</span> <span class="nf">_panel_boxes</span><span class="p">(</span><span class="n">gray</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">max_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">):</span> <span class="c1">#输入灰度图 ，最大候选区为6
+</span>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">bw</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">threshold</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span>
+                                  <span class="n">cv2</span><span class="p">.</span><span class="n">THRESH_BINARY</span> <span class="o">+</span> <span class="n">cv2</span><span class="p">.</span><span class="n">THRESH_OTSU</span><span class="p">)</span> <span class="c1">#二值化: 将原图变成 000111这种图 使用OTSU自动寻找阈值最佳的黑白分界 例如120 小于120 记录0 为黑色 大于120 记录255 为白色 
+</span>        <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>   
+        <span class="n">cnts</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">findContours</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">RETR_EXTERNAL</span><span class="p">,</span>          
+                                   <span class="n">cv2</span><span class="p">.</span><span class="n">CHAIN_APPROX_SIMPLE</span><span class="p">)</span>     <span class="c1">#寻找边界 ,RETR_EXTERNAL意思：只找最外层轮廓 CHAIN_APPROX_SIMPLE 轮廓压缩。
+</span>        <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">gray</span><span class="p">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>  <span class="c1">#获取图片大小
+</span>        <span class="n">boxes</span> <span class="o">=</span> <span class="p">[]</span> 
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">cnts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">cv2</span><span class="p">.</span><span class="n">contourArea</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)[:</span><span class="n">max_n</span> <span class="o">*</span> <span class="mi">3</span><span class="p">]:</span> <span class="c1">#计算面积并降序 前18个最大轮廓
+</span>            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">boundingRect</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">w</span> <span class="o">&lt;</span> <span class="mi">30</span> <span class="ow">or</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>     <span class="c1">#过滤太小
+</span>                <span class="k">continue</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.7</span> <span class="o">&lt;</span> <span class="n">w</span> <span class="o">/</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="mf">1.45</span><span class="p">):</span>     <span class="c1">#判断正方形  
+</span>                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">w</span> <span class="o">*</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">W</span> <span class="o">*</span> <span class="n">H</span><span class="p">:</span>             <span class="c1">#过滤太大
+</span>                <span class="k">continue</span>
+            <span class="n">boxes</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">boxes</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">max_n</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">boxes</span>  <span class="c1">#返回最可能是二维码的位置 初次筛选 可能有误判区域
+</span>
+</code></pre></div></div>
+
+<p>_panel_boxes() 只负责找出外观上像面板的候选矩形，它并没有识别出二维码。</p>
+
+<p>_detect_in() 才负责调用 ArUco 检测算法，判断候选区域里是否真的存在能匹配字典的标记。</p>
+
+<p>比如窗框满足正方形比例、尺寸也合适，它就可能进入候选列表。但如果里面没有能够匹配 DICT_4X4_50 的有效标记，通常就不会被当成有效结果。</p>
+
+<p>不过，如果窗框内部恰好包含可被算法误解为有效标记的图案，仍有误识别可能。因此，几何筛选是缩小搜索范围，编码匹配才是进一步验证。</p>
+
+<h3 id="图像识别类核心函数-detect-调用和进一步几何筛选">图像识别类核心函数 detect() (调用和进一步几何筛选)</h3>
+
+<pre><code class="language-mermaid">
+flowchart TD
+    A["detect(image_bgr)"] --&gt; B{"图像为空？"}
+    B -- 是 --&gt; C["返回 None"]
+    B -- 否 --&gt; D["BGR 转灰度图"]
+    D --&gt; E["_detect_in(gray)：整图检测"]
+    E --&gt; F{"找到标记且边长 ≥ 24 px？"}
+    F -- 是 --&gt; G["选择最大标记"]
+    F -- 否 --&gt; H["_panel_boxes(gray)"]
+    H --&gt; I["最多筛选 6 个疑似面板"]
+    I --&gt; J["面板：先用原框裁剪"]
+    J --&gt; K["裁剪区调用 _detect_in()"]
+    K --&gt; L{"成功？"}
+    L -- 是 --&gt; G
+    L -- 否 --&gt; M["把框向外扩 6% 再裁一次"]
+    M --&gt; N{"成功？"}
+    N -- 是 --&gt; G
+    N -- 否 --&gt; O["换下一个候选面板"]
+    O --&gt; J
+    G --&gt; N["保存 last_size_px"]
+    N --&gt; O["保存 last_id = marker_id + 1"]
+    O --&gt; P["返回编号 1~24"]
+    C --&gt; Q["结束"]
+    P --&gt; Q
+
+</code></pre>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">detect</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">image_bgr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">],</span>
+               <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>  
+        
+        <span class="k">if</span> <span class="n">image_bgr</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">image_bgr</span><span class="p">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">#防止没有图像
+</span>            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">cvtColor</span><span class="p">(</span><span class="n">image_bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>  <span class="c1">#BRG转灰度
+</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_detect_in</span><span class="p">(</span><span class="n">gray</span><span class="p">)</span> <span class="c1">#检测如果成功就直接返回
+</span>        <span class="n">how</span> <span class="o">=</span> <span class="sh">"</span><span class="s">整幅画面</span><span class="sh">"</span>
+        <span class="k">if</span> <span class="n">found</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>  <span class="c1">#可能被误判干扰
+</span>            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">_panel_boxes</span><span class="p">(</span><span class="n">gray</span><span class="p">)):</span> <span class="c1">#调用 _panel_boxes(gray) 寻找白色面板
+</span>                <span class="k">for</span> <span class="n">pad</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="nf">int</span><span class="p">(</span><span class="mf">0.06</span> <span class="o">*</span> <span class="n">w</span><span class="p">)):</span> <span class="c1">#先按面板原框试；失败后把框向外扩 6% 再试(pad 取负→左边界左移、右边界右移)
+</span>                    <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">pad</span><span class="p">),</span> <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">pad</span><span class="p">)</span>
+                    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="n">gray</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span> <span class="o">+</span> <span class="n">w</span> <span class="o">-</span> <span class="n">pad</span><span class="p">),</span> \
+                             <span class="nf">min</span><span class="p">(</span><span class="n">gray</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span> <span class="o">+</span> <span class="n">h</span> <span class="o">-</span> <span class="n">pad</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span> <span class="o">&lt;</span> <span class="mi">30</span> <span class="ow">or</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">y0</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_detect_in</span><span class="p">(</span><span class="n">gray</span><span class="p">[</span><span class="n">y0</span><span class="p">:</span><span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span><span class="n">x1</span><span class="p">])</span> <span class="c1">#裁剪面板
+</span>                    <span class="k">if</span> <span class="n">found</span><span class="p">:</span>
+                        <span class="n">how</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">面板</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">裁剪(</span><span class="si">{</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span><span class="si">}</span><span class="s">px)</span><span class="sh">"</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="n">found</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">found</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="c1">#如果真找到了 保存ID与大小
+</span>        <span class="n">marker_id</span><span class="p">,</span> <span class="n">side</span> <span class="o">=</span> <span class="n">found</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">last_size_px</span> <span class="o">=</span> <span class="n">side</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">last_id</span> <span class="o">=</span> <span class="n">marker_id</span> <span class="o">+</span> <span class="mi">1</span>          
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">    识别途径=</span><span class="si">{</span><span class="n">how</span><span class="si">}</span><span class="s"> marker_id=</span><span class="si">{</span><span class="n">marker_id</span><span class="si">}</span><span class="s"> 边长=</span><span class="si">{</span><span class="n">side</span><span class="si">:</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="s">px</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">last_id</span>
+</code></pre></div></div>
+
+<p>detect() 采用的是一种常见的先直接检测、失败后再补救的策略。</p>
+<ul>
+  <li>第一次：直接扫描整张图，减少不必要的处理。</li>
+  <li>第二次：如果整图没有找到符合条件的标记，就尝试寻找疑似面板。</li>
+  <li>第三次：裁剪候选面板再识别。每个面板<strong>先按原框裁</strong>，失败后把框<strong>向外扩 6%</strong> 再试一次。</li>
+  <li>最后：成功则返回编号，失败则返回 None。</li>
+</ul>
+
+<h3 id="检验检测效果">检验检测效果</h3>
+
+<p>辅助类方法</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#调试显示，把识别结果画出来 画框和显示ID信息
+</span>    <span class="k">def</span> <span class="nf">annotate</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">image_bgr</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">image_bgr</span><span class="p">.</span><span class="nf">copy</span><span class="p">()</span>
+        <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">cvtColor</span><span class="p">(</span><span class="n">image_bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+        <span class="n">corners</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">aruco</span><span class="p">.</span><span class="nf">detectMarkers</span><span class="p">(</span>
+            <span class="n">gray</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="n">aruco</span><span class="p">.</span><span class="nf">drawDetectedMarkers</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">pts</span><span class="p">,</span> <span class="n">mid</span> <span class="ow">in</span> <span class="nf">zip</span><span class="p">(</span><span class="n">corners</span><span class="p">,</span> <span class="n">ids</span><span class="p">.</span><span class="nf">flatten</span><span class="p">()):</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nf">int</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">cv2</span><span class="p">.</span><span class="nf">putText</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="sa">f</span><span class="sh">"</span><span class="s">ID=</span><span class="si">{</span><span class="nf">int</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nf">max</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)),</span>
+                            <span class="n">cv2</span><span class="p">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>     
+        <span class="k">return</span> <span class="n">out</span>
+
+</code></pre></div></div>
+
+<p>具体流程</p>
+
+<pre><code class="language-mermaid">flowchart TD
+    A["运行 qr_detector.py"] --&gt; B["确定图片目录 base"]
+    B --&gt; C["创建 QrDetector"]
+    C --&gt; D["循环 i = 0~23"]
+    D --&gt; E["读取 aruco_4x4_50_id_XX.png"]
+    E --&gt; F["det.detect(img)"]
+    F --&gt; G{"返回值等于 i+1？"}
+    G -- 是 --&gt; H["继续检查下一张"]
+    G -- 否 --&gt; I["记录错误 bad"]
+    H --&gt; J{"24 张检查完？"}
+    I --&gt; J
+    J -- 否 --&gt; D
+    J -- 是 --&gt; K{"bad 为空？"}
+    K -- 是 --&gt; L["打印 24 个码全部正确"]
+    K -- 否 --&gt; M["打印错误编号及结果"]
+    L --&gt; N["抽查指定编号的颜色顺序"]
+    M --&gt; N
+
+</code></pre>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="c1"># 自测：把 24 张码全跑一遍
+</span>    <span class="kn">import</span> <span class="n">os</span>
+    <span class="kn">import</span> <span class="n">sys</span>
+
+    <span class="n">base</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="sh">"</span><span class="s">.</span><span class="sh">"</span>
+    <span class="n">det</span> <span class="o">=</span> <span class="nc">QrDetector</span><span class="p">()</span>
+    <span class="n">bad</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">24</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="sa">f</span><span class="sh">"</span><span class="s">aruco_4x4_50_id_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="mi">02</span><span class="n">d</span><span class="si">}</span><span class="s">.png</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">imread</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">got</span> <span class="o">=</span> <span class="n">det</span><span class="p">.</span><span class="nf">detect</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">got</span> <span class="o">!=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">bad</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">got</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">bad</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">【ERROR】 有错:</span><span class="sh">"</span><span class="p">,</span> <span class="n">bad</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">【SUCCESS】24 个码全部识别正确（顺序 ID 1~24）</span><span class="sh">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="se">\n</span><span class="s">表 8 抽查：</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">24</span><span class="p">):</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">   ID </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="mi">2</span><span class="n">d</span><span class="si">}</span><span class="s"> → </span><span class="si">{</span><span class="sh">'</span><span class="s">、</span><span class="sh">'</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="nf">colors_for_id</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="实测这张成绩单覆盖不到什么">实测：这张成绩单覆盖不到什么</h4>
+
+<p>打开 <code class="language-plaintext highlighter-rouge">debug=True</code> 跑完 24 张，统计每一张实际走的是哪条路径：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>路径统计: {'整幅画面': 24}
+面板裁剪分支被触发次数: 0
+</code></pre></div></div>
+
+<p>也就是说 <code class="language-plaintext highlighter-rouge">_panel_boxes()</code> 和那段 <code class="language-plaintext highlighter-rouge">pad</code> 边距逻辑，<strong>一次都没有被执行过</strong>。原因很直接：这 24 张原图本身就是整幅画面的标记，第一次整图检测就成功了，永远走不到面板兜底那条路。</p>
+
+<p>由此这张成绩单的边界也就清楚了：</p>
+
+<ul>
+  <li>24/24 全绿，只证明“<strong>整图 → 字典匹配 → <code class="language-plaintext highlighter-rouge">+1</code> 编号</strong>”这条链子接对了；</li>
+  <li>倾斜、模糊、缩放、遮挡，以及<strong>面板裁剪这条兜底路径</strong>，都不在覆盖范围内。</li>
+</ul>
+
+<h4 id="那-pad-该往哪个方向偏">那 <code class="language-plaintext highlighter-rouge">pad</code> 该往哪个方向偏？</h4>
+
+<p>为了弄清这件事，我搭了一个等价场景：白面板 + 与面板同亮的窗框横梁紧贴面板顶边（500×500，标记取官方 <code class="language-plaintext highlighter-rouge">id_20</code>、160px），把边距从 −40 扫到 +36：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"><code class="language-plaintext highlighter-rouge">pad</code></th>
+      <th>裁剪尺寸</th>
+      <th>检测结果</th>
+      <th>方向</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">−40</td>
+      <td>340×364</td>
+      <td><code class="language-plaintext highlighter-rouge">id=20</code> ✅</td>
+      <td>外扩</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">−24</td>
+      <td>308×332</td>
+      <td><code class="language-plaintext highlighter-rouge">id=20</code> ✅</td>
+      <td>外扩</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">−14</td>
+      <td>288×312</td>
+      <td><code class="language-plaintext highlighter-rouge">id=20</code> ✅</td>
+      <td>外扩（＝代码的第二次迭代）</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">±0</td>
+      <td>260×284</td>
+      <td><code class="language-plaintext highlighter-rouge">id=20</code> ✅</td>
+      <td>原框</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">+12</td>
+      <td>236×260</td>
+      <td><code class="language-plaintext highlighter-rouge">id=20</code> ✅</td>
+      <td>内缩</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">+36</td>
+      <td>188×212</td>
+      <td><code class="language-plaintext highlighter-rouge">id=20</code> ✅</td>
+      <td>内缩</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>结论是<strong>两个方向都能识别</strong> 所以正扩与外扩的区别暂时无法判断</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 判据：在能触发面板分支的帧上比较这三种 pad 序列
+</span><span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">pads</span> <span class="ow">in</span> <span class="p">((</span><span class="sh">"</span><span class="s">原样 (0,-k)</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">k</span><span class="p">)),</span>
+                    <span class="p">(</span><span class="sh">"</span><span class="s">只缩 (0,+k)</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">+</span><span class="n">k</span><span class="p">)),</span>
+                    <span class="p">(</span><span class="sh">"</span><span class="s">只原框 (0,)</span><span class="sh">"</span><span class="p">,</span>  <span class="p">(</span><span class="mi">0</span><span class="p">,))):</span>
+    <span class="n">ok</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">detect_with_pads</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">pads</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">for</span> <span class="n">gray</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s">  </span><span class="si">{</span><span class="n">ok</span><span class="si">}</span><span class="s">/</span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="总结">总结</h2>
+
+<p><img src="/assets/images/2026_10_13/二维码检测代码流程图与功能说明.png" alt="二维码检测代码流程图与功能说明" /></p>
+
+<p>整个 qr_detector.py 说到底只做了一件事：<strong>把”看图猜颜色顺序”变成”查表找编号”</strong>。</p>
+
+<ul>
+  <li><strong>全排列预先建表</strong>：24 种颜色顺序在程序启动时就固化成 <code class="language-plaintext highlighter-rouge">ID_TO_COLORS</code>，运行时不重算，识别到 <code class="language-plaintext highlighter-rouge">marker_id</code> 只要 <code class="language-plaintext highlighter-rouge">+1</code> 再查一次字典。</li>
+  <li><strong>ArUco 负责”认出是什么”</strong>：<code class="language-plaintext highlighter-rouge">DICT_4X4_50</code> 把标记内部的黑白图案解码成一个编号，这是唯一真正下结论的判据。</li>
+  <li><strong>几何筛选负责”先排除不可能”</strong>：<code class="language-plaintext highlighter-rouge">_panel_boxes()</code> 用尺寸、宽高比、面积占比把上百个轮廓砍到 6 个，它不识别，只负责缩小范围。</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">detect()</code> 负责”先易后难”</strong>：整图扫一遍是最省的路径，失败了才裁剪面板重试，用一点冗余换更高的召回率。</li>
+</ul>
+
+<p>写完之后最想强调的还是这一句：</p>
+
+<blockquote>
+  <p><strong>形状筛选负责缩小范围，编码匹配才负责下结论。</strong></p>
+</blockquote>
+
+<p>窗框没被当成二维码，不是因为它长得不像，而是因为<strong>它里面没有能匹配字典的图案</strong>。反过来，只要几何条件刚好满足、编码又恰好撞上，误判依旧可能发生——所以这类程序的目标从来不是”消灭误判”，而是<strong>把误判一层层收敛到可以接受的范围</strong>。</p>
+
+<hr />
+
+<p><em>说明：本文代码运行在仿真环境下，参数是针对当时的分辨率与光照调出来的。换相机、换场地之后，<code class="language-plaintext highlighter-rouge">MIN_MARKER_PX</code>、<code class="language-plaintext highlighter-rouge">adaptiveThreshWinSizeMin/Max/Step</code> 这些值建议重新标定——参数表是量出来的，不是抄出来的。</em></p>
+
+
+    </div>
+
+    
+    <footer class="post-tags">
+      <span>标签:</span>
+      
+      <a href="/tags/#python">Python</a>
+      
+      <a href="/tags/#图像处理">图像处理</a>
+      
+    </footer>
+    
+
+    <!-- 上一篇 / 下一篇(Jekyll 内置,按文章顺序) -->
+    <nav class="post-nav">
+      
+      <a class="post-nav-prev" href="/2026/10/10/Containers/">← 从零开始的容器教程</a>
+      
+      
+    </nav>
+
+    <!-- 留言区(Giscus) -->
+    <!-- =============================================================================
+     Giscus 留言区(基于 GitHub Discussions)
+     配置文档:https://giscus.app
+     说明:repo-id 和 category-id 需要你在 giscus.app 页面生成后填入。
+     ============================================================================= -->
+<section class="post-comments">
+  <h2 class="comments-title">留言</h2>
+  <div id="giscus-container"></div>
+</section>
+
+<script>
+  (function () {
+    // 读取当前博客主题(浅色/深色),让 Giscus 初始主题与之匹配
+    var currentTheme = document.documentElement.getAttribute('data-theme') === 'dark'
+      ? 'dark'
+      : 'light';
+
+    var container = document.getElementById('giscus-container');
+    var script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', 'VoVL773/VoVL773.github.io');
+    script.setAttribute('data-repo-id', 'R_kgDOUOAOAA');
+    script.setAttribute('data-category', 'Announcements');
+    script.setAttribute('data-category-id', 'DIC_kwDOUOAOAM4DFTd6');
+    script.setAttribute('data-mapping', 'pathname');
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'bottom');
+    script.setAttribute('data-theme', currentTheme);
+    script.setAttribute('data-lang', 'zh-CN');
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+    container.appendChild(script);
+  })();
+</script>
+
+  </article>
+
+  <!-- 右侧目录(TOC):由下方脚本从 .post-content 内的 h2/h3 自动生成,
+       窄屏(<=1024px)由 CSS 隐藏,不影响移动端阅读。 -->
+  <aside class="toc" aria-label="文章目录">
+    <div class="toc-inner">
+      <div class="toc-title">目录</div>
+      <nav id="toc-nav" class="toc-nav"></nav>
+    </div>
+  </aside>
+</div>
+
+<!-- ===== 文章目录(TOC)交互脚本 =====
+     职责:从 .post-content 抓取 h2/h3 自动生成右侧目录链接,
+     点击平滑跳转、滚动时高亮当前章节。
+     内联在此处而非外链:TOC 逻辑与 TOC 结构强相关,且仅文章页需要。 -->
+<script>
+  (function () {
+    var content = document.querySelector('.post-content');
+    var nav = document.getElementById('toc-nav');
+    var tocAside = document.querySelector('.toc');
+    if (!content || !nav) return;
+
+    // 收集文章正文中的二级、三级标题(kramdown 已自动生成 id)
+    var headings = Array.prototype.slice.call(content.querySelectorAll('h2, h3'));
+
+    // 文章没有标题时,隐藏整个目录侧栏,布局自动回退为单栏
+    if (headings.length === 0) {
+      if (tocAside) tocAside.style.display = 'none';
+      return;
+    }
+
+    // 兜底:为没有 id 的标题补一个,避免点击跳转失效
+    headings.forEach(function (h, i) {
+      if (!h.id) h.id = 'toc-heading-' + i;
+    });
+
+    // 生成目录链接:h2 顶格,h3 缩进
+    var frag = document.createDocumentFragment();
+    headings.forEach(function (h) {
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      a.className = 'toc-level-' + h.tagName.toLowerCase().slice(1);
+      a.setAttribute('data-target', h.id);
+      frag.appendChild(a);
+    });
+    nav.appendChild(frag);
+
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+    var linksById = {};
+    links.forEach(function (a) { linksById[a.getAttribute('data-target')] = a; });
+
+    // 点击:平滑滚动到对应标题,并更新地址栏 hash(不触发跳转)
+    links.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = document.getElementById(a.getAttribute('data-target'));
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', '#' + a.getAttribute('data-target'));
+      });
+    });
+
+    // 滚动高亮:找到离视口顶部最近(且已滚过)的标题,用 rAF 节流
+    var OFFSET = 100; // 顶部留白,避免标题贴着视口顶就算"当前"
+    var ticking = false;
+
+    function updateActive() {
+      ticking = false;
+      var scrollY = window.scrollY;
+      var current = null;
+      for (var i = 0; i < headings.length; i++) {
+        if (headings[i].getBoundingClientRect().top + scrollY - OFFSET <= scrollY) {
+          current = headings[i];
+        }
+      }
+      links.forEach(function (l) { l.classList.remove('is-active'); });
+      if (current && linksById[current.id]) {
+        linksById[current.id].classList.add('is-active');
+      }
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActive);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateActive();
+  })();
+</script>
+
+<!-- ===== Mermaid 图表(按需加载)=====
+     仅当本文真的有 ```mermaid 代码块时才引入,避免其它文章白白下载 3.5MB 的库。
+     content 在这里是已渲染完的 HTML,所以直接按 class 判断即可。 -->
+
+<script>
+  (function () {
+    // kramdown 对未知语言只输出 <pre><code class="language-mermaid">,没有 highlighter 包裹。
+    // closest 兜底是为了兼容以后万一变回 <div class="language-mermaid highlighter-rouge"> 的结构。
+    var codes = Array.prototype.slice.call(
+      document.querySelectorAll('pre > code.language-mermaid')
+    );
+    if (codes.length === 0) return;
+
+    // 换成 mermaid 需要的 <div class="mermaid">。
+    // 原始文本存进 data-src:主题切换后要用它重绘,库加载失败时要用它还原代码块。
+    var nodes = codes.map(function (code) {
+      var div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code.textContent.trim();   // textContent 会把 &gt; 自动还原成 >
+      div.setAttribute('data-src', div.textContent);
+
+      var block = (code.closest && code.closest('div.highlighter-rouge, div.language-mermaid'))
+        || code.parentNode;                        // 通常就是 <pre>
+      block.parentNode.replaceChild(div, block);
+      return div;
+    });
+
+    function themeName() {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
+    }
+
+    // 库加载失败时把图表还原成普通代码块 —— 宁可难看,也不能让内容凭空消失
+    function restoreSources() {
+      nodes.forEach(function (node) {
+        var pre = document.createElement('pre');
+        var code = document.createElement('code');
+        code.className = 'language-mermaid';
+        code.textContent = node.getAttribute('data-src');
+        pre.appendChild(code);
+        if (node.parentNode) node.parentNode.replaceChild(pre, node);
+      });
+    }
+
+    function render() {
+      nodes.forEach(function (node) {
+        node.removeAttribute('data-processed');    // 复位,允许重复渲染
+        node.textContent = node.getAttribute('data-src');
+      });
+
+      window.mermaid.initialize({
+        startOnLoad: false,                        // 由我们手动控制渲染时机
+        theme: themeName(),
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif',
+        securityLevel: 'loose',                    // 图表由本站作者编写,允许 htmlLabels
+        flowchart: { useMaxWidth: true, htmlLabels: true }
+      });
+
+      // v10 起用 run(),旧版回退到 init();suppressErrors 保证一张图出错不影响其余的图
+      var done = window.mermaid.run
+        ? window.mermaid.run({ nodes: nodes, suppressErrors: true })
+        : window.mermaid.init(undefined, nodes);
+
+      return Promise.resolve(done).catch(function () { /* 单图语法错误时静默保留其余图表 */ });
+    }
+
+    // 串行化渲染,避免快速反复切主题时多次渲染互相打断
+    var queue = Promise.resolve();
+    function scheduleRender() {
+      queue = queue.then(render).catch(function () {});
+      return queue;
+    }
+
+    var script = document.createElement('script');
+    script.src = '/assets/js/mermaid.min.js';
+    script.onload = function () {
+      scheduleRender();
+
+      // theme.js 只负责改 <html data-theme>,这里观察它的变化来重绘
+      var last = themeName();
+      new MutationObserver(function () {
+        if (themeName() !== last) {
+          last = themeName();
+          scheduleRender();
+        }
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    };
+    script.onerror = restoreSources;
+    document.head.appendChild(script);
+  })();
+</script>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        <a href="https://space.bilibili.com/" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+</body>
+</html>

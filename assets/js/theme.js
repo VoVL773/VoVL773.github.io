@@ -25,10 +25,19 @@ document.addEventListener('DOMContentLoaded', function () {
   // ===== 主题切换 =====
   var toggle = document.getElementById('theme-toggle');
   if (toggle) {
+    var themeImg = toggle.querySelector('img');
+    // 从初始 img src 推导出图标目录,兼容子路径部署
+    var iconDir = themeImg ? themeImg.src.replace(/[^/]+$/, '') : '/assets/images/icons/';
+    var sunIcon = iconDir + 'sun.png';
+    var moonIcon = iconDir + 'moon.png';
+
     // 根据当前主题更新按钮图标:浅色显示月亮,暗色显示太阳
     function updateThemeButton() {
       var isDark = root.getAttribute('data-theme') === 'dark';
-      toggle.textContent = isDark ? '☀️' : '🌙';
+      if (themeImg) {
+        themeImg.src = isDark ? sunIcon : moonIcon;
+        themeImg.alt = isDark ? '切换到浅色' : '切换到暗色';
+      }
       toggle.setAttribute('aria-label', isDark ? '切换到浅色' : '切换到暗色');
     }
 
