@@ -36,11 +36,8 @@ paginate_path: "/page:num/"                     # 第 2 页地址为 /page2/(分
 
 # ===== 自定义集合(Collections)=====
 # 和 _posts 机制一样:往对应目录丢 .md 文件,Jekyll 自动收集。
-# collections_dir 把集合根目录设为 _aldata,因此:
-#   题解目录 → _aldata/_problems/
-#   见解目录 → _aldata/_insights/
-# (子目录前的下划线是 Jekyll 集合的约定,和 _posts 一样)
-collections_dir: _aldata
+# 题解目录 → _problems/   见解目录 → _insights/
+# (目录前的下划线是 Jekyll 集合约定,和 _posts 一样)
 collections:
   problems:
     output: true
