@@ -9,6 +9,7 @@
 
 :root {
   --bg: #ffffff;
+  --card-bg: #f6f8fa;
   --text: #1f2328;
   --muted: #57606a;
   --link: #0969da;
@@ -36,6 +37,7 @@
 
 [data-theme="dark"] {
   --bg: #0d1117;
+  --card-bg: #161b22;
   --text: #c9d1d9;
   --muted: #8b949e;
   --link: #58a6ff;
@@ -227,7 +229,7 @@ a:hover {
   margin-bottom: 1rem;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--bg);
+  background: var(--card-bg);
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 
@@ -876,7 +878,7 @@ a:hover {
   padding: 1.1rem 1.2rem;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--bg);
+  background: var(--card-bg);
   color: var(--text);
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
@@ -1093,7 +1095,7 @@ a:hover {
   padding: 1.2rem 1.3rem;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--bg);
+  background: var(--card-bg);
 }
 
 .algo-insight-title {
