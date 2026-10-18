@@ -1,7 +1,8 @@
 ---
 layout: post
-title: "机器人是怎么读懂 ican 提供的“二维码”的"
+title: '机器人是怎么读懂 ican 提供的"二维码"的'
 tags: [Python,图像处理]
+cover: "assets/images/2026_10_13/ican_opencv.png"
 ---
 
 > 本博客只作学习交流，涉及到部分ican比赛的相关内容，如有侵权，立刻删除

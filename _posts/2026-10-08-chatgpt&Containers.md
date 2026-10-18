@@ -2,6 +2,7 @@
 layout: post
 title: "ChatGPT 与 Container Tools 插件的配置记录"
 tags: [随笔, 教程]
+cover: "assets/images/2026_10_08/容器面板新手指南.png"
 ---
 
 这是一篇教程向的记录：怎么在国内把 ChatGPT（以及它自带的 Codex 客户端）配起来，再用 VS Code 的容器插件管理 Docker。

@@ -36,7 +36,7 @@ paginate_path: "/page:num/"                     # 第 2 页地址为 /page2/(分
 
 # ===== 自定义集合(Collections)=====
 # 和 _posts 机制一样:往对应目录丢 .md 文件,Jekyll 自动收集。
-# 题解目录 → _problems/   见解目录 → _insights/
+# 题解目录 → _problems/   见解目录 → _insights/   项目目录 → _projects/
 # (目录前的下划线是 Jekyll 集合约定,和 _posts 一样)
 collections:
   problems:
@@ -45,6 +45,9 @@ collections:
   insights:
     output: true
     permalink: /algorithm/insights/:name/
+  projects:
+    output: true
+    permalink: /projects/:name/
 
 # ===== 默认布局(自动给文章/页面赋 layout,减少 front matter 重复)=====
 defaults:
@@ -68,6 +71,11 @@ defaults:
       type: "insights"   # 见解集合自动套用 insight 布局
     values:
       layout: "insight"
+  - scope:
+      path: ""
+      type: "projects"   # 项目集合自动套用 project 布局
+    values:
+      layout: "project"
 
 # ===== 杂项 =====
 lang: zh-CN

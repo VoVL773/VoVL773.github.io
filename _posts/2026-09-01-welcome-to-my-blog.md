@@ -2,6 +2,7 @@
 layout: post
 title: "欢迎来到我的博客"
 tags: [随笔, 公告]
+cover: ""
 ---
 
 这是这个博客的第一篇文章。

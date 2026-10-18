@@ -2,6 +2,7 @@
 layout: post
 title: "从零开始的容器教程"
 tags: [随笔, 教程]
+cover: "assets/images/2026_10_10/Docker.png"
 ---
 
 这篇博客记录我怎么从零搭建三类容器：**Ubuntu 22.04 + ROS 2 Humble**、**YOLOv8 编译环境**，以及 **Label Studio 标注工具**。三者用途完全不同，但搭建套路是一致的——看完你应该也能照着做出自己的容器。

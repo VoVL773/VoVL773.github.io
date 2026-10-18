@@ -2,6 +2,7 @@
 layout: post
 title: "Python笔记"
 tags: [Python,笔记]
+cover: "assets/images/2026_09_04/python_note.png"
 ---
 
 这是学习Python后的总结(主要是对练习进行总结)

@@ -1,0 +1,29 @@
+---
+layout: page
+title: 项目
+permalink: /projects/
+---
+
+<div class="project-grid">
+  {% for proj in site.projects %}
+  <article class="project-card">
+    <a class="project-card-link" href="{{ proj.url | relative_url }}" aria-label="查看项目:{{ proj.title }}"></a>
+    <div class="project-cover">
+      {% if proj.cover %}
+      <img src="{{ proj.cover | relative_url }}" alt="{{ proj.title }}" onerror="this.src='{{ '/assets/images/demo/default-cover.png' | relative_url }}'">
+      {% else %}
+      <img src="{{ '/assets/images/demo/default-cover.png' | relative_url }}" alt="{{ proj.title }}">
+      {% endif %}
+    </div>
+    <div class="project-body">
+      <h3 class="project-title">{{ proj.title }}</h3>
+      <p class="project-desc">{{ proj.excerpt | strip_html | truncate: 60 }}</p>
+      <div class="project-tags">
+        {% for tag in proj.tags %}
+        <span class="project-tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</div>

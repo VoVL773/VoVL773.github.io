@@ -2,84 +2,196 @@
 layout: default
 ---
 <div class="home">
-  <!-- 首页 Banner:用 CSS 变量 --hero-bg 设背景图,
-       由 theme.js 根据 localStorage 偏好动态更新 -->
-  <section class="home-banner">
-    <div class="home-banner-inner">
-      <h1 class="home-banner-title">{{ site.title }}</h1>
-      {% if site.description %}
-      <p class="home-banner-subtitle">{{ site.description }}</p>
-      {% endif %}
+  <!-- ===== Hero 头图区 ===== -->
+  <section class="hero">
+    <div class="hero-bg" style="background-image: var(--hero-bg);"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <img class="hero-avatar" src="{{ '/assets/images/icon&blanner/favicon.png' | relative_url }}" alt="{{ site.title }}">
+      <div class="hero-text">
+        <h1 class="hero-title">{{ site.title }}</h1>
+        {% if site.description %}
+        <p class="hero-subtitle">{{ site.description }}</p>
+        {% endif %}
+        <div class="hero-links">
+          <a class="hero-link" href="https://github.com/VoVL773" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a class="hero-link" href="{{ '/about/' | relative_url }}">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <span>关于我</span>
+          </a>
+        </div>
+      </div>
     </div>
-    <!-- 渐变遮罩:保证无论背景图亮暗,白色文字都可读 -->
-    <div class="home-banner-overlay"></div>
   </section>
 
-  <!-- index.html 里写的简介会渲染到这里(可选) -->
-  {% if content != "" %}
-  <div class="home-intro">
-    {{ content }}
-  </div>
-  {% endif %}
+  <div class="container">
+    <!-- ===== 精选项目 ===== -->
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-icon">🚀</span> 精选项目
+        </h2>
+        <a class="section-more" href="{{ '/projects/' | relative_url }}">查看全部项目 →</a>
+      </div>
+      <div class="project-grid">
+        {% for proj in site.projects %}
+        <article class="project-card">
+          <a class="project-card-link" href="{{ proj.url | relative_url }}" aria-label="查看项目:{{ proj.title }}"></a>
+          <div class="project-cover">
+            {% if proj.cover %}
+            <img src="{{ proj.cover | relative_url }}" alt="{{ proj.title }}" onerror="this.src='{{ '/assets/images/demo/default-cover.png' | relative_url }}'">
+            {% else %}
+            <img src="{{ '/assets/images/demo/default-cover.png' | relative_url }}" alt="{{ proj.title }}">
+            {% endif %}
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">{{ proj.title }}</h3>
+            <p class="project-desc">{{ proj.excerpt | strip_html | truncate: 50 }}</p>
+            <div class="project-tags">
+              {% for tag in proj.tags %}
+              <span class="project-tag">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
 
-  <h1 class="post-list-heading">文章</h1>
+    <!-- ===== 文章分类 ===== -->
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-icon">📂</span> 文章分类
+        </h2>
+        <a class="section-more" href="{{ '/tags/' | relative_url }}">查看全部标签 →</a>
+      </div>
+      <div class="category-grid">
+        {% assign sorted_tags = site.tags | sort %}
+        {% for tag in sorted_tags %}
+        {% assign tag_name = tag[0] %}
+        {% assign tag_count = tag[1] | size %}
+        <a class="category-card" href="{{ '/tags/' | relative_url }}#{{ tag_name | slugify }}">
+          <div class="category-icon">
+            {% case tag_name %}
+            {% when 'Python' %}🐍
+            {% when '算法' or '回溯' %}🧮
+            {% when '图像处理' or 'OpenCV' %}👁️
+            {% when '随笔' %}✍️
+            {% when '教程' %}📖
+            {% when '笔记' %}📝
+            {% when '公告' %}📢
+            {% else %}📌
+            {% endcase %}
+          </div>
+          <div class="category-name">{{ tag_name }}</div>
+          <div class="category-count">{{ tag_count }} 篇文章</div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
 
-  <!-- 分页已启用:paginator.posts 为当前页的文章切片(按日期倒序) -->
-  {% if paginator %}
-  {% for post in paginator.posts %}
-  <article class="post-list-item">
-    <!-- 整张卡片可点击的覆盖层(标签因其 z-index 更高仍可单独点击) -->
-    <a class="post-card-link" href="{{ post.url | relative_url }}" aria-label="阅读文章:{{ post.title }}"></a>
-    <h2 class="post-list-title">
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-    </h2>
-    <time class="post-list-date">{{ post.date | date: "%Y-%m-%d" }}</time>
-    <!-- excerpt 是 Jekyll 自动取的首段 -->
-    <div class="post-list-excerpt">{{ post.excerpt }}</div>
-    <!-- 文章标签:链接到标签页对应锚点 -->
-    {% if post.tags.size > 0 %}
-    <div class="post-list-tags">
-      {% for tag in post.tags %}
-      <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">#{{ tag }}</a>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </article>
-  {% endfor %}
+    <!-- ===== 最新文章 ===== -->
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-icon">📝</span> 最新文章
+        </h2>
+        <a class="section-more" href="{{ '/archive/' | relative_url }}">查看更多文章 →</a>
+      </div>
 
-  <!-- 分页导航:页码全部由 Liquid 自行拼接,兼容项目站点的 baseurl -->
-  {% if paginator.total_pages > 1 %}
-  <nav class="pagination-nav" aria-label="分页">
-    {% if paginator.previous_page %}
-    {% assign prev_num = paginator.previous_page %}
-    {% if prev_num == 1 %}
-    {% assign prev_href = '/' | relative_url %}
-    {% else %}
-    {% assign prev_href = site.paginate_path | replace: ':num', prev_num | relative_url %}
-    {% endif %}
-    <a class="pagination-prev" href="{{ prev_href }}">← 上一页</a>
-    {% else %}
-    <span class="pagination-prev is-disabled">← 上一页</span>
-    {% endif %}
+      <!-- 取最近 4 篇作为特色文章(带封面),其余走分页列表 -->
+      {% assign recent_posts = site.posts | slice: 0, 4 %}
+      <div class="recent-grid">
+        {% for post in recent_posts %}
+        <article class="recent-card">
+          <a class="recent-card-link" href="{{ post.url | relative_url }}" aria-label="阅读文章:{{ post.title }}"></a>
+          <div class="recent-cover">
+            {% if post.cover %}
+            <img src="{{ post.cover | relative_url }}" alt="{{ post.title }}" onerror="this.src='{{ '/assets/images/demo/default-cover.png' | relative_url }}'">
+            {% else %}
+            <img src="{{ '/assets/images/demo/default-cover.png' | relative_url }}" alt="{{ post.title }}">
+            {% endif %}
+          </div>
+          <div class="recent-body">
+            <h3 class="recent-title">{{ post.title }}</h3>
+            <time class="recent-date">{{ post.date | date: "%Y-%m-%d" }}</time>
+            {% if post.tags.size > 0 %}
+            <div class="recent-tags">
+              {% for tag in post.tags %}
+              <span class="recent-tag">#{{ tag }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        </article>
+        {% endfor %}
+      </div>
 
-    <span class="pagination-pages">
-      {% for num in (1..paginator.total_pages) %}
-      {% if num == paginator.page %}
-      <span class="pagination-num is-current">{{ num }}</span>
-      {% elsif num == 1 %}
-      <a class="pagination-num" href="{{ '/' | relative_url }}">{{ num }}</a>
-      {% else %}
-      <a class="pagination-num" href="{{ site.paginate_path | replace: ':num', num | relative_url }}">{{ num }}</a>
+      <!-- 分页文章列表(第 5 篇起) -->
+      {% if paginator %}
+      {% assign offset_posts = paginator.posts | slice: 4, 20 %}
+      {% if offset_posts.size > 0 or paginator.page > 1 %}
+      <h2 class="post-list-heading">全部文章</h2>
+      {% for post in paginator.posts %}
+      {% assign idx = forloop.index0 %}
+      {% if paginator.page > 1 or idx >= 4 %}
+      <article class="post-list-item">
+        <a class="post-card-link" href="{{ post.url | relative_url }}" aria-label="阅读文章:{{ post.title }}"></a>
+        <h2 class="post-list-title">
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        </h2>
+        <time class="post-list-date">{{ post.date | date: "%Y-%m-%d" }}</time>
+        <div class="post-list-excerpt">{{ post.excerpt }}</div>
+        {% if post.tags.size > 0 %}
+        <div class="post-list-tags">
+          {% for tag in post.tags %}
+          <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">#{{ tag }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </article>
       {% endif %}
       {% endfor %}
-    </span>
 
-    {% if paginator.next_page %}
-    <a class="pagination-next" href="{{ site.paginate_path | replace: ':num', paginator.next_page | relative_url }}">下一页 →</a>
-    {% else %}
-    <span class="pagination-next is-disabled">下一页 →</span>
-    {% endif %}
-  </nav>
-  {% endif %}
-  {% endif %}
+      {% if paginator.total_pages > 1 %}
+      <nav class="pagination-nav" aria-label="分页">
+        {% if paginator.previous_page %}
+        {% assign prev_num = paginator.previous_page %}
+        {% if prev_num == 1 %}
+        {% assign prev_href = '/' | relative_url %}
+        {% else %}
+        {% assign prev_href = site.paginate_path | replace: ':num', prev_num | relative_url %}
+        {% endif %}
+        <a class="pagination-prev" href="{{ prev_href }}">← 上一页</a>
+        {% else %}
+        <span class="pagination-prev is-disabled">← 上一页</span>
+        {% endif %}
+
+        <span class="pagination-pages">
+          {% for num in (1..paginator.total_pages) %}
+          {% if num == paginator.page %}
+          <span class="pagination-num is-current">{{ num }}</span>
+          {% elsif num == 1 %}
+          <a class="pagination-num" href="{{ '/' | relative_url }}">{{ num }}</a>
+          {% else %}
+          <a class="pagination-num" href="{{ site.paginate_path | replace: ':num', num | relative_url }}">{{ num }}</a>
+          {% endif %}
+          {% endfor %}
+        </span>
+
+        {% if paginator.next_page %}
+        <a class="pagination-next" href="{{ site.paginate_path | replace: ':num', paginator.next_page | relative_url }}">下一页 →</a>
+        {% else %}
+        <span class="pagination-next is-disabled">下一页 →</span>
+        {% endif %}
+      </nav>
+      {% endif %}
+      {% endif %}
+      {% endif %}
+    </section>
+  </div>
 </div>
