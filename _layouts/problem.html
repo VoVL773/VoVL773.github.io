@@ -1,0 +1,24 @@
+---
+layout: algorithm
+---
+<article class="algo-detail">
+  <a class="algo-back" href="{{ '/algorithm/' | relative_url }}">← 返回题解列表</a>
+
+  <header class="algo-problem-head">
+    <h1 class="algo-problem-title">{{ page.title }}</h1>
+    <div class="algo-problem-meta">
+      {% if page.difficulty %}
+      <span class="algo-card-diff algo-diff-{{ page.difficulty }}">{{ page.difficulty }}</span>
+      {% endif %}
+      {% if page.tags.size > 0 %}
+      <div class="algo-card-tags">
+        {% for tag in page.tags %}<span class="algo-tag">{{ tag }}</span>{% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="algo-problem-content">
+    {{ content }}
+  </div>
+</article>

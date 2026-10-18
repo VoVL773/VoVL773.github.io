@@ -1,0 +1,28 @@
+---
+layout: algorithm
+title: 见解
+---
+
+<section class="algo-section">
+  <h2 class="algo-section-title">见解</h2>
+  <p class="algo-section-desc">记录刷题过程中的思考、总结与心得。</p>
+
+  <div class="algo-insight-list">
+    {% assign insights = site.insights | sort: 'date' | reverse %}
+    {% for item in insights %}
+    <article class="algo-insight-item">
+      <h3 class="algo-insight-title">
+        <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+      </h3>
+      {% if item.date %}
+      <time class="algo-insight-date">日期：{{ item.date | date: "%Y-%m-%d" }}</time>
+      {% endif %}
+      {% if item.tags.size > 0 %}
+      <div class="algo-card-tags">
+        {% for t in item.tags %}<span class="algo-tag">{{ t }}</span>{% endfor %}
+      </div>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>

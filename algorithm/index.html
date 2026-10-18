@@ -1,0 +1,35 @@
+---
+layout: algorithm
+title: 算法题解与见解
+---
+
+<div class="algo-hero">
+  <h1 class="algo-hero-title">算法题解与题解</h1>
+  <p class="algo-hero-subtitle">- 记录题解与见解 -</p>
+</div>
+
+<section class="algo-section">
+  <h2 class="algo-section-title">LeetCode 题解</h2>
+
+  <div class="algo-card-grid">
+    {% for p in site.problems %}
+      <a class="algo-card" href="{{ p.url | relative_url }}">
+        <div class="algo-card-head">
+          <span class="algo-card-id">#{{ p.name | split: '-' | first }}</span>
+          {% if p.difficulty %}
+          <span class="algo-card-diff algo-diff-{{ p.difficulty }}">{{ p.difficulty }}</span>
+          {% endif %}
+        </div>
+        <h3 class="algo-card-title">{{ p.title }}</h3>
+        {% if p.desc %}
+        <p class="algo-card-desc">{{ p.desc }}</p>
+        {% endif %}
+        {% if p.tags.size > 0 %}
+        <div class="algo-card-tags">
+          {% for t in p.tags %}<span class="algo-tag">{{ t }}</span>{% endfor %}
+        </div>
+        {% endif %}
+      </a>
+    {% endfor %}
+  </div>
+</section>

@@ -34,6 +34,21 @@ plugins:
 paginate: 5                                     # 首页每页文章数
 paginate_path: "/page:num/"                     # 第 2 页地址为 /page2/(分页仅对根目录 index.html 生效)
 
+# ===== 自定义集合(Collections)=====
+# 和 _posts 机制一样:往对应目录丢 .md 文件,Jekyll 自动收集。
+# collections_dir 把集合根目录设为 _aldata,因此:
+#   题解目录 → _aldata/_problems/
+#   见解目录 → _aldata/_insights/
+# (子目录前的下划线是 Jekyll 集合的约定,和 _posts 一样)
+collections_dir: _aldata
+collections:
+  problems:
+    output: true
+    permalink: /algorithm/problem/:name/
+  insights:
+    output: true
+    permalink: /algorithm/insights/:name/
+
 # ===== 默认布局(自动给文章/页面赋 layout,减少 front matter 重复)=====
 defaults:
   - scope:
@@ -46,6 +61,16 @@ defaults:
       type: "pages"      # 仅对页面(index/about/archive/tags)生效
     values:
       layout: "page"
+  - scope:
+      path: ""
+      type: "problems"   # 题解集合自动套用 problem 布局
+    values:
+      layout: "problem"
+  - scope:
+      path: ""
+      type: "insights"   # 见解集合自动套用 insight 布局
+    values:
+      layout: "insight"
 
 # ===== 杂项 =====
 lang: zh-CN
