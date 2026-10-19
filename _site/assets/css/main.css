@@ -513,6 +513,17 @@ a:hover {
 }
 
 /* ===== 文章分类 ===== */
+.category-section {
+  background: #eef4fb;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem 1.5rem;
+}
+
+[data-theme=dark] .category-section {
+  background: #111827;
+}
+
 .category-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
