@@ -8,6 +8,8 @@
 :root {
   --bg: #ffffff;
   --card-bg: #f6f8fa;
+  /* 正文阅读面:文章/页面内容铺一层近不透明的底色,避免背景图影响阅读 */
+  --surface: rgba(255, 255, 255, 0.94);
   --text: #1f2328;
   --muted: #57606a;
   --link: #0969da;
@@ -20,7 +22,9 @@
   --tag-active-bg: #ffffff;
   --tag-shadow: 0 1px 4px rgba(15, 23, 42, 0.1);
   /* ===== 全站背景图 =====
-     浅色模式用高比例白色遮罩压淡图片,保证正文可读;
+     浅色模式用白色遮罩压淡图片,保证大面积文字仍可读;
+     正文区另有 --surface 底色兜底,所以这里可以留得淡一些,
+     让背景图在 Hero、页头、卡片间隙等区域保持可见。
      图片本身由 url() 引用 assets/images/icon&blanner/bg.jpg。
      注意:值外层必须用 Sass 插值包裹,否则 Sass 3.7 会把自定义属性值
      按 SassScript 解析,遇到带引号的 url(...) 直接报 Invalid CSS。 */
@@ -41,6 +45,7 @@
 [data-theme=dark] {
   --bg: #0d1117;
   --card-bg: #161b22;
+  --surface: rgba(22, 27, 34, 0.94);
   --text: #c9d1d9;
   --muted: #8b949e;
   --link: #58a6ff;
@@ -855,16 +860,27 @@ a:hover {
 
 /* ===== 文章详情 =====
    文章页采用两栏布局:主内容 + 右侧目录。
-   .post-layout 突破默认 .container 的 720px 限制,改为 1000px 容器,
-   主内容保持窄列利于阅读,右侧 220px 给目录。 */
+   .post-layout 宽度与全站容器一致(--max-width: 1200px),
+   主内容保持较宽的阅读列,右侧 220px 给目录。 */
 .post-layout {
-  max-width: 1000px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 1.5rem;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 220px;
-  gap: 3rem;
+  gap: 2.5rem;
   align-items: start;
+}
+
+/* 正文阅读面:文章与普通页面铺一层近不透明底色,
+   让文字始终落在干净的背景上,不受全站背景图干扰。 */
+.post,
+.page {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
 .post-header {
@@ -959,6 +975,207 @@ a:hover {
   padding: 0.15em 0.35em;
   border-radius: 4px;
   font-size: 0.9em;
+}
+
+/* ===== 代码块:深色底 + 语法高亮(参考图二)=====
+   Rouge 会给每个 token 加 class(如 .k/.s/.c1/.nf),这里统一上色;
+   明暗主题共用同一套深色代码配色,保证代码区观感稳定。
+   注意:行内代码 <code> 也带 highlighter-rouge class,
+   所以块级样式必须限定在 div.highlighter-rouge,否则会出现黑块。 */
+.post-content div.highlighter-rouge,
+.page-content div.highlighter-rouge {
+  position: relative;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  background: #1e1e1e;
+  overflow: hidden;
+}
+
+/* 外层已铺底色,内层 pre 设为透明,避免双层背景 */
+.post-content div.highlighter-rouge pre,
+.page-content div.highlighter-rouge pre {
+  margin: 0;
+  background: transparent;
+  color: #abb2bf;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* 右上角语言标签:对应 kramdown 生成的 language-xxx class */
+div.highlighter-rouge[class*=language-]::before {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  padding: 0.15rem 0.7rem;
+  border-bottom-left-radius: 8px;
+  background: #2d2d2d;
+  color: #8b949e;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+.language-py::before,
+.language-python::before {
+  display: block;
+  content: "Python";
+}
+
+.language-cpp::before {
+  display: block;
+  content: "C++";
+}
+
+.language-c::before {
+  display: block;
+  content: "C";
+}
+
+.language-java::before {
+  display: block;
+  content: "Java";
+}
+
+.language-js::before,
+.language-javascript::before {
+  display: block;
+  content: "JavaScript";
+}
+
+.language-bash::before,
+.language-sh::before,
+.language-shell::before {
+  display: block;
+  content: "Shell";
+}
+
+.language-sql::before {
+  display: block;
+  content: "SQL";
+}
+
+.language-html::before {
+  display: block;
+  content: "HTML";
+}
+
+.language-css::before {
+  display: block;
+  content: "CSS";
+}
+
+.language-json::before {
+  display: block;
+  content: "JSON";
+}
+
+.language-yaml::before,
+.language-yml::before {
+  display: block;
+  content: "YAML";
+}
+
+/* --- 语法着色(One Dark 风格)--- */
+.highlighter-rouge .c,
+.highlighter-rouge .c1,
+.highlighter-rouge .cm,
+.highlighter-rouge .cs,
+.highlighter-rouge .cp,
+.highlighter-rouge .cd,
+.highlighter-rouge .ch {
+  color: #5c6370;
+}
+
+.highlighter-rouge .k,
+.highlighter-rouge .kc,
+.highlighter-rouge .kd,
+.highlighter-rouge .kn,
+.highlighter-rouge .kp,
+.highlighter-rouge .kr {
+  color: #c678dd;
+}
+
+.highlighter-rouge .kt {
+  color: #e5c07b;
+}
+
+.highlighter-rouge .ow {
+  color: #c678dd;
+}
+
+.highlighter-rouge .o {
+  color: #56b6c2;
+}
+
+.highlighter-rouge .s,
+.highlighter-rouge .s1,
+.highlighter-rouge .s2,
+.highlighter-rouge .sb,
+.highlighter-rouge .sc,
+.highlighter-rouge .sd,
+.highlighter-rouge .se,
+.highlighter-rouge .sh,
+.highlighter-rouge .si,
+.highlighter-rouge .sr,
+.highlighter-rouge .ss,
+.highlighter-rouge .sx {
+  color: #98c379;
+}
+
+.highlighter-rouge .m,
+.highlighter-rouge .mf,
+.highlighter-rouge .mh,
+.highlighter-rouge .mi,
+.highlighter-rouge .mo,
+.highlighter-rouge .il {
+  color: #d19a66;
+}
+
+.highlighter-rouge .nf,
+.highlighter-rouge .fm {
+  color: #61afef;
+}
+
+.highlighter-rouge .nc,
+.highlighter-rouge .nn,
+.highlighter-rouge .ne,
+.highlighter-rouge .nd {
+  color: #e5c07b;
+}
+
+.highlighter-rouge .nb,
+.highlighter-rouge .bp {
+  color: #56b6c2;
+}
+
+.highlighter-rouge .nv,
+.highlighter-rouge .vi,
+.highlighter-rouge .vg,
+.highlighter-rouge .vc,
+.highlighter-rouge .nl {
+  color: #e06c75;
+}
+
+.highlighter-rouge .na {
+  color: #d19a66;
+}
+
+.highlighter-rouge .nt {
+  color: #e06c75;
+}
+
+.highlighter-rouge .err {
+  color: #e06c75;
+}
+
+.highlighter-rouge .gd {
+  color: #e06c75;
+}
+
+.highlighter-rouge .gi {
+  color: #98c379;
 }
 
 /* 标签行 */
@@ -1421,6 +1638,11 @@ a:hover {
   }
   .post-nav {
     flex-direction: column;
+  }
+  /* 小屏收窄阅读面内边距,给正文留更多宽度 */
+  .post,
+  .page {
+    padding: 1.25rem;
   }
   .tag-tab {
     padding: 0.4rem 0.85rem;
