@@ -867,6 +867,19 @@ a:hover {
   font-size: 0.875rem;
 }
 
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.post-tags-inline {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
 .post-content {
   margin-bottom: 2rem;
 }
@@ -877,6 +890,35 @@ a:hover {
 
 .post-content img {
   max-width: 100%;
+}
+
+/* 表格 */
+.post-content table,
+.page-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.post-content th,
+.post-content td,
+.page-content th,
+.page-content td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.8rem;
+  text-align: left;
+}
+
+.post-content th,
+.page-content th {
+  background: var(--code-bg);
+  font-weight: 600;
+}
+
+.post-content tr:nth-child(even),
+.page-content tr:nth-child(even) {
+  background: var(--card-bg);
 }
 
 /* 代码块 */

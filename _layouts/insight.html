@@ -1,24 +1,107 @@
 ---
 layout: algorithm
 ---
-<article class="algo-detail">
-  <a class="algo-back" href="{{ '/algorithm/insights/' | relative_url }}">← 返回见解列表</a>
+<div class="post-layout">
+  <article class="post">
+    <a class="algo-back" href="{{ '/algorithm/insights/' | relative_url }}">← 返回见解列表</a>
 
-  <header class="algo-problem-head">
-    <h1 class="algo-problem-title">{{ page.title }}</h1>
-    <div class="algo-problem-meta">
-      {% if page.date %}
-      <time class="algo-insight-date">{{ page.date | date: "%Y-%m-%d" }}</time>
-      {% endif %}
-      {% if page.tags.size > 0 %}
-      <div class="algo-card-tags">
-        {% for tag in page.tags %}<span class="algo-tag">{{ tag }}</span>{% endfor %}
+    <header class="post-header">
+      <h1 class="post-title">{{ page.title }}</h1>
+      <div class="post-meta">
+        {% if page.date %}
+        <time class="post-date">{{ page.date | date: "%Y-%m-%d" }}</time>
+        {% endif %}
+        {% if page.tags.size > 0 %}
+        <div class="post-tags-inline">
+          {% for tag in page.tags %}<span class="algo-tag">{{ tag }}</span>{% endfor %}
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
-    </div>
-  </header>
+    </header>
 
-  <div class="algo-problem-content">
-    {{ content }}
-  </div>
-</article>
+    <div class="post-content">
+      {{ content }}
+    </div>
+  </article>
+
+  <!-- 右侧目录 -->
+  <aside class="toc" aria-label="文章目录">
+    <div class="toc-inner">
+      <div class="toc-title">目录</div>
+      <nav id="toc-nav" class="toc-nav"></nav>
+    </div>
+  </aside>
+</div>
+
+<script>
+  (function () {
+    var content = document.querySelector('.post-content');
+    var nav = document.getElementById('toc-nav');
+    var tocAside = document.querySelector('.toc');
+    if (!content || !nav) return;
+
+    var headings = Array.prototype.slice.call(content.querySelectorAll('h2, h3'));
+    if (headings.length === 0) {
+      if (tocAside) tocAside.style.display = 'none';
+      return;
+    }
+
+    headings.forEach(function (h, i) {
+      if (!h.id) h.id = 'toc-heading-' + i;
+    });
+
+    var frag = document.createDocumentFragment();
+    headings.forEach(function (h) {
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      a.className = 'toc-level-' + h.tagName.toLowerCase().slice(1);
+      a.setAttribute('data-target', h.id);
+      frag.appendChild(a);
+    });
+    nav.appendChild(frag);
+
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+    var linksById = {};
+    links.forEach(function (a) { linksById[a.getAttribute('data-target')] = a; });
+
+    links.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = document.getElementById(a.getAttribute('data-target'));
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', '#' + a.getAttribute('data-target'));
+      });
+    });
+
+    var OFFSET = 100;
+    var ticking = false;
+
+    function updateActive() {
+      ticking = false;
+      var scrollY = window.scrollY;
+      var current = null;
+      for (var i = 0; i < headings.length; i++) {
+        if (headings[i].getBoundingClientRect().top + scrollY - OFFSET <= scrollY) {
+          current = headings[i];
+        }
+      }
+      links.forEach(function (l) { l.classList.remove('is-active'); });
+      if (current && linksById[current.id]) {
+        linksById[current.id].classList.add('is-active');
+      }
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActive);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateActive();
+  })();
+</script>

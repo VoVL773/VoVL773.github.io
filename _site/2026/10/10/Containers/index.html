@@ -298,9 +298,11 @@ __pycache__/
 
     <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 加 NVIDIA 的软件源</span>
 curl <span class="nt">-fsSL</span> https://nvidia.github.io/libnvidia-container/gpgkey <span class="se">\</span>
+
   | <span class="nb">sudo </span>gpg <span class="nt">--dearmor</span> <span class="nt">-o</span> /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
 
 curl <span class="nt">-s</span> <span class="nt">-L</span> https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list <span class="se">\</span>
+
   | <span class="nb">sed</span> <span class="s1">'s#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g'</span> <span class="se">\</span>
   | <span class="nb">sudo tee</span> /etc/apt/sources.list.d/nvidia-container-toolkit.list <span class="o">&gt;</span>/dev/null
 
