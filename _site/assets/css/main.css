@@ -21,12 +21,10 @@
   --tag-shadow: 0 1px 4px rgba(15, 23, 42, 0.1);
   /* ===== 全站背景图 =====
      浅色模式用高比例白色遮罩压淡图片,保证正文可读;
-     图片本身由 url() 引用 assets/images/icon&blanner/bg.jpg。 */
-  --page-bg-image: linear-gradient(
-      rgba(255, 255, 255, 0.84),
-      rgba(255, 255, 255, 0.84)
-    ),
-    url("/assets/images/icon&blanner/bg.jpg");
+     图片本身由 url() 引用 assets/images/icon&blanner/bg.jpg。
+     注意:值外层必须用 Sass 插值包裹,否则 Sass 3.7 会把自定义属性值
+     按 SassScript 解析,遇到带引号的 url(...) 直接报 Invalid CSS。 */
+  --page-bg-image: linear-gradient(rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.84)), url("/assets/images/icon&blanner/bg.jpg");
   /* ===== Banner 相关 =====
        背景图默认用渐变兜底,实际图片由 theme.js 设置 --hero-bg
        (从 bannerPreset 列表循环选取或 localStorage 恢复)。
@@ -54,11 +52,7 @@
   --tag-active-bg: #21262d;
   --tag-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
   /* 暗色模式用深色遮罩压暗图片,保证浅色正文可读 */
-  --page-bg-image: linear-gradient(
-      rgba(13, 17, 23, 0.8),
-      rgba(13, 17, 23, 0.88)
-    ),
-    url("/assets/images/icon&blanner/bg.jpg");
+  --page-bg-image: linear-gradient(rgba(13, 17, 23, 0.8), rgba(13, 17, 23, 0.88)), url("/assets/images/icon&blanner/bg.jpg");
   /* 暗色模式下遮罩加深,让白色文字在暗色图上仍清晰 */
   --hero-overlay: linear-gradient(
     to bottom,
