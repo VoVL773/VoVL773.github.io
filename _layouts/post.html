@@ -16,7 +16,7 @@ layout: default
     <footer class="post-tags">
       <span>标签:</span>
       {% for tag in page.tags %}
-      <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a>{% unless forloop.last %} {% endunless %}
+      <a href="{{ '/posts/' | relative_url }}?tag={{ tag | url_encode }}">{{ tag }}</a>{% unless forloop.last %} {% endunless %}
       {% endfor %}
     </footer>
     {% endif %}

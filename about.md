@@ -11,4 +11,4 @@ permalink: /about/
 - 偏好独立理解每一行代码
 - 用 Markdown 写作
 
-欢迎在 [GitHub](https://github.com/) 上找到我。
+欢迎在 [GitHub](https://github.com/VoVL773) 上找到我。

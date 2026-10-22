@@ -7,6 +7,9 @@
 title: VoVL的博客
 description: 间接性踌躇满志，持续性记录生活。
 author: VoVL773
+home_intro: 记录 ROS 2、机器视觉与机器人仿真实践，也分享 Python 和算法学习笔记。
+# 填写 B 站个人主页完整地址后，页脚自动显示入口。
+bilibili_url: "https://space.bilibili.com/3546792683637323"
 
 # ===== URL(部署到 GitHub Pages 后替换,二选一)=====
 # 情况 A:用户站点(仓库名必须为 your-username.github.io)
