@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    ROS 2 机器视觉实践：从色块识别到目标跟踪 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    <div class="post-layout">
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">ROS 2 机器视觉实践：从色块识别到目标跟踪</h1>
+      <time class="post-date">2026-10-23</time>
+    </header>
+
+    <div class="post-content">
+      <h2 id="引言">引言：</h2>
+
+<p>本博客主要是介绍开源项目<a href="https://github.com/VoVL773/Machine_vision_color_sorting_system">机器视觉颜色分拣系统</a>的设计思路，实现，与踩坑记录</p>
+
+<div style="background:#e8f4fd; color:#222; padding:16px;border-left:4px solid #5080ccff; border-radius:8px;">
+  <strong>这个项目要解决什么问题？最终输入和输出分别是什么？</strong>
+  <p>—————————————————————————</p>
+  <p>本项目旨在利用 OpenCV 对图像中的指定颜色目标进行检测，并在连续图像帧中维持目标的身份标识，为后续的机器人视觉应用提供目标信息。</p>
+  <p>系统主要完成以下任务：</p>
+  <ol>
+    <li>获取图像，可以来自摄像头、视频文件或合成测试场景。</li>
+    <li>将图像转换到 HSV 颜色空间，根据配置的颜色范围提取目标。</li>
+    <li>对二值掩码进行形态学处理，减少噪声并改善目标区域。</li>
+    <li>提取轮廓，通过面积、尺寸和形状等条件过滤无效区域。</li>
+    <li>计算目标的中心坐标、面积和外接矩形。</li>
+    <li>根据相邻帧目标的位置匹配结果，为目标分配和维护 ID。</li>
+    <li>将结果绘制在图像上，并为后续 ROS 2 通信提供数据基础。</li>
+  </ol>
+</div>
+
+<p><img src="/assets/images/2026_10_23/设计思路.png" alt="设计思路" /></p>
+
+<details>
+  <summary style="font-size:1.2rem; font-weight:700; color:#1E3A5F; cursor:pointer; padding:6px 0;">问题清单(1)</summary>
+  <div style="margin:24px 0;">
+    <div style="background:#EFF6FF; color:#1E3A5F; border-left:4px solid #3B82F6; padding:16px 20px; border-radius:8px; margin-bottom:12px;">
+      <strong>1.为什么先实现独立的 Python 检测程序，再集成到 ROS 2</strong>
+    </div>
+
+  <div style="background:#F0FDFA; color:#134E4A; border-left:4px solid #14B8A6; padding:16px 20px; border-radius:8px;">
+    <strong>答：</strong>
+    <p style="margin:8px 0 0; line-height:1.8;">
+      因为视觉算法和 ROS 2 通信属于不同的问题领域,如果算法还没有验证，就直接集成 ROS 2，那么检测失败时 需要排查的问题非常多。<br />
+      先用普通 Python 程序验证检测流程，可以把问题范围缩小到图像处理本身。确认检测器能够正确输出结果后，再接入 ROS 2，排查会更容易。
+    </p>
+  </div>
+</div>
+
+<div style="margin:24px 0;">
+    <div style="background:#EFF6FF; color:#1E3A5F; border-left:4px solid #3B82F6; padding:16px 20px; border-radius:8px; margin-bottom:12px;">
+      <strong>2.一张图像如何经过整个系统？</strong>
+    </div>
+
+  <div style="background:#F0FDFA; color:#e4eff3ff; border-left:4px solid #a3d3e5ff; padding:16px 20px; border-radius:8px;">
+      <pre><code class="language-mermaid">flowchart TD
+    A["图像输入&lt;br/&gt;摄像头、视频或合成场景"] --&gt; B["图像检查与预处理"]
+    B --&gt; C["BGR 转 HSV"]
+    C --&gt; D["按颜色阈值生成二值掩码"]
+    D --&gt; E["形态学处理"]
+    E --&gt; F["轮廓提取与过滤"]
+    F --&gt; G["计算中心、面积和外接框"]
+    G --&gt; H["跨帧目标匹配与 ID 管理"]
+    H --&gt; I["输出 Detection 列表"]
+    I --&gt; J["可视化"]
+    I --&gt; K["ROS 2 消息转换与发布"]
+</code></pre>
+    </div>
+</div>
+</details>
+
+<h2 id="opencv部分">Opencv部分:</h2>
+<div style="background:#EFF6FF; color:#1E3A5F; border-left:4px solid #3B82F6; padding:16px 20px; border-radius:8px; margin-bottom:12px;">
+      <strong>各个模块是怎么协作的</strong>
+    </div>
+<pre><code class="language-mermaid">flowchart TD
+    A["hsv_config.py：创建配置对象"] --&gt; B["共享的 HSVConfig 对象"]
+    C["gui.py：滑块修改配置"] --&gt; B
+    B --&gt; D["color_detector.py：检测"]
+    E["image_sources.py：生成 BGR 图像"] --&gt; D
+    D --&gt; F["Detection 列表 + 各色掩码"]
+    F --&gt; G["visualization.py：标注与拼图"]
+    F --&gt; H["服务端：发布 ROS 消息"]
+</code></pre>
+
+<h3 id="hsvconfig-颜色阈值配置信息">HSVConfig 颜色阈值配置信息</h3>
+
+<details>
+  <summary style="font-size:1.2rem; font-weight:700; color:#1E3A5F; cursor:pointer; padding:6px 0;">hsv_cpnfig.py完整代码</summary>
+<div style="margin:24px 0;">
+  <div>
+      <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sh">"""</span><span class="s">HSV colour threshold configuration and JSON persistence.</span><span class="sh">"""</span>
+
+<span class="kn">from</span> <span class="n">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="n">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">import</span> <span class="n">json</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">from</span> <span class="n">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="n">COLOR_ORDER</span> <span class="o">=</span> <span class="p">(</span><span class="sh">'</span><span class="s">red</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">green</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="c1"># OpenCV HSV ranges: H in [0, 179], S and V in [0, 255].
+</span><span class="n">DEFAULT_COLORS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">red</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span>
+        <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="sh">'</span><span class="s">green</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
+        <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">85</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span>
+        <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">140</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span>
+        <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">38</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="n">DEFAULT_FILTER</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">min_area</span><span class="sh">'</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">max_area</span><span class="sh">'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">min_dimension</span><span class="sh">'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">min_fill_ratio</span><span class="sh">'</span><span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">DEFAULT_MORPHOLOGY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">kernel</span><span class="sh">'</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">iterations</span><span class="sh">'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">blur_kernel</span><span class="sh">'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">DEFAULT_CONFIG_VERSION</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1"># Yellow defaults before config version 2.  A saved configuration that still
+# uses these exact values is migrated so that golden/orange-yellow objects are
+# detected after upgrading.
+</span><span class="n">LEGACY_YELLOW_LOWER</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="n">LEGACY_YELLOW_UPPER</span> <span class="o">=</span> <span class="p">[</span><span class="mi">35</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Convert a JSON value to int, rejecting booleans and fractions.</span><span class="sh">"""</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s"> must be an integer, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s"> must be an integer, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="sh">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">number</span>
+
+
+<span class="k">def</span> <span class="nf">_as_float</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Convert a JSON value to float, rejecting booleans.</span><span class="sh">"""</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s"> must be a number, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="sh">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nf">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_as_bool</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Convert a JSON value to bool.</span><span class="sh">"""</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nf">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="p">.</span><span class="nf">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="sh">'</span><span class="s">true</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">false</span><span class="sh">'</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">.</span><span class="nf">lower</span><span class="p">()</span> <span class="o">==</span> <span class="sh">'</span><span class="s">true</span><span class="sh">'</span>
+    <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s"> must be a boolean, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="sh">'</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_as_triplet</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">limits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="sh">"""</span><span class="s">Validate a three-element HSV triplet and clamp it to its limits.</span><span class="sh">"""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">)</span> <span class="ow">or</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s"> must be a list of three integers</span><span class="sh">'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s"> must contain exactly three values</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="nf">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">limits</span><span class="p">)):</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s">[</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s">]</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s">[</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s">] must be in [0, </span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s">]</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="nf">return </span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ColorThreshold</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">HSV threshold for one colour class.</span><span class="sh">"""</span>
+
+    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">wrap_hue</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">lower</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">upper</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Validate and normalise the threshold values.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="nf">_as_bool</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">enabled</span><span class="p">,</span> <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">wrap_hue</span> <span class="o">=</span> <span class="nf">_as_bool</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">wrap_hue</span><span class="p">,</span> <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">lower</span> <span class="o">=</span> <span class="nf">_as_triplet</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">,</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">upper</span> <span class="o">=</span> <span class="nf">_as_triplet</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">,</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">hue lower bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s"> is greater than upper bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">channel</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">((</span><span class="sh">'</span><span class="s">saturation</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">value</span><span class="sh">'</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s"> lower bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s"> is greater than </span><span class="sh">'</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">upper bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">'</span><span class="s">color</span><span class="sh">'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="sh">'</span><span class="s">ColorThreshold</span><span class="sh">'</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Build a threshold from a JSON-like dictionary.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">color </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s"> must be an object</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="nf">cls</span><span class="p">(</span>
+            <span class="n">enabled</span><span class="o">=</span><span class="nf">_as_bool</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">.enabled</span><span class="sh">'</span><span class="p">),</span>
+            <span class="n">wrap_hue</span><span class="o">=</span><span class="nf">_as_bool</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">.wrap_hue</span><span class="sh">'</span><span class="p">),</span>
+            <span class="n">lower</span><span class="o">=</span><span class="nf">_as_triplet</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+                              <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">.lower</span><span class="sh">'</span><span class="p">),</span>
+            <span class="n">upper</span><span class="o">=</span><span class="nf">_as_triplet</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">,</span> <span class="p">[</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">]),</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+                              <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">.upper</span><span class="sh">'</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">threshold</span>
+
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sh">"""</span><span class="s">Return a JSON-serialisable representation.</span><span class="sh">"""</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">enabled</span><span class="p">,</span>
+            <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">wrap_hue</span><span class="p">,</span>
+            <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="nf">list</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="nf">list</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">mask_ranges</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+        <span class="sh">"""</span><span class="s">
+        Return the inRange intervals for this colour.
+
+        When ``wrap_hue`` is enabled, a second interval is added around hue 180
+        so that red colours on both sides of the OpenCV hue wrap are captured.
+        </span><span class="sh">"""</span>
+        <span class="n">ranges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">wrap_hue</span><span class="p">:</span>
+            <span class="n">wrap_low</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">180</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">wrap_high</span> <span class="o">=</span> <span class="mi">179</span>
+            <span class="k">if</span> <span class="n">wrap_low</span> <span class="o">&lt;=</span> <span class="n">wrap_high</span><span class="p">:</span>
+                <span class="n">ranges</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span>
+                    <span class="p">((</span><span class="n">wrap_low</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                     <span class="p">(</span><span class="n">wrap_high</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+        <span class="k">return</span> <span class="n">ranges</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">HSVConfig</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Full detector configuration: per-colour thresholds and filters.</span><span class="sh">"""</span>
+
+    <span class="n">colors</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ColorThreshold</span><span class="p">]</span> <span class="o">=</span> <span class="nf">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">ColorThreshold</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">DEFAULT_COLORS</span><span class="p">.</span><span class="nf">items</span><span class="p">()</span>
+        <span class="p">})</span>
+    <span class="n">min_area</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span>
+    <span class="n">max_area</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">min_dimension</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">min_fill_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.20</span>
+    <span class="n">morph_kernel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">morph_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">blur_kernel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Validate the configuration after construction.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">validate</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Validate all fields and raise ValueError when invalid.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">colors must be a non-empty object</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">all</span><span class="p">(</span><span class="nf">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">colour names must be non-empty strings</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">.</span><span class="nf">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="n">ColorThreshold</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">color </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s"> is not a ColorThreshold</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">checked</span> <span class="o">=</span> <span class="nc">ColorThreshold</span><span class="p">(</span>
+                <span class="n">enabled</span><span class="o">=</span><span class="n">threshold</span><span class="p">.</span><span class="n">enabled</span><span class="p">,</span>
+                <span class="n">wrap_hue</span><span class="o">=</span><span class="n">threshold</span><span class="p">.</span><span class="n">wrap_hue</span><span class="p">,</span>
+                <span class="n">lower</span><span class="o">=</span><span class="n">threshold</span><span class="p">.</span><span class="n">lower</span><span class="p">,</span>
+                <span class="n">upper</span><span class="o">=</span><span class="n">threshold</span><span class="p">.</span><span class="n">upper</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">threshold</span><span class="p">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">checked</span><span class="p">.</span><span class="n">enabled</span>
+            <span class="n">threshold</span><span class="p">.</span><span class="n">wrap_hue</span> <span class="o">=</span> <span class="n">checked</span><span class="p">.</span><span class="n">wrap_hue</span>
+            <span class="n">threshold</span><span class="p">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">checked</span><span class="p">.</span><span class="n">lower</span>
+            <span class="n">threshold</span><span class="p">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">checked</span><span class="p">.</span><span class="n">upper</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">min_area</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">min_area</span><span class="p">,</span> <span class="sh">'</span><span class="s">filter.min_area</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">max_area</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">max_area</span><span class="p">,</span> <span class="sh">'</span><span class="s">filter.max_area</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">min_dimension</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">min_dimension</span><span class="p">,</span> <span class="sh">'</span><span class="s">filter.min_dimension</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">min_fill_ratio</span> <span class="o">=</span> <span class="nf">_as_float</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">min_fill_ratio</span><span class="p">,</span> <span class="sh">'</span><span class="s">filter.min_fill_ratio</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">morph_kernel</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">morph_kernel</span><span class="p">,</span> <span class="sh">'</span><span class="s">morphology.kernel</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">morph_iterations</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">morph_iterations</span><span class="p">,</span> <span class="sh">'</span><span class="s">morphology.iterations</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">blur_kernel</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">blur_kernel</span><span class="p">,</span> <span class="sh">'</span><span class="s">morphology.blur_kernel</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">min_area</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter.min_area must be &gt;= 0</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">max_area</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter.max_area must be &gt;= 0</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">max_area</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">max_area</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">min_area</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter.max_area must be 0 or &gt;= filter.min_area</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">min_dimension</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter.min_dimension must be &gt;= 0</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">min_fill_ratio</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter.min_fill_ratio must be in [0.0, 1.0]</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">morph_kernel</span> <span class="o">&lt;=</span> <span class="mi">31</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">morphology.kernel must be in [0, 31]</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">morph_iterations</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">morphology.iterations must be &gt;= 0</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">blur_kernel</span> <span class="o">&lt;=</span> <span class="mi">31</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">morphology.blur_kernel must be in [0, 31]</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="sh">'</span><span class="s">HSVConfig</span><span class="sh">'</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Return the built-in default configuration.</span><span class="sh">"""</span>
+        <span class="k">return</span> <span class="nf">cls</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="sh">'</span><span class="s">HSVConfig</span><span class="sh">'</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Build a configuration from a JSON-like dictionary.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">configuration root must be an object</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="n">colors_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">colors</span><span class="sh">'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">colors_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">colors must be an object</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="n">version</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">version</span><span class="sh">'</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="sh">'</span><span class="s">version</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">version</span> <span class="o">&lt;</span> <span class="n">DEFAULT_CONFIG_VERSION</span><span class="p">:</span>
+            <span class="n">legacy_yellow</span> <span class="o">=</span> <span class="n">colors_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">)</span>
+            <span class="nf">if </span><span class="p">(</span><span class="nf">isinstance</span><span class="p">(</span><span class="n">legacy_yellow</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="n">legacy_yellow</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">)</span> <span class="o">==</span> <span class="n">LEGACY_YELLOW_LOWER</span>
+                    <span class="ow">and</span> <span class="n">legacy_yellow</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">)</span> <span class="o">==</span> <span class="n">LEGACY_YELLOW_UPPER</span><span class="p">):</span>
+                <span class="n">colors_data</span> <span class="o">=</span> <span class="nf">dict</span><span class="p">(</span><span class="n">colors_data</span><span class="p">)</span>
+                <span class="n">migrated</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">legacy_yellow</span><span class="p">.</span><span class="nf">items</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">)}</span>
+                <span class="n">colors_data</span><span class="p">[</span><span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="o">**</span><span class="n">DEFAULT_COLORS</span><span class="p">[</span><span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">],</span> <span class="o">**</span><span class="n">migrated</span><span class="p">}</span>
+
+        <span class="n">colors</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ColorThreshold</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">COLOR_ORDER</span><span class="p">:</span>
+            <span class="n">raw</span> <span class="o">=</span> <span class="n">colors_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">DEFAULT_COLORS</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">raw</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">DEFAULT_COLORS</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="o">**</span><span class="n">raw</span><span class="p">}</span>
+            <span class="n">colors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ColorThreshold</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">raw</span> <span class="ow">in</span> <span class="n">colors_data</span><span class="p">.</span><span class="nf">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">:</span>
+                <span class="n">colors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ColorThreshold</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="n">filter_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">filter</span><span class="sh">'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">morphology_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">morphology</span><span class="sh">'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">filter_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter must be an object</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">morphology_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">morphology must be an object</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="nf">cls</span><span class="p">(</span>
+            <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+            <span class="n">min_area</span><span class="o">=</span><span class="n">filter_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">min_area</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_FILTER</span><span class="p">[</span><span class="sh">'</span><span class="s">min_area</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">max_area</span><span class="o">=</span><span class="n">filter_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">max_area</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_FILTER</span><span class="p">[</span><span class="sh">'</span><span class="s">max_area</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">min_dimension</span><span class="o">=</span><span class="n">filter_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">min_dimension</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_FILTER</span><span class="p">[</span><span class="sh">'</span><span class="s">min_dimension</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">min_fill_ratio</span><span class="o">=</span><span class="n">filter_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">min_fill_ratio</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_FILTER</span><span class="p">[</span><span class="sh">'</span><span class="s">min_fill_ratio</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">morph_kernel</span><span class="o">=</span><span class="n">morphology_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">kernel</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_MORPHOLOGY</span><span class="p">[</span><span class="sh">'</span><span class="s">kernel</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">morph_iterations</span><span class="o">=</span><span class="n">morphology_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">iterations</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_MORPHOLOGY</span><span class="p">[</span><span class="sh">'</span><span class="s">iterations</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">blur_kernel</span><span class="o">=</span><span class="n">morphology_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">blur_kernel</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_MORPHOLOGY</span><span class="p">[</span><span class="sh">'</span><span class="s">blur_kernel</span><span class="sh">'</span><span class="p">]),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">config</span>
+
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sh">"""</span><span class="s">Return a JSON-serialisable representation.</span><span class="sh">"""</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="sh">'</span><span class="s">version</span><span class="sh">'</span><span class="p">:</span> <span class="n">DEFAULT_CONFIG_VERSION</span><span class="p">,</span>
+            <span class="sh">'</span><span class="s">colors</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">threshold</span><span class="p">.</span><span class="nf">to_dict</span><span class="p">()</span>
+                       <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">.</span><span class="nf">items</span><span class="p">()},</span>
+            <span class="sh">'</span><span class="s">filter</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+                <span class="sh">'</span><span class="s">min_area</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">min_area</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">max_area</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">max_area</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">min_dimension</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">min_dimension</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">min_fill_ratio</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">min_fill_ratio</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="sh">'</span><span class="s">morphology</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+                <span class="sh">'</span><span class="s">kernel</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">morph_kernel</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">iterations</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">morph_iterations</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">blur_kernel</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">blur_kernel</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="sh">'</span><span class="s">HSVConfig</span><span class="sh">'</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Load and validate a configuration from ``path``.</span><span class="sh">"""</span>
+        <span class="n">expanded</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">expanded</span><span class="p">,</span> <span class="sh">'</span><span class="s">r</span><span class="sh">'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">'</span><span class="s">utf-8</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">json</span><span class="p">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">invalid JSON in </span><span class="si">{</span><span class="n">expanded</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">exc</span><span class="p">.</span><span class="n">msg</span><span class="si">}</span><span class="s"> at line </span><span class="si">{</span><span class="n">exc</span><span class="p">.</span><span class="n">lineno</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span> <span class="k">from</span> <span class="n">exc</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cls</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">invalid HSV configuration </span><span class="si">{</span><span class="n">expanded</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span> <span class="k">from</span> <span class="n">exc</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Validate and atomically write the configuration to ``path``.</span><span class="sh">"""</span>
+        <span class="n">expanded</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">abspath</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">validate</span><span class="p">()</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">expanded</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parent</span><span class="p">:</span>
+            <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">temporary</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">expanded</span><span class="si">}</span><span class="s">.tmp</span><span class="sh">'</span>
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="sh">'</span><span class="s">w</span><span class="sh">'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">'</span><span class="s">utf-8</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="n">json</span><span class="p">.</span><span class="nf">dump</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">to_dict</span><span class="p">(),</span> <span class="n">stream</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">stream</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sh">'</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">os</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">expanded</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">expanded</span>
+
+</code></pre></div>      </div>
+    </div>
+</div>
+</details>
+
+<p>代码很长但要解释起来并不难把颜色阈值、面积过滤、形态学参数组织成一个对象生成所需要的配置信息，保存和读取配置信息 通过配置对象与其他模块结合</p>
+
+<p><a href="https://github.com/VoVL773/Machine_vision_color_sorting_system/blob/main/md/%E4%BA%8C.%E5%8C%85%E9%AA%A8%E6%9E%B6%E5%88%9B%E5%BB%BA%E4%B8%8E%20HSV%20%E9%85%8D%E7%BD%AE%E5%B1%82.md">详细教程见仓库</a></p>
+
+
+    </div>
+
+    
+    <footer class="post-tags">
+      <span>标签:</span>
+      
+      <a href="/posts/?tag=%E6%95%99%E7%A8%8B">教程</a>
+      
+      <a href="/posts/?tag=Python">Python</a>
+      
+      <a href="/posts/?tag=%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86">图像处理</a>
+      
+    </footer>
+    
+
+    <!-- 上一篇 / 下一篇(Jekyll 内置,按文章顺序) -->
+    <nav class="post-nav">
+      
+      <a class="post-nav-prev" href="/2026/10/13/ican-Opencv/">← 机器人是怎么读懂 ican 提供的"二维码"的</a>
+      
+      
+    </nav>
+
+    <!-- 留言区(Giscus) -->
+    <!-- =============================================================================
+     Giscus 留言区(基于 GitHub Discussions)
+     配置文档:https://giscus.app
+     说明:repo-id 和 category-id 需要你在 giscus.app 页面生成后填入。
+     ============================================================================= -->
+<section class="post-comments">
+  <h2 class="comments-title">留言</h2>
+  <div id="giscus-container"></div>
+</section>
+
+<script>
+  (function () {
+    // 读取当前博客主题(浅色/深色),让 Giscus 初始主题与之匹配
+    var currentTheme = document.documentElement.getAttribute('data-theme') === 'dark'
+      ? 'dark'
+      : 'light';
+
+    var container = document.getElementById('giscus-container');
+    var script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', 'VoVL773/VoVL773.github.io');
+    script.setAttribute('data-repo-id', 'R_kgDOUOAOAA');
+    script.setAttribute('data-category', 'Announcements');
+    script.setAttribute('data-category-id', 'DIC_kwDOUOAOAM4DFTd6');
+    script.setAttribute('data-mapping', 'pathname');
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'bottom');
+    script.setAttribute('data-theme', currentTheme);
+    script.setAttribute('data-lang', 'zh-CN');
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+    container.appendChild(script);
+  })();
+</script>
+
+  </article>
+
+  <!-- 右侧目录(TOC):由下方脚本从 .post-content 内的 h2/h3 自动生成,
+       窄屏(<=1024px)由 CSS 隐藏,不影响移动端阅读。 -->
+  <aside class="toc" aria-label="文章目录">
+    <div class="toc-inner">
+      <div class="toc-title">目录</div>
+      <nav id="toc-nav" class="toc-nav"></nav>
+    </div>
+  </aside>
+</div>
+
+<!-- ===== 文章目录(TOC)交互脚本 =====
+     职责:从 .post-content 抓取 h2/h3 自动生成右侧目录链接,
+     点击平滑跳转、滚动时高亮当前章节。
+     内联在此处而非外链:TOC 逻辑与 TOC 结构强相关,且仅文章页需要。 -->
+<script>
+  (function () {
+    var content = document.querySelector('.post-content');
+    var nav = document.getElementById('toc-nav');
+    var tocAside = document.querySelector('.toc');
+    if (!content || !nav) return;
+
+    // 收集文章正文中的二级、三级标题(kramdown 已自动生成 id)
+    var headings = Array.prototype.slice.call(content.querySelectorAll('h2, h3'));
+
+    // 文章没有标题时,隐藏整个目录侧栏,布局自动回退为单栏
+    if (headings.length === 0) {
+      if (tocAside) tocAside.style.display = 'none';
+      return;
+    }
+
+    // 兜底:为没有 id 的标题补一个,避免点击跳转失效
+    headings.forEach(function (h, i) {
+      if (!h.id) h.id = 'toc-heading-' + i;
+    });
+
+    // 生成目录链接:h2 顶格,h3 缩进
+    var frag = document.createDocumentFragment();
+    headings.forEach(function (h) {
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      a.className = 'toc-level-' + h.tagName.toLowerCase().slice(1);
+      a.setAttribute('data-target', h.id);
+      frag.appendChild(a);
+    });
+    nav.appendChild(frag);
+
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+    var linksById = {};
+    links.forEach(function (a) { linksById[a.getAttribute('data-target')] = a; });
+
+    // 点击:平滑滚动到对应标题,并更新地址栏 hash(不触发跳转)
+    links.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = document.getElementById(a.getAttribute('data-target'));
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', '#' + a.getAttribute('data-target'));
+      });
+    });
+
+    // 滚动高亮:找到离视口顶部最近(且已滚过)的标题,用 rAF 节流
+    var OFFSET = 100; // 顶部留白,避免标题贴着视口顶就算"当前"
+    var ticking = false;
+
+    function updateActive() {
+      ticking = false;
+      var scrollY = window.scrollY;
+      var current = null;
+      for (var i = 0; i < headings.length; i++) {
+        if (headings[i].getBoundingClientRect().top + scrollY - OFFSET <= scrollY) {
+          current = headings[i];
+        }
+      }
+      links.forEach(function (l) { l.classList.remove('is-active'); });
+      if (current && linksById[current.id]) {
+        linksById[current.id].classList.add('is-active');
+      }
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActive);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateActive();
+  })();
+</script>
+
+<!-- ===== Mermaid 图表(按需加载)=====
+     仅当本文真的有 ```mermaid 代码块时才引入,避免其它文章白白下载 3.5MB 的库。
+     content 在这里是已渲染完的 HTML,所以直接按 class 判断即可。 -->
+
+<script>
+  (function () {
+    // kramdown 对未知语言只输出 <pre><code class="language-mermaid">,没有 highlighter 包裹。
+    // closest 兜底是为了兼容以后万一变回 <div class="language-mermaid highlighter-rouge"> 的结构。
+    var codes = Array.prototype.slice.call(
+      document.querySelectorAll('pre > code.language-mermaid')
+    );
+    if (codes.length === 0) return;
+
+    // 换成 mermaid 需要的 <div class="mermaid">。
+    // 原始文本存进 data-src:主题切换后要用它重绘,库加载失败时要用它还原代码块。
+    var nodes = codes.map(function (code) {
+      var div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code.textContent.trim();   // textContent 会把 &gt; 自动还原成 >
+      div.setAttribute('data-src', div.textContent);
+
+      var block = (code.closest && code.closest('div.highlighter-rouge, div.language-mermaid'))
+        || code.parentNode;                        // 通常就是 <pre>
+      block.parentNode.replaceChild(div, block);
+      return div;
+    });
+
+    function themeName() {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
+    }
+
+    // 库加载失败时把图表还原成普通代码块 —— 宁可难看,也不能让内容凭空消失
+    function restoreSources() {
+      nodes.forEach(function (node) {
+        var pre = document.createElement('pre');
+        var code = document.createElement('code');
+        code.className = 'language-mermaid';
+        code.textContent = node.getAttribute('data-src');
+        pre.appendChild(code);
+        if (node.parentNode) node.parentNode.replaceChild(pre, node);
+      });
+    }
+
+    function render() {
+      nodes.forEach(function (node) {
+        node.removeAttribute('data-processed');    // 复位,允许重复渲染
+        node.textContent = node.getAttribute('data-src');
+      });
+
+      window.mermaid.initialize({
+        startOnLoad: false,                        // 由我们手动控制渲染时机
+        theme: themeName(),
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif',
+        securityLevel: 'loose',                    // 图表由本站作者编写,允许 htmlLabels
+        flowchart: { useMaxWidth: true, htmlLabels: true }
+      });
+
+      // v10 起用 run(),旧版回退到 init();suppressErrors 保证一张图出错不影响其余的图
+      var done = window.mermaid.run
+        ? window.mermaid.run({ nodes: nodes, suppressErrors: true })
+        : window.mermaid.init(undefined, nodes);
+
+      return Promise.resolve(done).catch(function () { /* 单图语法错误时静默保留其余图表 */ });
+    }
+
+    // 串行化渲染,避免快速反复切主题时多次渲染互相打断
+    var queue = Promise.resolve();
+    function scheduleRender() {
+      queue = queue.then(render).catch(function () {});
+      return queue;
+    }
+
+    var script = document.createElement('script');
+    script.src = '/assets/js/mermaid.min.js';
+    script.onload = function () {
+      scheduleRender();
+
+      // theme.js 只负责改 <html data-theme>,这里观察它的变化来重绘
+      var last = themeName();
+      new MutationObserver(function () {
+        if (themeName() !== last) {
+          last = themeName();
+          scheduleRender();
+        }
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    };
+    script.onerror = restoreSources;
+    document.head.appendChild(script);
+  })();
+</script>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+</body>
+</html>

@@ -4,7 +4,7 @@
 
 ## 功能
 
-- 首页：Hero 头图 + 精选项目 + 文章分类 + 最新文章
+- 首页：Hero 头图与技术方向介绍 + 最新文章 + 精选项目 + 文章分类
 - 全部文章页（`/posts/`）：封面卡片 + 分类筛选 + 分页
 - 项目页（`/projects/`）：项目展示
 - 算法题解站（`/algorithm/`）：LeetCode 题解与见解
@@ -61,3 +61,8 @@ jekyll serve --host 0.0.0.0 --port 4000
 
 访问 http://127.0.0.1:4000/
 [博客界面](https://vovl773.github.io/)
+
+## 社交链接与订阅
+
+- `_config.yml` 的 `bilibili_url` 填入 B 站个人主页完整地址；留空时隐藏入口。
+- RSS 订阅由 `feed.xml` 模板自动生成，地址为 `/feed.xml`。

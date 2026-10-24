@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VoVL的博客</title>
+    <link>http://localhost:4000/</link>
+    <description>间接性踌躇满志，持续性记录生活。</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 24 Oct 2026 10:53:54 +0800</lastBuildDate>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ROS 2 机器视觉实践：从色块识别到目标跟踪</title>
+      <link>http://localhost:4000/2026/10/23/MVC/</link>
+      <guid isPermaLink="true">http://localhost:4000/2026/10/23/MVC/</guid>
+      <pubDate>Fri, 23 Oct 2026 00:00:00 +0800</pubDate>
+      <description>引言：
+</description>
+      <category>教程</category><category>Python</category><category>图像处理</category>
+    </item>
+    
+    <item>
+      <title>机器人是怎么读懂 ican 提供的&quot;二维码&quot;的</title>
+      <link>http://localhost:4000/2026/10/13/ican-Opencv/</link>
+      <guid isPermaLink="true">http://localhost:4000/2026/10/13/ican-Opencv/</guid>
+      <pubDate>Tue, 13 Oct 2026 00:00:00 +0800</pubDate>
+      <description>
+  本博客只作学习交流，涉及到部分ican比赛的相关内容，如有侵权，立刻删除
+
+</description>
+      <category>Python</category><category>图像处理</category>
+    </item>
+    
+    <item>
+      <title>从零开始的容器教程</title>
+      <link>http://localhost:4000/2026/10/10/Containers/</link>
+      <guid isPermaLink="true">http://localhost:4000/2026/10/10/Containers/</guid>
+      <pubDate>Sat, 10 Oct 2026 00:00:00 +0800</pubDate>
+      <description>这篇博客记录我怎么从零搭建三类容器：Ubuntu 22.04 + ROS 2 Humble、YOLOv8 编译环境，以及 Label Studio 标注工具。三者用途完全不同，但搭建套路是一致的——看完你应该也能照着做出自己的容器。
+</description>
+      <category>随笔</category><category>教程</category>
+    </item>
+    
+    <item>
+      <title>ChatGPT 与 Container Tools 插件的配置记录</title>
+      <link>http://localhost:4000/2026/10/08/chatgpt&amp;Containers/</link>
+      <guid isPermaLink="true">http://localhost:4000/2026/10/08/chatgpt&amp;Containers/</guid>
+      <pubDate>Thu, 08 Oct 2026 00:00:00 +0800</pubDate>
+      <description>这是一篇教程向的记录：怎么在国内把 ChatGPT（以及它自带的 Codex 客户端）配起来，再用 VS Code 的容器插件管理 Docker。
+</description>
+      <category>随笔</category><category>教程</category>
+    </item>
+    
+    <item>
+      <title>那行被删掉的 `pop()`，才是回溯的命根子</title>
+      <link>http://localhost:4000/2026/09/26/recall/</link>
+      <guid isPermaLink="true">http://localhost:4000/2026/09/26/recall/</guid>
+      <pubDate>Sat, 26 Sep 2026 00:00:00 +0800</pubDate>
+      <description>
+  一道面试高频送命题。这篇文章要做的，是帮你把那种“说不清但能感觉到”的直觉，变成一句能说清楚的话。
+
+</description>
+      <category>算法</category>
+    </item>
+    
+    <item>
+      <title>《当机器人学会踩球，AI安全却还没学会刹车》</title>
+      <link>http://localhost:4000/2026/09/19/news/</link>
+      <guid isPermaLink="true">http://localhost:4000/2026/09/19/news/</guid>
+      <pubDate>Sat, 19 Sep 2026 00:00:00 +0800</pubDate>
+      <description>9月9日，智元发布了AGILE 2.0。同一天，一位英国AI研究员在X上发了一则措辞严厉的离职声明。两件事看起来不相干，但放在一起看，恰好勾勒出当下AI最真实的处境：能力在狂奔，约束却还在原地。
+</description>
+      <category>随笔</category>
+    </item>
+    
+    <item>
+      <title>Python笔记</title>
+      <link>http://localhost:4000/2026/09/04/Python-note/</link>
+      <guid isPermaLink="true">http://localhost:4000/2026/09/04/Python-note/</guid>
+      <pubDate>Fri, 04 Sep 2026 00:00:00 +0800</pubDate>
+      <description>这是学习Python后的总结(主要是对练习进行总结)
+</description>
+      <category>Python</category><category>笔记</category>
+    </item>
+    
+    <item>
+      <title>欢迎来到我的博客</title>
+      <link>http://localhost:4000/2026/09/01/welcome-to-my-blog/</link>
+      <guid isPermaLink="true">http://localhost:4000/2026/09/01/welcome-to-my-blog/</guid>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0800</pubDate>
+      <description>这是这个博客的第一篇文章。
+</description>
+      <category>随笔</category><category>公告</category>
+    </item>
+    
+  </channel>
+</rss>
