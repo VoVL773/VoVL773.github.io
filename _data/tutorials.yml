@@ -1,0 +1,16 @@
+- id: machine-vision
+  title: ROS 2 机器视觉实战
+  subtitle: 从颜色检测到视觉服务
+  description: 从接口定义、HSV 配置和目标跟踪开始，逐步接入 ROS 2，完成可调参、可测试的颜色分拣视觉系统。
+  tags: [ROS 2 Jazzy, OpenCV, Python]
+  cover:
+    title: ROS 2
+    subtitle: × OpenCV
+    label: VISION
+  url: /tutorials/machine-vision/00-overview/
+  source: https://github.com/VoVL773/Machine_vision-_color_sorting_system
+  groups:
+    - 课程导读
+    - 基础与接口
+    - 纯 Python 视觉模块
+    - 接入 ROS 2

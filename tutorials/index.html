@@ -1,0 +1,30 @@
+---
+layout: default
+title: 教程
+tutorial_index: true
+permalink: /tutorials/
+---
+<div class="tutorial-hub">
+  <header class="tutorial-hub-heading">
+    <div class="tutorial-eyebrow">LEARN · BUILD · SHARE</div>
+    <h1>教程与实践</h1>
+    <p>把项目拆成章节，从原理到实现，一步一步动手完成。</p>
+  </header>
+  {% for course in site.data.tutorials %}
+  {% assign chapters = site.tutorials | where: 'course', course.id | where_exp: 'item', 'item.order > 0' %}
+  <a class="tutorial-course-card" href="{{ course.url | relative_url }}">
+    <div class="tutorial-course-art" aria-hidden="true">
+      <span>{{ course.cover.title | default: course.title | escape }}</span>
+      {% if course.cover.subtitle %}<span>{{ course.cover.subtitle | escape }}</span>{% endif %}
+      <div class="tutorial-art-caption">{{ course.cover.label | default: 'TUTORIAL' | escape }} / {{ chapters.size }} CHAPTERS</div>
+    </div>
+    <div class="tutorial-course-info">
+      <div class="tutorial-eyebrow">项目实战 · {{ chapters.size }} 章</div>
+      <h2>{{ course.title }}</h2>
+      <p>{{ course.description }}</p>
+      <div class="tutorial-course-tags">{% for tag in course.tags %}<span>{{ tag }}</span>{% endfor %}</div>
+      <div class="tutorial-start">开始学习 →</div>
+    </div>
+  </a>
+  {% endfor %}
+</div>

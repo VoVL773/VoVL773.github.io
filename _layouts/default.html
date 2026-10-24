@@ -38,12 +38,15 @@
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
 
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  {% if page.layout == 'tutorial' or page.tutorial_index %}
+  <link rel="stylesheet" href="{{ '/assets/css/tutorials.css' | relative_url }}">
+  {% endif %}
 </head>
-<body>
+<body{% if page.layout == 'tutorial' %} class="tutorial-page"{% endif %}>
   {% include header.html %}
 
   <main class="site-main">
-    {% if page.layout == 'post' %}
+    {% if page.layout == 'post' or page.layout == 'tutorial' %}
       {%- comment -%}文章页由 post.html 自己用 .post-layout 控制两栏宽度,不套默认 .container{%- endcomment -%}
       {{ content }}
     {% else %}

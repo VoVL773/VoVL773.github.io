@@ -1,0 +1,68 @@
+---
+layout: default
+---
+{% assign course = site.data.tutorials | where: 'id', page.course | first %}
+{% assign lessons = site.tutorials | where: 'course', page.course | sort: 'order' %}
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="{{ '/tutorials/' | relative_url }}">← 全部教程</a>
+    <div class="tutorial-course-name">{{ course.title }}</div>
+    <p class="tutorial-course-subtitle">{{ course.subtitle }}</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        {% for group in course.groups %}
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">{{ group }}</div>
+          {% for lesson in lessons %}
+          {% if lesson.group == group %}
+          <a class="tutorial-chapter{% if lesson.url == page.url %} is-current{% endif %}" href="{{ lesson.url | relative_url }}"{% if lesson.url == page.url %} aria-current="page"{% endif %}>
+            <span class="tutorial-chapter-number">{% if lesson.order == 0 %}序{% else %}{{ lesson.order | prepend: '0' | slice: -2, 2 }}{% endif %}</span>
+            <span>{{ lesson.title }}</span>
+          </a>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </nav>
+    </details>
+    <a class="tutorial-source" href="{{ course.source }}" target="_blank" rel="noopener">项目源码 ↗</a>
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="{{ '/tutorials/' | relative_url }}">教程</a><span>/</span>
+      <a href="{{ course.url | relative_url }}">机器视觉</a><span>/</span>
+      <span>{{ page.group }}</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">{{ course.title }} · {% if page.order == 0 %}课程导读{% else %}第 {{ page.order }} 章{% endif %}</div>
+      <h1>{{ page.title }}</h1>
+      <p>{{ page.description }}</p>
+    </header>
+    <div class="post-content tutorial-content">{{ content }}</div>
+    {% if page.source_doc %}<div class="tutorial-edit"><a href="{{ course.source }}/blob/main/md/{{ page.source_doc | uri_escape }}" target="_blank" rel="noopener">在 GitHub 查看原文 ↗</a></div>{% endif %}
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      {% for lesson in lessons %}
+        {% if lesson.url == page.url %}
+          {% unless forloop.first %}
+            {% assign previous_index = forloop.index0 | minus: 1 %}
+            {% assign previous = lessons[previous_index] %}
+            <a href="{{ previous.url | relative_url }}"><span>← 上一章</span><strong>{{ previous.title }}</strong></a>
+          {% endunless %}
+          {% unless forloop.last %}
+            {% assign next_index = forloop.index0 | plus: 1 %}
+            {% assign next = lessons[next_index] %}
+            <a class="tutorial-next" href="{{ next.url | relative_url }}"><span>下一章 →</span><strong>{{ next.title }}</strong></a>
+          {% endunless %}
+        {% endif %}
+      {% endfor %}
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="{{ '/assets/js/tutorials.js' | relative_url }}" defer></script>

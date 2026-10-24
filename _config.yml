@@ -40,6 +40,9 @@ plugins: []
 # 题解目录 → _problems/   见解目录 → _insights/   项目目录 → _projects/
 # (目录前的下划线是 Jekyll 集合约定,和 _posts 一样)
 collections:
+  tutorials:
+    output: true
+    permalink: /tutorials/:path/
   problems:
     output: true
     permalink: /algorithm/problem/:name/
@@ -52,6 +55,11 @@ collections:
 
 # ===== 默认布局(自动给文章/页面赋 layout,减少 front matter 重复)=====
 defaults:
+  - scope:
+      path: ""
+      type: "tutorials"
+    values:
+      layout: "tutorial"
   - scope:
       path: ""           # 所有路径
       type: "posts"      # 仅对 _posts 下的文章生效
