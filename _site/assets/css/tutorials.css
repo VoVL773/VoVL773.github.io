@@ -84,7 +84,7 @@
 .tutorial-pagination span { font-size: .75rem; color: var(--muted); }
 .tutorial-pagination strong { font-size: .9rem; font-weight: 500; }
 .tutorial-next { grid-column: 2; text-align: right; }
-.tutorial-page .site-footer { margin-top: 0; background: var(--tutorial-sidebar-bg); }
+.tutorial-page .site-footer { margin-top: 0; }
 .tutorial-hub { padding: 35px 0 80px; }
 .tutorial-hub-heading { margin-bottom: 36px; }
 .tutorial-hub-heading h1 { font-size: 2.4rem; margin: 10px 0; }
