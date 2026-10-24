@@ -1,5 +1,5 @@
 ---
-title: "机器视觉颜色分拣系统（ROS 2 视觉目标输出）"
+title: "差速小车建图/巡检/前沿探索"
 tags: [Python,ROS2,NAV2]
 cover: "assets/images/demo/patrol.png"
 github: "https://github.com/VoVL773/patrol"
