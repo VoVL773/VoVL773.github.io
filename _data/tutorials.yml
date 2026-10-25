@@ -14,3 +14,18 @@
     - 基础与接口
     - 纯 Python 视觉模块
     - 接入 ROS 2
+
+- id: ros2-basics
+  title: ROS2 基础教程
+  subtitle: ROS2基础 · ROS2实战 · 巡游小车实战
+  description: 从工作空间、话题与服务通信入门，结合海龟案例练习 ROS2，再完成 Gazebo 仿真、建图导航与巡游小车项目。
+  tags: [ROS 2 Jazzy, Gazebo Harmonic, Python, Nav2]
+  cover:
+    title: ROS2
+    subtitle: 从基础到巡游小车
+    label: ROBOTICS
+  url: /tutorials/ROS2-bash/README/
+  groups:
+    - ROS2基础
+    - ROS2实战
+    - 巡游小车实战

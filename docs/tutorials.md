@@ -25,6 +25,18 @@ python3 scripts/import-machine-vision.py "/home/vovl773/VoVL773/开源项目/Mac
 
 ## 手动新增一章
 
+### ROS2 基础教程
+
+课程正文位于 `_tutorials/ROS2-bash/`，课程 ID 为 `ros2-basics`，入口为 `/tutorials/ROS2-bash/README/`。共三部分：
+
+- **ROS2基础**：课程导读、01～07 章、07B 实操手册与勘误附录。
+- **ROS2实战**：`ROS2实战部分详细记录.md`，包含海龟与通信练习案例。
+- **巡游小车实战**：`巡游小车仿真-从零复刻手册.md`，包含小车仿真与巡检完整流程。
+
+这门课直接维护博客内的 Markdown 文件，不使用机器视觉课程的导入脚本。正文中的 Liquid 示例（如 `{{FILE:…}}`）需要使用 Liquid 的 `raw` / `endraw` 标签包裹，避免被当作站点模板执行。
+
+### 章节元数据
+
 创建 `_tutorials/machine-vision/10-your-topic.md`，开头写：
 
 ```yaml

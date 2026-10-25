@@ -26,13 +26,13 @@ layout: default
         {% endfor %}
       </nav>
     </details>
-    <a class="tutorial-source" href="{{ course.source }}" target="_blank" rel="noopener">项目源码 ↗</a>
+    {% if course.source %}<a class="tutorial-source" href="{{ course.source }}" target="_blank" rel="noopener">项目源码 ↗</a>{% endif %}
   </aside>
 
   <article class="tutorial-article">
     <nav class="tutorial-breadcrumb" aria-label="页面路径">
       <a href="{{ '/tutorials/' | relative_url }}">教程</a><span>/</span>
-      <a href="{{ course.url | relative_url }}">机器视觉</a><span>/</span>
+      <a href="{{ course.url | relative_url }}">{{ course.title }}</a><span>/</span>
       <span>{{ page.group }}</span>
     </nav>
     <header class="tutorial-title-block">
@@ -41,7 +41,7 @@ layout: default
       <p>{{ page.description }}</p>
     </header>
     <div class="post-content tutorial-content">{{ content }}</div>
-    {% if page.source_doc %}<div class="tutorial-edit"><a href="{{ course.source }}/blob/main/md/{{ page.source_doc | uri_escape }}" target="_blank" rel="noopener">在 GitHub 查看原文 ↗</a></div>{% endif %}
+    {% if page.source_doc and course.source %}<div class="tutorial-edit"><a href="{{ course.source }}/blob/main/md/{{ page.source_doc | uri_escape }}" target="_blank" rel="noopener">在 GitHub 查看原文 ↗</a></div>{% endif %}
     <nav class="tutorial-pagination" aria-label="章节翻页">
       {% for lesson in lessons %}
         {% if lesson.url == page.url %}
