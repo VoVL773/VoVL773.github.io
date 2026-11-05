@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    话题通信 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS2 基础教程</div>
+    <p class="tutorial-course-subtitle">ROS2基础 · ROS2实战 · 巡游小车实战</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2基础</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/README/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程导读</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/01-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>创建工作空间</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>多线程示例</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/" aria-current="page">
+            <span class="tutorial-chapter-number">03</span>
+            <span>话题通信</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>服务和参数</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>TF 坐标变换</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>可视化与数据工具</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>仿真与导航</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07B-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%93%8D%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>仿真与导航实操手册</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E9%99%84%E5%BD%95-%E5%8B%98%E8%AF%AF%E4%B8%8E%E9%80%9F%E6%9F%A5/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>附录：勘误与速查</span>
+          </a>
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/ROS2%E5%AE%9E%E6%88%98%E9%83%A8%E5%88%86%E8%AF%A6%E7%BB%86%E8%AE%B0%E5%BD%95/">
+            <span class="tutorial-chapter-number">10</span>
+            <span>ROS2 实战：海龟案例与通信练习</span>
+          </a>
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">巡游小车实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E5%B7%A1%E6%B8%B8%E5%B0%8F%E8%BD%A6%E4%BB%BF%E7%9C%9F-%E4%BB%8E%E9%9B%B6%E5%A4%8D%E5%88%BB%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">11</span>
+            <span>巡游小车实战：从零复刻</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/ROS2-bash/README/">ROS2 基础教程</a><span>/</span>
+      <span>ROS2基础</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS2 基础教程 · 第 3 章</div>
+      <h1>话题通信</h1>
+      <p>学习发布订阅、自定义消息与图像通信。</p>
+    </header>
+    <div class="post-content tutorial-content"><!-- nav -->
+<blockquote>
+  <p>📖 <a href="/tutorials/ROS2-bash/README/">ROS 2 学习随笔</a> ｜ ⬅️ 上一章：<a href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">二、多线程示例</a> ｜ <a href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">下一章：四、服务和参数</a> ➡️</p>
+</blockquote>
+
+<p>以海龟节点为例：<code class="language-plaintext highlighter-rouge">ros2 run turtlesim turtlesim_node</code></p>
+
+<p>指令清单：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ros2 node list</code> —— 列出所有正在运行的节点</li>
+  <li><code class="language-plaintext highlighter-rouge">ros2 node info /turtlesim</code> —— 显示 <code class="language-plaintext highlighter-rouge">/turtlesim</code> 这个节点的信息（它订阅了什么、发布了什么、提供了哪些服务）</li>
+  <li><code class="language-plaintext highlighter-rouge">ros2 topic --help</code> —— 话题对应的命令</li>
+</ul>
+
+<p>示例 <code class="language-plaintext highlighter-rouge">ros2 topic echo /turtle1/pose</code> 打印海龟节点 <strong>/turtlesim</strong> 的位置。</p>
+
+<p>输出依次是：x 轴坐标、y 轴坐标、朝向角 theta（与 x 轴的夹角，单位弧度）、线速度 linear_velocity、角速度 angular_velocity。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ros2 topic info /turtle1/cmd_vel</code> —— 显示这个话题的消息类型，以及发布者和订阅者的数量</li>
+  <li><code class="language-plaintext highlighter-rouge">ros2 interface show</code> —— 查看对应接口的详细定义</li>
+  <li><code class="language-plaintext highlighter-rouge">ros2 topic pub 话题名 接口名 对应参数</code>
+    <blockquote>
+      <p>示例：<code class="language-plaintext highlighter-rouge">ros2 topic pub /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5, y: 0.0}, angular: {z: 0.0}}"</code></p>
+
+      <p>发布一个对应控制海龟速度的接口的话题，让海龟节点以指定速度运动。</p>
+    </blockquote>
+  </li>
+</ul>
+
+<blockquote>
+  <p>💡 <strong>知识点：节点名 vs 话题名</strong></p>
+
+  <p>海龟模拟器里有两类名字，初学特别容易混：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>名字</th>
+        <th>是什么</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">/turtlesim</code></td>
+        <td><strong>节点名</strong>（整个模拟器程序）</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">/turtle1</code></td>
+        <td><strong>海龟实体名</strong>（可以 spawn 出 turtle2、turtle3……）</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">/turtle1/cmd_vel</code></td>
+        <td><strong>话题名</strong>，给 turtle1 下发速度指令</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">/turtle1/pose</code></td>
+        <td><strong>话题名</strong>，turtle1 上报自己的位姿</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>所以 <code class="language-plaintext highlighter-rouge">ros2 node info /turtlesim</code> 用节点名，<code class="language-plaintext highlighter-rouge">ros2 topic echo /turtle1/pose</code> 用话题名。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">ros2 topic pub</code> 的默认行为</strong></p>
+
+  <p>不加 <code class="language-plaintext highlighter-rouge">--once</code> / <code class="language-plaintext highlighter-rouge">-1</code> 时，它会<strong>按 1 Hz 持续发布</strong>，所以海龟会一直动。想只发一次就加 <code class="language-plaintext highlighter-rouge">--once</code>。
+参数用 YAML 写，<strong>可以只写要改的字段</strong>，没写到的字段取默认值（0）。所以 <code class="language-plaintext highlighter-rouge">"{linear: {x: 0.5}}"</code> 是合法的。</p>
+</blockquote>
+
+<h3 id="示例项目小说发布与接收然后读取">示例项目：小说发布与接收然后读取</h3>
+
+<p>发布节点如下：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">import</span> <span class="n">requests</span>
+<span class="kn">from</span> <span class="n">std_msgs.msg</span> <span class="kn">import</span> <span class="n">String</span>
+<span class="kn">from</span> <span class="n">queue</span> <span class="kn">import</span> <span class="n">Queue</span>          <span class="c1"># 线程安全的队列，用于在"下载线程"和"定时器回调"之间传数据
+</span><span class="kn">import</span> <span class="n">threading</span>
+
+<span class="k">class</span> <span class="nc">NovelPubNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>                     <span class="c1"># 必须调用父类构造，完成节点初始化
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s">节点，启动</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="c1"># 队列：下载线程往里放，定时器回调从里取。Queue 内部有锁，多线程读写安全
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">novels_queue</span> <span class="o">=</span> <span class="nc">Queue</span><span class="p">()</span>
+
+        <span class="c1"># 创建发布者：参数依次为 (消息类型, 话题名, QoS 队列深度)
+</span>        <span class="c1"># 话题名 'novel' 是相对名字，ROS 2 会自动补上命名空间，最终通常是 /novel
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">novel_publisher</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="sh">'</span><span class="s">novel</span><span class="sh">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># 创建定时器：每 5 秒调用一次 timer_callback
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">timer_callback</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">timer_callback</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="c1"># 只有队列里有内容才发布，避免把空行刷到话题上
+</span>        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">novels_queue</span><span class="p">.</span><span class="nf">qsize</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">novels_queue</span><span class="p">.</span><span class="nf">get</span><span class="p">()</span>               <span class="c1"># 从队列取出一行（取走即删除）
+</span>            <span class="n">msg</span> <span class="o">=</span> <span class="nc">String</span><span class="p">()</span>                               <span class="c1"># ROS 消息必须先实例化
+</span>            <span class="n">msg</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">line</span>                              <span class="c1"># String 消息只有一个字段 data
+</span>            <span class="n">self</span><span class="p">.</span><span class="n">novel_publisher</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>            <span class="c1"># 发布出去
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">发布了：</span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">data</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="c1"># 这个方法跑在子线程里，负责把整本小说切行塞进队列
+</span>        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="sh">'</span><span class="s">gbk</span><span class="sh">'</span>                        <span class="c1"># 中文小说站多为 GBK，不指定会乱码
+</span>        <span class="n">text</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">text</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">下载</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="si">}</span><span class="s"> 字</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">text</span><span class="p">.</span><span class="nf">splitlines</span><span class="p">():</span>                   <span class="c1"># 按行切分
+</span>            <span class="n">self</span><span class="p">.</span><span class="n">novels_queue</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>                  <span class="c1"># 逐行入队
+</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">NovelPubNode</span><span class="p">(</span><span class="sh">'</span><span class="s">novel_pub</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="c1"># 建议换成你自己准备的一个本地 txt 文件或稳定的测试地址：
+</span>    <span class="c1"># 第三方下载站的链接经常失效，而且抓取受版权保护的内容有法律风险。
+</span>    <span class="n">url</span> <span class="o">=</span> <span class="p">(</span><span class="sh">'</span><span class="s">https://download.zxcs.zip/%E3%80%8A%E5%87%A1%E4%BA%BA%E4%BF%AE%E4%BB%99%E4%BC%A0%E3%80%8B</span><span class="sh">'</span>
+           <span class="sh">'</span><span class="s">%EF%BC%88%E6%A0%A1%E5%AF%B9%E7%89%88%E5%85%A8%E6%9C%AC+%E7%95%AA%E5%A4%96%EF%BC%89</span><span class="sh">'</span>
+           <span class="sh">'</span><span class="s">%E4%BD%9C%E8%80%85%EF%BC%9A%E5%BF%98%E8%AF%AD.txt</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="c1"># 放到子线程下载，daemon=True 让它随主程序退出而结束
+</span>    <span class="c1"># 下载可能要几十秒，如果放在主线程会把后面的 rclpy.spin 堵住
+</span>    <span class="n">download_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="p">.</span><span class="nc">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">node</span><span class="p">.</span><span class="n">download</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">url</span><span class="p">,),</span> <span class="n">daemon</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">download_thread</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>        <span class="c1"># 主线程在这里跑事件循环，定时器才能被触发
+</span>    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么必须用 <code class="language-plaintext highlighter-rouge">Queue</code> 而不是普通 <code class="language-plaintext highlighter-rouge">list</code></strong></p>
+
+  <p>下载在<strong>子线程</strong>，发布在<strong>主线程的定时器回调</strong>里，两者共享数据。普通 <code class="language-plaintext highlighter-rouge">list</code> 的 <code class="language-plaintext highlighter-rouge">append</code> / <code class="language-plaintext highlighter-rouge">pop(0)</code> 不是原子操作，并发读写可能丢数据或读到”半成品”。<code class="language-plaintext highlighter-rouge">queue.Queue</code> 内部自带锁，是<strong>跨线程传数据的标准做法</strong>。</p>
+
+  <p>记住这个模式：<strong>ROS 回调 + 子线程协作 = 用 Queue 或锁</strong>。后面 Qt 那个例子用的是另一种更优雅的方案（信号槽）。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">create_publisher</code> 的第三个参数是什么</strong></p>
+
+  <p>那个 <code class="language-plaintext highlighter-rouge">10</code> 不是”缓冲区大小”这么简单，它是 <strong>QoS（服务质量）的队列深度</strong>。ROS 2 的通信质量由 QoS 策略控制，最常用的两项是：</p>
+
+  <ul>
+    <li><strong>可靠性（Reliability）</strong>：默认 <code class="language-plaintext highlighter-rouge">RELIABLE</code>（保证送达，丢包会重传）；可改为 <code class="language-plaintext highlighter-rouge">BEST_EFFORT</code>（尽力而为，适合高频传感器数据，如摄像头、激光雷达）</li>
+    <li><strong>历史深度（History Depth）</strong>：默认 <code class="language-plaintext highlighter-rouge">10</code>，即最多缓存 10 条待发消息，超出后丢最旧的</li>
+  </ul>
+
+  <p>发布者和订阅者的 QoS <strong>必须兼容</strong>才能通信。如果你遇到”话题明明对，就是收不到消息”，八成是 QoS 不匹配——用 <code class="language-plaintext highlighter-rouge">ros2 topic info /话题名 --verbose</code> 对比两边的 QoS 设置。</p>
+</blockquote>
+
+<p>接收节点如下：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">espeakng</span>          <span class="c1"># 注意：PyPI 包名是 py-espeak-ng，不是 espeakng（见下方说明）
+</span><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">std_msgs.msg</span> <span class="kn">import</span> <span class="n">String</span>
+<span class="kn">from</span> <span class="n">queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">import</span> <span class="n">threading</span>
+<span class="kn">import</span> <span class="n">time</span>
+
+<span class="k">class</span> <span class="nc">NovelSubNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s"> 启动！</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">novels_queue_</span> <span class="o">=</span> <span class="nc">Queue</span><span class="p">()</span>
+
+        <span class="c1"># 创建订阅者：参数依次为 (消息类型, 话题名, 回调函数, QoS 队列深度)
+</span>        <span class="c1"># 消息类型和话题名必须与发布端完全一致，否则收不到
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">novel_subscriber_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_subscription</span><span class="p">(</span>
+            <span class="n">String</span><span class="p">,</span> <span class="sh">'</span><span class="s">novel</span><span class="sh">'</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">novel_callback</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># 朗读很耗时（一句话要好几秒），绝不能放在回调里做，否则会卡住整个 spin
+</span>        <span class="c1"># 所以单独开一个线程专职朗读
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">speech_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="p">.</span><span class="nc">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">speak_thread</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">speech_thread</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">novel_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="c1"># 订阅回调要尽可能快：这里只做"入队"这一件事，立刻返回
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">novels_queue_</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">speak_thread</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="c1"># 这个函数跑在子线程里
+</span>        <span class="n">speaker</span> <span class="o">=</span> <span class="n">espeakng</span><span class="p">.</span><span class="nc">ESpeakNG</span><span class="p">()</span>
+        <span class="n">speaker</span><span class="p">.</span><span class="n">voice</span> <span class="o">=</span> <span class="sh">'</span><span class="s">zh</span><span class="sh">'</span>          <span class="c1"># 指定中文发音
+</span>
+        <span class="k">while</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>             <span class="c1"># rclpy.ok() 在 shutdown 后变 False，循环随之退出
+</span>            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">novels_queue_</span><span class="p">.</span><span class="nf">qsize</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">novels_queue_</span><span class="p">.</span><span class="nf">get</span><span class="p">()</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">读：</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+                <span class="n">speaker</span><span class="p">.</span><span class="nf">say</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>   <span class="c1"># sync=True：等这句话读完再返回，否则会叠着读
+</span>            <span class="k">else</span><span class="p">:</span>
+                <span class="n">time</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>         <span class="c1"># 队列空了就歇 1 秒，避免 while 空转把 CPU 跑满
+</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">NovelSubNode</span><span class="p">(</span><span class="sh">'</span><span class="s">novel_sub</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>注意：<code class="language-plaintext highlighter-rouge">espeakng</code> 这个名字有个大坑</strong></p>
+
+  <p>PyPI 上有<strong>两个</strong>名字相近的包，装错了会直接 <code class="language-plaintext highlighter-rouge">ImportError</code>：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>你想用的 API</th>
+        <th>正确的 pip 包名</th>
+        <th>装错的后果</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">espeakng.ESpeakNG()</code>（本代码用的）</td>
+        <td><strong><code class="language-plaintext highlighter-rouge">py-espeak-ng</code></strong></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">espeakng.Speaker()</code></td>
+        <td><code class="language-plaintext highlighter-rouge">espeakng</code></td>
+        <td>报 <code class="language-plaintext highlighter-rouge">AttributeError: module 'espeakng' has no attribute 'ESpeakNG'</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>所以安装命令是：</p>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>py-espeak-ng
+<span class="nb">sudo </span>apt <span class="nb">install </span>espeak-ng      <span class="c"># 还需要系统层面的 espeak-ng 引擎</span>
+</code></pre></div>  </div>
+
+  <p><strong>光 pip 装不够</strong>，<code class="language-plaintext highlighter-rouge">py-espeak-ng</code> 只是 Python 封装，底层要调用系统的 <code class="language-plaintext highlighter-rouge">espeak-ng</code> 可执行程序。系统没装会报找不到引擎。</p>
+</blockquote>
+
+<blockquote>
+  <p>⚠️ <strong>注意：这里同时修了两个问题</strong></p>
+
+  <ol>
+    <li><strong>方法名拼写</strong>：<code class="language-plaintext highlighter-rouge">speake_thread</code> → <code class="language-plaintext highlighter-rouge">speak_thread</code>（原来拼错了，虽然前后一致所以能跑，但容易误导）</li>
+    <li><strong>补了 <code class="language-plaintext highlighter-rouge">daemon=True</code></strong>：原代码没加。不加的话，主程序退出时这个线程可能还卡在 <code class="language-plaintext highlighter-rouge">speaker.say()</code> 里，导致进程<strong>退不干净</strong>（要再按一次 Ctrl+C）。加了 <code class="language-plaintext highlighter-rouge">daemon=True</code>，主程序一退，子线程立刻被强制结束。</li>
+  </ol>
+
+  <p>另外原笔记的接收节点末尾漏了 <code class="language-plaintext highlighter-rouge">if __name__ == "__main__": main()</code>，也补上了。</p>
+</blockquote>
+
+<p>原理就是创建一个发布者，发布特定类型和名字的话题，然后在另一个代码里写上接收者，指定该特定类型和名字的话题，即可接收话题里包含的信息。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 发布端：类型 String，话题名 'novel'，队列深度 10
+</span><span class="n">self</span><span class="p">.</span><span class="n">novel_publisher</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="sh">'</span><span class="s">novel</span><span class="sh">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># 订阅端：类型 String，话题名 'novel'，回调 self.novel_callback，队列深度 10
+</span><span class="n">self</span><span class="p">.</span><span class="n">novel_subscriber_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_subscription</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="sh">'</span><span class="s">novel</span><span class="sh">'</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">novel_callback</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：话题通信的三个”必须一致”</strong></p>
+
+  <p>发布端和订阅端要能通上，<strong>消息类型</strong>和<strong>话题名</strong>必须一致（QoS 要兼容）。这也是为什么后面自定义接口时，<code class="language-plaintext highlighter-rouge">.msg</code> 文件一改，所有用它的节点都得重新编译。</p>
+</blockquote>
+
+<p>现在写一个对海龟节点进行控制的发布者的示例：</p>
+
+<p>海龟运动就是通过发布 <code class="language-plaintext highlighter-rouge">/turtle1/cmd_vel</code> 这个 Twist 话题控制的。从 <code class="language-plaintext highlighter-rouge">geometry_msgs</code> 消息包中导入 Twist 消息类型。Twist 用于描述速度。</p>
+
+<p>创建一个发布者（Publisher）：</p>
+
+<p>消息类型：<code class="language-plaintext highlighter-rouge">Twist</code></p>
+
+<p>话题名：<code class="language-plaintext highlighter-rouge">/turtle1/cmd_vel</code>（turtlesim 默认监听的速度话题）</p>
+
+<p>队列长度：10（最多缓存 10 条待发消息）</p>
+
+<p>把发布者对象保存在 <code class="language-plaintext highlighter-rouge">self.turtleCircle_publisher</code> 中，后面回调函数要用。</p>
+
+<blockquote>
+  <p>💡 <strong>知识点：Twist 为什么能同时表示”直线走”和”转弯”</strong></p>
+
+  <p><code class="language-plaintext highlighter-rouge">Twist</code> 是<strong>速度</strong>消息，由两个 <code class="language-plaintext highlighter-rouge">Vector3</code> 组成：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>字段</th>
+        <th>含义</th>
+        <th>常用分量</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">linear</code></td>
+        <td>线速度（m/s）</td>
+        <td><code class="language-plaintext highlighter-rouge">linear.x</code> 前进后退</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">angular</code></td>
+        <td>角速度（rad/s）</td>
+        <td><code class="language-plaintext highlighter-rouge">angular.z</code> 左转右转</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>二维平面里海龟只有 3 个自由度（x、y、朝向），所以实际只用 <code class="language-plaintext highlighter-rouge">linear.x</code>（前进）和 <code class="language-plaintext highlighter-rouge">angular.z</code>（转向）。<strong>同时给这两个值，海龟就会走弧线</strong>——这正是下面画圆代码的原理。</p>
+</blockquote>
+
+<p><strong>疑惑点：为什么是 <code class="language-plaintext highlighter-rouge">from geometry_msgs.msg import Twist</code>？</strong></p>
+
+<p>首先 <code class="language-plaintext highlighter-rouge">ros2 topic list</code> 查看所有话题，<code class="language-plaintext highlighter-rouge">ros2 topic info 话题名</code></p>
+
+<p>输出</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Type: geometry_msgs/msg/Twist
+Publisher count: 0
+Subscription count: 1
+</code></pre></div></div>
+
+<p>看到 <code class="language-plaintext highlighter-rouge">geometry_msgs/msg/Twist</code> 就说明：</p>
+
+<p>包名：<code class="language-plaintext highlighter-rouge">geometry_msgs</code></p>
+
+<p>消息名：<code class="language-plaintext highlighter-rouge">Twist</code></p>
+
+<p>导入写法：<code class="language-plaintext highlighter-rouge">from geometry_msgs.msg import Twist</code></p>
+
+<p>查看消息的字段结构</p>
+
+<p><code class="language-plaintext highlighter-rouge">ros2 interface show geometry_msgs/msg/Twist</code></p>
+
+<p>输出</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Vector3  linear
+        float64 x
+        float64 y
+        float64 z
+Vector3  angular
+        float64 x
+        float64 y
+        float64 z
+</code></pre></div></div>
+
+<p>这样你就知道 Twist 里有 linear 和 angular，各自又含 x/y/z。</p>
+
+<blockquote>
+  <p>💡 <strong>知识点：从接口全名反推 import 语句</strong></p>
+
+  <p>这是 ROS 2 里最实用的一条推导规则：</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geometry_msgs/msg/Twist
+└─包名─────┘ └类型┘└消息名┘
+
+消息：from geometry_msgs.msg import Twist
+服务：from turtlesim.srv import Spawn
+</code></pre></div>  </div>
+
+  <p>规律是 <strong><code class="language-plaintext highlighter-rouge">from 包名.msg import 消息名</code></strong>（服务则把 <code class="language-plaintext highlighter-rouge">.msg</code> 换成 <code class="language-plaintext highlighter-rouge">.srv</code>）。知道这条，你就不用死记任何 <code class="language-plaintext highlighter-rouge">import</code> 语句了——<code class="language-plaintext highlighter-rouge">ros2 topic info</code> 或 <code class="language-plaintext highlighter-rouge">ros2 service list -t</code> 一查就知道该怎么导。</p>
+</blockquote>
+
+<p>接下来进入代码部分：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">Twist</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+
+<span class="sh">"""</span><span class="s">
+海龟节点画圆
+</span><span class="sh">"""</span>
+
+<span class="k">class</span> <span class="nc">TurtleCircleNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s">节点启动</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 发布速度指令到 turtlesim 监听的话题
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">turtleCircle_publisher</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span>
+            <span class="n">Twist</span><span class="p">,</span> <span class="sh">'</span><span class="s">/turtle1/cmd_vel</span><span class="sh">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># 每 1 秒发布一次速度指令
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">timer_callback</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">timer_callback</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">twist</span> <span class="o">=</span> <span class="nc">Twist</span><span class="p">()</span>                 <span class="c1"># 每次都新建一条消息
+</span>        <span class="n">twist</span><span class="p">.</span><span class="n">linear</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">1.0</span>            <span class="c1"># 前进速度 1.0 m/s
+</span>        <span class="n">twist</span><span class="p">.</span><span class="n">angular</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.25</span>          <span class="c1"># 逆时针转 0.25 rad/s
+</span>
+        <span class="c1"># 关键：线速度和角速度同时不为 0 → 合成运动轨迹就是一个圆
+</span>        <span class="c1"># 半径 r = v / ω = 1.0 / 0.25 = 4.0 米
+</span>        <span class="c1"># 改变这两个值的比例，就能改变圆的半径
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">turtleCircle_publisher</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">twist</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">发布了话题</span><span class="si">{</span><span class="n">twist</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">TurtleCircleNode</span><span class="p">(</span><span class="sh">'</span><span class="s">TurtleCircleNode</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么每秒发一次也能持续运动</strong></p>
+
+  <p><code class="language-plaintext highlighter-rouge">cmd_vel</code> 是<strong>速度</strong>指令，turtlesim 收到后会一直按这个速度走，直到收到新指令。所以定时器只要<strong>持续重复发</strong>同一条指令即可（这里的 1 秒是刷新周期，也是”保活”）。</p>
+
+  <p>反过来说：<strong>如果发布者挂了，海龟会继续按最后一次的速度走</strong>，不会自动停。实际机器人上必须做”心跳丢失就急停”的保护。</p>
+
+  <p>补充：<code class="language-plaintext highlighter-rouge">twist.linear.y</code>、<code class="language-plaintext highlighter-rouge">twist.linear.z</code> 等没赋值的字段默认是 0，所以不需要显式写。</p>
+</blockquote>
+
+<hr />
+
+<h3 id="自定义接口以及-qt-的-python-使用">自定义接口以及 QT 的 Python 使用</h3>
+
+<p>首先我们自定义通信接口。</p>
+
+<p>创建一个 C++ 版本的包：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 pkg create status_interfaces <span class="se">\</span>
+    <span class="nt">--build-type</span> ament_cmake <span class="se">\</span>
+    <span class="nt">--dependencies</span> builtin_interfaces rosidl_default_generators <span class="se">\</span>
+    <span class="nt">--license</span> Apache-2.0
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记这里没写 <code class="language-plaintext highlighter-rouge">--build-type ament_cmake</code></strong>。虽然它正好是默认值所以能跑，但<strong>定义消息接口的包必须是 <code class="language-plaintext highlighter-rouge">ament_cmake</code></strong>，显式写出来能避免以后照抄时出错。</p>
+</blockquote>
+
+<p>结构如下</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>status_interfaces/
+├── CMakeLists.txt
+├── include
+│   └── status_interfaces
+├── LICENSE
+├── package.xml
+└── src
+└── msg                  <span class="c"># 需要自己新建，与 CMakeLists.txt 同级</span>
+    └── SystemStatus.msg
+</code></pre></div></div>
+
+<p>新建一个 <code class="language-plaintext highlighter-rouge">msg</code> 目录，在目录下创建接口声明文件 <code class="language-plaintext highlighter-rouge">SystemStatus.msg</code>，写入如下内容：</p>
+
+<pre><code class="language-msg">builtin_interfaces/Time stamp   # 记录时间戳
+string host_name                # 主机名
+float32 cpu_percent             # CPU 使用率(%)
+float32 memory_percent          # 内存使用率(%)
+float32 memory_total            # 内存总大小(MB)
+float32 memory_available        # 剩余内存(MB)
+float64 net_sent                # 网络发送数据总量(MB)
+float64 net_recv                # 网络数据接收总量(MB)
+</code></pre>
+
+<p><code class="language-plaintext highlighter-rouge">include</code> 和 <code class="language-plaintext highlighter-rouge">src</code> 目录可删，因为只是定义接口，一般用不到。</p>
+
+<blockquote>
+  <p>⚠️ <strong>注意两处拼写</strong>（已在上面修正）：</p>
+
+  <ol>
+    <li>文件名 <code class="language-plaintext highlighter-rouge">SyStemStatus.msg</code> → <strong><code class="language-plaintext highlighter-rouge">SystemStatus.msg</code></strong>。文件名 = 消息名，<strong>首字母必须大写，其余不能有大写错位</strong>，否则 <code class="language-plaintext highlighter-rouge">import SystemStatus</code> 会失败。</li>
+    <li>字段名 <code class="language-plaintext highlighter-rouge">cup_percent</code> → <strong><code class="language-plaintext highlighter-rouge">cpu_percent</code></strong>（CPU 不是 CUP）。
+这个错尤其要注意：下面 Python 代码里写的是 <code class="language-plaintext highlighter-rouge">msg.cpu_percent</code>，如果你照着原笔记建 <code class="language-plaintext highlighter-rouge">.msg</code>，运行时会直接报 <code class="language-plaintext highlighter-rouge">AttributeError</code>。
+原笔记后面 <code class="language-plaintext highlighter-rouge">ros2 interface show</code> 的输出里显示的是正确的 <code class="language-plaintext highlighter-rouge">cpu_percent</code>，说明只是文档里的笔误。</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">.msg</code> 文件的书写规则</strong></p>
+
+  <pre><code class="language-msg">字段类型 字段名    # 注释
+</code></pre>
+
+  <p>几条硬性规则：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>规则</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>字段名用 <strong>snake_case</strong></td>
+        <td><code class="language-plaintext highlighter-rouge">cpu_percent</code>，不能写 <code class="language-plaintext highlighter-rouge">cpuPercent</code></td>
+      </tr>
+      <tr>
+        <td>消息名用 <strong>CamelCase</strong></td>
+        <td><code class="language-plaintext highlighter-rouge">SystemStatus</code>，文件名必须与之一致</td>
+      </tr>
+      <tr>
+        <td>类型可以是内置类型或其它包的消息</td>
+        <td><code class="language-plaintext highlighter-rouge">float32</code>、<code class="language-plaintext highlighter-rouge">string</code>、<code class="language-plaintext highlighter-rouge">int32[]</code>，或 <code class="language-plaintext highlighter-rouge">builtin_interfaces/Time</code>、<code class="language-plaintext highlighter-rouge">sensor_msgs/Image</code></td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">#</code> 后面是注释</td>
+        <td>可以写在行尾</td>
+      </tr>
+      <tr>
+        <td>数组用 <code class="language-plaintext highlighter-rouge">[]</code></td>
+        <td><code class="language-plaintext highlighter-rouge">int32[] top</code> 表示变长数组</td>
+      </tr>
+      <tr>
+        <td>常量用 <code class="language-plaintext highlighter-rouge">=</code></td>
+        <td><code class="language-plaintext highlighter-rouge">int8 SUCCESS = 1</code>（只能用在 <code class="language-plaintext highlighter-rouge">.srv</code>/<code class="language-plaintext highlighter-rouge">.msg</code> 里，值不能改）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>不要写 <code class="language-plaintext highlighter-rouge">;</code> 结尾</strong>，也不要写 C++ 类型（<code class="language-plaintext highlighter-rouge">double</code> 要写 <code class="language-plaintext highlighter-rouge">float64</code>）。</p>
+</blockquote>
+
+<p>之后在 <code class="language-plaintext highlighter-rouge">CMakeLists.txt</code> 的 <code class="language-plaintext highlighter-rouge"># find dependencies</code> 下写入如下内容：</p>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># find dependencies</span>
+<span class="nb">find_package</span><span class="p">(</span>ament_cmake REQUIRED<span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span>builtin_interfaces REQUIRED<span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span>rosidl_default_generators REQUIRED<span class="p">)</span>
+
+<span class="c1"># rosidl_generate_interfaces 是 CMake 函数，来自 rosidl_default_generators</span>
+<span class="c1"># 作用：把 .msg / .srv / .action 接口定义文件生成对应语言的代码（Python 类、C++ 头文件）</span>
+<span class="nf">rosidl_generate_interfaces</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+    <span class="s2">"msg/SystemStatus.msg"</span>
+    DEPENDENCIES builtin_interfaces   <span class="c1"># 用到了 builtin_interfaces/Time，必须声明</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记把 <code class="language-plaintext highlighter-rouge">ament_cmake</code> 拼成了 <code class="language-plaintext highlighter-rouge">ament_camke</code></strong>（已修正）。这种拼写错误会导致 CMake 配置阶段直接失败，报 <code class="language-plaintext highlighter-rouge">Could not find a package configuration file provided by "ament_camke"</code>。</p>
+</blockquote>
+
+<p>另外在 <code class="language-plaintext highlighter-rouge">package.xml</code> 声明：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;member_of_group&gt;</span>rosidl_interface_packages<span class="nt">&lt;/member_of_group&gt;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：这三行分别解决什么问题</strong></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>写在哪</th>
+        <th>内容</th>
+        <th>作用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">package.xml</code></td>
+        <td><code class="language-plaintext highlighter-rouge">&lt;depend&gt;builtin_interfaces&lt;/depend&gt;</code> 等</td>
+        <td>声明<strong>依赖</strong>，让 colcon 知道构建顺序</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">package.xml</code></td>
+        <td><code class="language-plaintext highlighter-rouge">&lt;member_of_group&gt;rosidl_interface_packages&lt;/member_of_group&gt;</code></td>
+        <td>告诉 ROS：<strong>这个包里定义了消息接口</strong>，其它包才能通过 <code class="language-plaintext highlighter-rouge">ros2 interface show</code> 找到它</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">CMakeLists.txt</code></td>
+        <td><code class="language-plaintext highlighter-rouge">rosidl_generate_interfaces(...)</code></td>
+        <td>真正<strong>生成代码</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>三者缺一不可。最常见的报错 <code class="language-plaintext highlighter-rouge">Package 'xxx' not found</code> 或 <code class="language-plaintext highlighter-rouge">ros2 interface show</code> 查不到，基本都是漏了 <code class="language-plaintext highlighter-rouge">member_of_group</code> 这一行。</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">colcon build</code> 创建即可，之后运行 <code class="language-plaintext highlighter-rouge">setup.bash</code> 后 <code class="language-plaintext highlighter-rouge">ros2 interface show &lt;接口名&gt;</code> 查看即可。</p>
+
+<p>显示如下内容即可：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 interface show status_interfaces/msg/SystemStatus
+</code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>builtin_interfaces/Time stamp #记录时间戳
+        int32 sec
+        uint32 nanosec
+string host_name  #主机名
+float32 cpu_percent #cpu使用率
+float32 memory_percent #内存使用率
+float32 memory_total #内存总大小
+float32 memory_available #剩余内存
+float64 net_sent #网络发送数据总量 1MB = 8Mb
+float64 net_recv #网络数据接收总量
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么 <code class="language-plaintext highlighter-rouge">Time</code> 会展开成 sec 和 nanosec</strong></p>
+
+  <p><code class="language-plaintext highlighter-rouge">builtin_interfaces/Time</code> 是 ROS 2 的内置类型，只有两个字段：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>字段</th>
+        <th>类型</th>
+        <th>含义</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">sec</code></td>
+        <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+        <td>秒</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">nanosec</code></td>
+        <td><code class="language-plaintext highlighter-rouge">uint32</code></td>
+        <td>纳秒（0 ~ 999999999）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>注意 <strong><code class="language-plaintext highlighter-rouge">1MB = 8Mb</code></strong> 这条注释：<strong>M</strong>B 是字节（Byte），<strong>M</strong>b 是比特（bit），1 Byte = 8 bit。网卡和运营商按 <strong>Mb</strong> 宣传带宽（比如”100M 宽带”），而 <code class="language-plaintext highlighter-rouge">psutil</code> 统计的是 <strong>Byte</strong>。做限速/带宽换算时这里是 8 倍关系，搞混了会差 8 倍。</p>
+</blockquote>
+
+<p>之后我们就在代码里使用接口。</p>
+
+<p>创建一个新的 Python 包叫 <code class="language-plaintext highlighter-rouge">status_publisher</code>，编写代码：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 pkg create status_publisher <span class="se">\</span>
+    <span class="nt">--build-type</span> ament_python <span class="se">\</span>
+    <span class="nt">--dependencies</span> rclpy status_interfaces <span class="se">\</span>
+    <span class="nt">--license</span> Apache-2.0
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记写的是 <code class="language-plaintext highlighter-rouge">status_interface</code>（少了 s）</strong>，已修正为 <code class="language-plaintext highlighter-rouge">status_interfaces</code>。依赖名写错会导致构建时找不到包。</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">status_interfaces.msg</span> <span class="kn">import</span> <span class="n">SystemStatus</span>   <span class="c1"># 自定义接口的导入方式
+</span><span class="kn">import</span> <span class="n">psutil</span>
+<span class="kn">import</span> <span class="n">platform</span>
+
+
+<span class="k">class</span> <span class="nc">SysStatusPub</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+
+        <span class="c1"># 发布自定义消息类型到话题 sys_status
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">status_publisher_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span>
+            <span class="n">SystemStatus</span><span class="p">,</span> <span class="sh">'</span><span class="s">sys_status</span><span class="sh">'</span><span class="p">,</span> <span class="mi">10</span>
+        <span class="p">)</span>
+        <span class="c1"># 每 1 秒采集并发布一次
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">timer_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">timer_callback</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">timer_callback</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="c1"># psutil 是跨平台系统信息库，直接读本机状态
+</span>        <span class="n">cpu_percent</span> <span class="o">=</span> <span class="n">psutil</span><span class="p">.</span><span class="nf">cpu_percent</span><span class="p">()</span>            <span class="c1"># CPU 使用率(%)，注意首次调用返回 0.0
+</span>        <span class="n">memory_info</span> <span class="o">=</span> <span class="n">psutil</span><span class="p">.</span><span class="nf">virtual_memory</span><span class="p">()</span>         <span class="c1"># 内存信息对象
+</span>        <span class="n">net_io_counters</span> <span class="o">=</span> <span class="n">psutil</span><span class="p">.</span><span class="nf">net_io_counters</span><span class="p">()</span>    <span class="c1"># 网络收发计数器
+</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="nc">SystemStatus</span><span class="p">()</span>                          <span class="c1"># 实例化自定义消息
+</span>        <span class="c1"># get_clock().now() 取 ROS 时间（不是系统时间），to_msg() 转成 ROS 的 Time 消息
+</span>        <span class="n">msg</span><span class="p">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_clock</span><span class="p">().</span><span class="nf">now</span><span class="p">().</span><span class="nf">to_msg</span><span class="p">()</span>
+        <span class="n">msg</span><span class="p">.</span><span class="n">host_name</span> <span class="o">=</span> <span class="n">platform</span><span class="p">.</span><span class="nf">node</span><span class="p">()</span>               <span class="c1"># 取主机名
+</span>        <span class="n">msg</span><span class="p">.</span><span class="n">cpu_percent</span> <span class="o">=</span> <span class="n">cpu_percent</span>
+
+        <span class="c1"># psutil 返回的单位是「字节」，这里统一换算成 MB
+</span>        <span class="c1"># 1 MB = 1024 * 1024 字节（注意：这也是为什么硬盘厂商标的容量"偏小"——他们按 1000 算）
+</span>        <span class="n">msg</span><span class="p">.</span><span class="n">memory_percent</span> <span class="o">=</span> <span class="n">memory_info</span><span class="p">.</span><span class="n">percent</span>
+        <span class="n">msg</span><span class="p">.</span><span class="n">memory_total</span> <span class="o">=</span> <span class="n">memory_info</span><span class="p">.</span><span class="n">total</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>
+        <span class="n">msg</span><span class="p">.</span><span class="n">memory_available</span> <span class="o">=</span> <span class="n">memory_info</span><span class="p">.</span><span class="n">available</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>
+        <span class="n">msg</span><span class="p">.</span><span class="n">net_sent</span> <span class="o">=</span> <span class="n">net_io_counters</span><span class="p">.</span><span class="n">bytes_sent</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>
+        <span class="n">msg</span><span class="p">.</span><span class="n">net_recv</span> <span class="o">=</span> <span class="n">net_io_counters</span><span class="p">.</span><span class="n">bytes_recv</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">发布: </span><span class="si">{</span><span class="nf">str</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">status_publisher_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">SysStatusPub</span><span class="p">(</span><span class="sh">'</span><span class="s">sys_status_pub</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么 <code class="language-plaintext highlighter-rouge">psutil.cpu_percent()</code> 第一次调用总是 0.0</strong></p>
+
+  <p>它算的是”距上次调用<strong>之间</strong>的平均使用率”。第一次调用没有参照点，所以返回 0.0。惯例做法是程序启动时先”热身”调一次、丢弃结果：</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">psutil</span><span class="p">.</span><span class="nf">cpu_percent</span><span class="p">()</span>          <span class="c1"># 热身，丢弃
+</span><span class="n">time</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">real_value</span> <span class="o">=</span> <span class="n">psutil</span><span class="p">.</span><span class="nf">cpu_percent</span><span class="p">()</span>   <span class="c1"># 这次才是真实值
+</span></code></pre></div>  </div>
+  <p>因为这里是每秒调用一次，第二秒开始就正常了，所以原代码没处理也没大问题——但你知道原因，排查时就不会困惑。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">builtin_interfaces/Time</code> 存 MB 用 <code class="language-plaintext highlighter-rouge">float32</code> 够吗</strong></p>
+
+  <p>够。<code class="language-plaintext highlighter-rouge">float32</code> 能<strong>精确表示所有整数</strong>直到 2²⁴ = 16,777,216。内存总量按 MB 算是几万，远小于这个数，不会有精度损失。</p>
+
+  <p>但更规范的做法是用 <code class="language-plaintext highlighter-rouge">uint64</code> 直接存<strong>字节数</strong>，既没有精度问题，也不用在两端反复换算单位。这是设计接口时可以留意的细节。</p>
+</blockquote>
+
+<p>之后一样的部署步骤即可。<strong>注意：要带着接口一起部署，不能单独部署。</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">ros2 topic echo &lt;话题名&gt;</code> 查看是否可以接收到发布的信息。</p>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记写的是 <code class="language-plaintext highlighter-rouge">ros topic echo</code>（少了 <code class="language-plaintext highlighter-rouge">2</code>）</strong>，已修正。</p>
+
+  <p>💡 <strong>为什么”要带着接口一起部署”</strong>：<code class="language-plaintext highlighter-rouge">status_publisher</code> 依赖 <code class="language-plaintext highlighter-rouge">status_interfaces</code>，而 ROS 2 在运行时是<strong>按包名去找生成的 Python 模块</strong>的。如果只 source 了 <code class="language-plaintext highlighter-rouge">status_publisher</code> 而没 source <code class="language-plaintext highlighter-rouge">status_interfaces</code>（或者后者没编译），<code class="language-plaintext highlighter-rouge">from status_interfaces.msg import SystemStatus</code> 就会 <code class="language-plaintext highlighter-rouge">ModuleNotFoundError</code>。<strong>改了 <code class="language-plaintext highlighter-rouge">.msg</code> 文件后，所有依赖它的包都要重新 <code class="language-plaintext highlighter-rouge">colcon build</code></strong>。</p>
+</blockquote>
+
+<h3 id="qt-的使用">QT 的使用</h3>
+
+<p><strong>第一个 QT 界面</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">from</span> <span class="n">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># 创建 QApplication 对象
+</span>    <span class="c1"># 每个 Qt 程序有且只有一个 QApplication，必须在创建任何控件之前创建
+</span>    <span class="n">app</span> <span class="o">=</span> <span class="nc">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+
+    <span class="n">label</span> <span class="o">=</span> <span class="nc">QLabel</span><span class="p">()</span>
+    <span class="n">label</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">'</span><span class="s">Hello Qt!</span><span class="sh">'</span><span class="p">)</span>     <span class="c1"># 注意：是调用方法，不是赋值！
+</span>    <span class="n">label</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>                   <span class="c1"># show() 才会真正显示窗口
+</span>
+    <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="nf">exec_</span><span class="p">())</span>          <span class="c1"># 进入 Qt 事件循环；窗口关闭时返回退出码
+</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记有两处会直接报错/失效的问题</strong>（已修正）：</p>
+
+  <p><strong>1. <code class="language-plaintext highlighter-rouge">from pyQt5.QtWidgets</code> 大小写错误</strong>
+正确的是 <strong><code class="language-plaintext highlighter-rouge">PyQt5</code></strong>（大写 P、大写 Q）。Python 在 Linux 下<strong>严格区分大小写</strong>，写成 <code class="language-plaintext highlighter-rouge">pyQt5</code> 会 <code class="language-plaintext highlighter-rouge">ModuleNotFoundError</code>。
+顺带一提：PyQt5 是 <strong>GPL 商业双许可</strong>，如果你要做闭源商业项目，可以考虑 <code class="language-plaintext highlighter-rouge">PySide6</code>（Qt 官方，LGPL），API 几乎一样。</p>
+
+  <p><strong>2. <code class="language-plaintext highlighter-rouge">label.setText = ('Hello Qt!')</code> —— 这是最经典的 Python 陷阱</strong></p>
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">label</span><span class="p">.</span><span class="n">setText</span> <span class="o">=</span> <span class="p">(</span><span class="sh">'</span><span class="s">Hello Qt!</span><span class="sh">'</span><span class="p">)</span>   <span class="c1"># ❌ 把 setText 这个方法「替换」成了一个字符串
+</span><span class="n">label</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">'</span><span class="s">Hello Qt!</span><span class="sh">'</span><span class="p">)</span>      <span class="c1"># ✅ 调用方法
+</span></code></pre></div>  </div>
+  <p>加号 <code class="language-plaintext highlighter-rouge">=</code> 让它变成了<strong>赋值</strong>：<code class="language-plaintext highlighter-rouge">label.setText</code> 从此不再是一个函数，而是一个字符串。界面会一片空白，且后续任何调用都会报 <code class="language-plaintext highlighter-rouge">TypeError: 'str' object is not callable</code>。
+<strong>括号本身不会调用函数，<code class="language-plaintext highlighter-rouge">()</code> 才是调用运算符。</strong></p>
+</blockquote>
+
+<p><strong>接收并用 QT 显示</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">import</span> <span class="n">threading</span>
+
+<span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">status_interfaces.msg</span> <span class="kn">import</span> <span class="n">SystemStatus</span>
+
+<span class="kn">from</span> <span class="n">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span>
+                             <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QGridLayout</span><span class="p">)</span>
+<span class="kn">from</span> <span class="n">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">pyqtSignal</span><span class="p">,</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">Qt</span>
+
+
+<span class="c1"># ─────────────────────────────────────────────
+# 1. ROS2 节点：收到消息后发 Qt 信号
+# ─────────────────────────────────────────────
+</span><span class="k">class</span> <span class="nc">RosSignalBridge</span><span class="p">(</span><span class="n">QObject</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">把 ROS2 回调的数据通过 Qt 信号转发给界面</span><span class="sh">"""</span>
+    <span class="c1"># 定义一个信号，参数类型是 object（可以承载任意 Python 对象，这里装 SystemStatus）
+</span>    <span class="n">status_received</span> <span class="o">=</span> <span class="nf">pyqtSignal</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SysStatusSub</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">bridge</span><span class="p">:</span> <span class="n">RosSignalBridge</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">bridge</span> <span class="o">=</span> <span class="n">bridge</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">subscription_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_subscription</span><span class="p">(</span>
+            <span class="n">SystemStatus</span><span class="p">,</span> <span class="sh">'</span><span class="s">sys_status</span><span class="sh">'</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">listener_callback</span><span class="p">,</span> <span class="mi">10</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">listener_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">SystemStatus</span><span class="p">):</span>
+        <span class="c1"># 注意：这里是 ROS2 子线程，不能直接操作 Qt 控件
+</span>        <span class="c1"># emit 只是「发射信号」，Qt 会自动把它排队投递到界面所在的主线程
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">bridge</span><span class="p">.</span><span class="n">status_received</span><span class="p">.</span><span class="nf">emit</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="c1"># ─────────────────────────────────────────────
+# 2. Qt 界面
+# ─────────────────────────────────────────────
+</span><span class="k">class</span> <span class="nc">StatusWindow</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowTitle</span><span class="p">(</span><span class="sh">"</span><span class="s">系统状态监控</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">resize</span><span class="p">(</span><span class="mi">420</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+
+        <span class="c1"># 用网格布局显示各字段：第 0 列是标题，第 1 列是数值
+</span>        <span class="n">layout</span> <span class="o">=</span> <span class="nc">QGridLayout</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">labels</span> <span class="o">=</span> <span class="p">{}</span>     <span class="c1"># 保存「字段名 → QLabel 控件」，方便后面更新
+</span>        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="sh">"</span><span class="s">host_name</span><span class="sh">"</span><span class="p">,</span>        <span class="sh">"</span><span class="s">主机名</span><span class="sh">"</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">"</span><span class="s">cpu_percent</span><span class="sh">"</span><span class="p">,</span>      <span class="sh">"</span><span class="s">CPU 使用率 (%)</span><span class="sh">"</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">"</span><span class="s">memory_percent</span><span class="sh">"</span><span class="p">,</span>   <span class="sh">"</span><span class="s">内存使用率 (%)</span><span class="sh">"</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">"</span><span class="s">memory_total</span><span class="sh">"</span><span class="p">,</span>     <span class="sh">"</span><span class="s">内存总量 (MB)</span><span class="sh">"</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">"</span><span class="s">memory_available</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">可用内存 (MB)</span><span class="sh">"</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">"</span><span class="s">net_sent</span><span class="sh">"</span><span class="p">,</span>         <span class="sh">"</span><span class="s">发送总量 (MB)</span><span class="sh">"</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">"</span><span class="s">net_recv</span><span class="sh">"</span><span class="p">,</span>         <span class="sh">"</span><span class="s">接收总量 (MB)</span><span class="sh">"</span><span class="p">),</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">fields</span><span class="p">):</span>
+            <span class="n">layout</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="nc">QLabel</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s">：</span><span class="sh">"</span><span class="p">),</span> <span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>   <span class="c1"># 左列：静态标题
+</span>            <span class="n">value_label</span> <span class="o">=</span> <span class="nc">QLabel</span><span class="p">(</span><span class="sh">"</span><span class="s">--</span><span class="sh">"</span><span class="p">)</span>                       <span class="c1"># 右列：待更新的数值
+</span>            <span class="n">value_label</span><span class="p">.</span><span class="nf">setAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">AlignRight</span><span class="p">)</span>          <span class="c1"># 右对齐，数字才对得齐
+</span>            <span class="n">layout</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">value_label</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">labels</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_label</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">update_status</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">SystemStatus</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">在主线程被调用，安全更新界面</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">labels</span><span class="p">[</span><span class="sh">"</span><span class="s">host_name</span><span class="sh">"</span><span class="p">].</span><span class="nf">setText</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">host_name</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">labels</span><span class="p">[</span><span class="sh">"</span><span class="s">cpu_percent</span><span class="sh">"</span><span class="p">].</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">cpu_percent</span><span class="si">:</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>        <span class="c1"># 保留 1 位小数
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">labels</span><span class="p">[</span><span class="sh">"</span><span class="s">memory_percent</span><span class="sh">"</span><span class="p">].</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">memory_percent</span><span class="si">:</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">labels</span><span class="p">[</span><span class="sh">"</span><span class="s">memory_total</span><span class="sh">"</span><span class="p">].</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">memory_total</span><span class="si">:</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>      <span class="c1"># 不保留小数
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">labels</span><span class="p">[</span><span class="sh">"</span><span class="s">memory_available</span><span class="sh">"</span><span class="p">].</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">memory_available</span><span class="si">:</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">labels</span><span class="p">[</span><span class="sh">"</span><span class="s">net_sent</span><span class="sh">"</span><span class="p">].</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">net_sent</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>              <span class="c1"># 保留 2 位小数
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">labels</span><span class="p">[</span><span class="sh">"</span><span class="s">net_recv</span><span class="sh">"</span><span class="p">].</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">net_recv</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+
+<span class="c1"># ─────────────────────────────────────────────
+# 3. 主程序：ROS2 子线程 + Qt 主线程
+# ─────────────────────────────────────────────
+</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># 先初始化 ROS2
+</span>    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+
+    <span class="c1"># Qt 应用（必须在主线程创建）
+</span>    <span class="n">app</span> <span class="o">=</span> <span class="nc">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+
+    <span class="c1"># 信号桥 + 界面
+</span>    <span class="n">bridge</span> <span class="o">=</span> <span class="nc">RosSignalBridge</span><span class="p">()</span>
+    <span class="n">window</span> <span class="o">=</span> <span class="nc">StatusWindow</span><span class="p">()</span>
+    <span class="c1"># 关键：连接信号与槽。
+</span>    <span class="c1"># 因为「发射方」在 ROS 子线程、「接收方」在主线程，Qt 会自动使用
+</span>    <span class="c1"># QueuedConnection（排队投递），这就等价于把更新操作安全地送回主线程执行。
+</span>    <span class="n">bridge</span><span class="p">.</span><span class="n">status_received</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">window</span><span class="p">.</span><span class="n">update_status</span><span class="p">)</span>
+
+    <span class="c1"># 创建订阅节点
+</span>    <span class="n">node</span> <span class="o">=</span> <span class="nc">SysStatusSub</span><span class="p">(</span><span class="sh">'</span><span class="s">sys_status_gui_sub</span><span class="sh">'</span><span class="p">,</span> <span class="n">bridge</span><span class="p">)</span>
+
+    <span class="c1"># ROS2 放到后台线程 spin
+</span>    <span class="c1"># 必须放子线程：rclpy.spin 是阻塞的，放主线程的话窗口根本显示不出来
+</span>    <span class="n">ros_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="p">.</span><span class="nc">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">rclpy</span><span class="p">.</span><span class="n">spin</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">node</span><span class="p">,),</span> <span class="n">daemon</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">ros_thread</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+
+    <span class="c1"># 显示界面，进入 Qt 事件循环
+</span>    <span class="n">window</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">exit_code</span> <span class="o">=</span> <span class="n">app</span><span class="p">.</span><span class="nf">exec_</span><span class="p">()</span>      <span class="c1"># 阻塞在 Qt 事件循环，直到窗口关闭
+</span>    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># 退出清理：无论正常关闭还是异常，都保证资源被释放
+</span>        <span class="n">node</span><span class="p">.</span><span class="nf">destroy_node</span><span class="p">()</span>
+        <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+    <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="n">exit_code</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么不能直接在 ROS 回调里改 Qt 控件</strong></p>
+
+  <p>Qt 有一条铁律：<strong>所有 UI 控件的操作必须在主线程完成</strong>。ROS 2 的订阅回调跑在 spin 线程里（这里是子线程），直接 <code class="language-plaintext highlighter-rouge">label.setText()</code> 会出随机崩溃或界面卡死——而且是<strong>偶发</strong>的，最难查的那类 bug。</p>
+
+  <p>这个例子给出的解法是<strong>信号槽 + 自动排队</strong>，这套机制值得完整理解：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>步骤</th>
+        <th>发生了什么</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">pyqtSignal(object)</code></td>
+        <td>在 <code class="language-plaintext highlighter-rouge">QObject</code> 子类上定义信号</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">signal.connect(slot)</code></td>
+        <td>把信号连到槽函数</td>
+      </tr>
+      <tr>
+        <td>子线程 <code class="language-plaintext highlighter-rouge">signal.emit(msg)</code></td>
+        <td><strong>不直接调用</strong>槽函数，而是把一次调用「打包」投递到接收者所在线程的事件队列</td>
+      </tr>
+      <tr>
+        <td>主线程事件循环</td>
+        <td>从队列取出，<strong>在主线程</strong>执行 <code class="language-plaintext highlighter-rouge">update_status</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>条件是：<code class="language-plaintext highlighter-rouge">connect</code> 时 Qt 发现收发双方<strong>线程不同</strong>，自动选用 <code class="language-plaintext highlighter-rouge">QueuedConnection</code>。如果两边同线程则是直接调用（<code class="language-plaintext highlighter-rouge">DirectConnection</code>）——<strong>同一份代码，Qt 自动判断</strong>，这正是信号槽最省心的地方。</p>
+
+  <p>对比一下前面小说朗读用的 <code class="language-plaintext highlighter-rouge">Queue</code> 方案：Queue 也能跨线程传数据，但<strong>“谁来取、什么时候取”要自己写循环</strong>；信号槽把这件事交给了 Qt 事件循环，代码更短。两种方案都值得掌握。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：ROS 2 + GUI 的标准骨架</strong></p>
+
+  <p>所有 ROS 2 桌面程序（Qt、Tkinter、Web 后端）都是这个结构，记下来能套用：</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>主线程：GUI 事件循环（app.exec_）
+子线程：rclpy.spin(node)     ← daemon=True
+桥接：  信号槽 / Queue / 定时轮询
+退出：  destroy_node() + rclpy.shutdown() 放在 finally
+</code></pre></div>  </div>
+
+  <p>反过来（ROS 在主线程、GUI 在子线程）是<strong>不行</strong>的——Qt 控件必须在主线程创建和操作。</p>
+</blockquote>
+
+<p>在 <code class="language-plaintext highlighter-rouge">setup.py</code> 里部署这个节点再运行即可。</p>
+
+<blockquote>
+  <p>⚠️ <strong>别忘了两件事</strong>：</p>
+  <ol>
+    <li><code class="language-plaintext highlighter-rouge">package.xml</code> 里要声明 <code class="language-plaintext highlighter-rouge">&lt;depend&gt;python3-pyqt5&lt;/depend&gt;</code>（或 <code class="language-plaintext highlighter-rouge">PyQt5</code>），否则换台机器装不上。</li>
+    <li>Qt 节点<strong>必须在本机图形界面下运行</strong>，通过 SSH 或 Docker 跑会报 <code class="language-plaintext highlighter-rouge">could not connect to display</code>，需要 <code class="language-plaintext highlighter-rouge">-X</code> 转发或 Xvfb 虚拟显示。</li>
+  </ol>
+</blockquote>
+
+<hr />
+
+<!-- nav -->
+
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">⬅️ 上一章</th>
+      <th style="text-align: center">🏠 目录</th>
+      <th style="text-align: right">下一章 ➡️</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><a href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">二、多线程示例</a></td>
+      <td style="text-align: center"><a href="/tutorials/ROS2-bash/README/">返回目录</a></td>
+      <td style="text-align: right"><a href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">四、服务和参数</a></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/"><span>← 上一章</span><strong>多线程示例</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/"><span>下一章 →</span><strong>服务和参数</strong></a>
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

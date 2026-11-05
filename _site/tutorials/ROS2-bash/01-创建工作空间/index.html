@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    创建工作空间 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS2 基础教程</div>
+    <p class="tutorial-course-subtitle">ROS2基础 · ROS2实战 · 巡游小车实战</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2基础</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/README/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程导读</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/ROS2-bash/01-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/" aria-current="page">
+            <span class="tutorial-chapter-number">01</span>
+            <span>创建工作空间</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>多线程示例</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>话题通信</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>服务和参数</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>TF 坐标变换</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>可视化与数据工具</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>仿真与导航</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07B-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%93%8D%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>仿真与导航实操手册</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E9%99%84%E5%BD%95-%E5%8B%98%E8%AF%AF%E4%B8%8E%E9%80%9F%E6%9F%A5/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>附录：勘误与速查</span>
+          </a>
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/ROS2%E5%AE%9E%E6%88%98%E9%83%A8%E5%88%86%E8%AF%A6%E7%BB%86%E8%AE%B0%E5%BD%95/">
+            <span class="tutorial-chapter-number">10</span>
+            <span>ROS2 实战：海龟案例与通信练习</span>
+          </a>
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">巡游小车实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E5%B7%A1%E6%B8%B8%E5%B0%8F%E8%BD%A6%E4%BB%BF%E7%9C%9F-%E4%BB%8E%E9%9B%B6%E5%A4%8D%E5%88%BB%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">11</span>
+            <span>巡游小车实战：从零复刻</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/ROS2-bash/README/">ROS2 基础教程</a><span>/</span>
+      <span>ROS2基础</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS2 基础教程 · 第 1 章</div>
+      <h1>创建工作空间</h1>
+      <p>创建功能包，理解构建系统与工作空间结构。</p>
+    </header>
+    <div class="post-content tutorial-content"><!-- nav -->
+<blockquote>
+  <p>📖 <a href="/tutorials/ROS2-bash/README/">ROS 2 学习随笔</a> ｜ ⬅️ 已是第一章 ｜ <a href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">下一章：二、多线程示例</a> ➡️</p>
+</blockquote>
+
+<h3 id="1创建-ros-2-包">1、创建 ROS 2 包</h3>
+
+<p>先了解创建包的命令：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 pkg create <span class="o">[</span><span class="nt">-h</span><span class="o">]</span> <span class="o">[</span><span class="nt">--package-format</span> <span class="o">{</span>2,3<span class="o">}]</span> <span class="o">[</span><span class="nt">--description</span> DESCRIPTION] <span class="o">[</span><span class="nt">--license</span> LICENSE]
+                       <span class="o">[</span><span class="nt">--destination-directory</span> DESTINATION_DIRECTORY] <span class="o">[</span><span class="nt">--build-type</span> <span class="o">{</span>cmake,ament_cmake,ament_cargo,ament_python<span class="o">}]</span>
+                       <span class="o">[</span><span class="nt">--dependencies</span> DEPENDENCIES <span class="o">[</span>DEPENDENCIES ...]] <span class="o">[</span><span class="nt">--maintainer-email</span> MAINTAINER_EMAIL]
+                       <span class="o">[</span><span class="nt">--maintainer-name</span> MAINTAINER_NAME] <span class="o">[</span><span class="nt">--node-name</span> NODE_NAME] <span class="o">[</span><span class="nt">--library-name</span> LIBRARY_NAME]
+                       package_name
+</code></pre></div></div>
+
+<p>其中：</p>
+
+<ul>
+  <li><strong>方括号 <code class="language-plaintext highlighter-rouge">[]</code> 中的是可选参数</strong>；</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">package_name</code> 是必需的参数</strong>，即要创建的包名。</li>
+</ul>
+
+<p>示例：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 pkg create <span class="nt">--build-type</span> ament_python <span class="nt">--license</span> Apache-2.0 demo_python_pkg
+</code></pre></div></div>
+
+<p>参数说明：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">--build-type ament_python</code>：以 Python 的形式创建该包；</li>
+  <li><code class="language-plaintext highlighter-rouge">--license Apache-2.0</code>：使用 Apache-2.0 开源许可证。</li>
+</ul>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">--build-type</code> 的三种取值</strong></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>取值</th>
+        <th>用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">ament_python</code></td>
+        <td>纯 Python 包，用 <code class="language-plaintext highlighter-rouge">setup.py</code> 描述构建</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">ament_cmake</code></td>
+        <td>C++ 包，用 <code class="language-plaintext highlighter-rouge">CMakeLists.txt</code> 描述构建</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">cmake</code></td>
+        <td>纯 CMake 包（不依赖 ament），很少用</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>不写 <code class="language-plaintext highlighter-rouge">--build-type</code> 时默认是 <code class="language-plaintext highlighter-rouge">ament_cmake</code></strong>。这一点很重要：后面自定义消息接口必须用 <code class="language-plaintext highlighter-rouge">ament_cmake</code>，所以创建接口包时可以省略该参数，但<strong>显式写出来更不容易搞混</strong>。</p>
+
+  <p>⚠️ <strong>注意</strong>：Python 包和 C++ 包<strong>不能混着建</strong>，一个包只能是其中一种。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">--dependencies</code> 一次帮你改三个文件</strong></p>
+
+  <p>加上 <code class="language-plaintext highlighter-rouge">--dependencies rclpy std_msgs</code> 后，<code class="language-plaintext highlighter-rouge">ros2 pkg create</code> 会自动：</p>
+  <ol>
+    <li>在 <code class="language-plaintext highlighter-rouge">package.xml</code> 里写入 <code class="language-plaintext highlighter-rouge">&lt;depend&gt;rclpy&lt;/depend&gt;</code> 等依赖声明；</li>
+    <li>在 <code class="language-plaintext highlighter-rouge">setup.py</code>（Python 包）或 <code class="language-plaintext highlighter-rouge">CMakeLists.txt</code>（C++ 包）里写入对应的查找/安装语句；</li>
+    <li>于是你就不用手工补了。</li>
+  </ol>
+
+  <p>但如果<strong>事后</strong>才发现少写了依赖，就得自己改这两个文件，缺一不可。</p>
+</blockquote>
+
+<blockquote>
+  <p>这里只介绍使用过程中会用到的部分，其余内容之后可能会补充。</p>
+</blockquote>
+
+<h3 id="2编写节点代码并配置">2、编写节点代码并配置</h3>
+
+<p><strong>1. 编写代码</strong></p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">demo_python_pkg</code> 目录下编写节点代码。</p>
+
+<p>示例：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>          <span class="c1"># 初始化 rclpy 客户端库（管理通信、分配资源），注意：这不是"创建节点"
+</span>    <span class="n">node</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span><span class="sh">"</span><span class="s">python_node</span><span class="sh">"</span><span class="p">)</span>   <span class="c1"># 真正创建节点对象，名字叫 python_node
+</span>
+    <span class="c1"># 日志分五个级别：debug / info / warn / error / fatal
+</span>    <span class="c1"># 默认终端只显示 info 及以上；warn 也可以用 .warning（推荐写法，.warn 是旧别名）
+</span>    <span class="n">node</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">这是一个普通信息</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">node</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warn</span><span class="p">(</span><span class="sh">"</span><span class="s">这是一个警告信息</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">node</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">这是一个错误信息</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>      <span class="c1"># 阻塞在这里，循环处理该节点的所有回调（订阅、定时器、服务……）
+</span>                          <span class="c1"># 直到 Ctrl+C 或节点被关闭才会往下走
+</span>    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>      <span class="c1"># 关闭 rclpy，释放通信资源（正常退出和异常退出都会走到这里）
+</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">rclpy.init()</code> 和 <code class="language-plaintext highlighter-rouge">Node()</code> 是两件事</strong></p>
+
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">rclpy.init()</code> 初始化的是 <strong>rclpy 这个客户端库</strong>（加载 DDS、创建上下文），整个进程调用<strong>一次</strong>即可；</li>
+    <li><code class="language-plaintext highlighter-rouge">Node("名字")</code> 才是创建<strong>节点对象</strong>。一个进程里可以有多个节点（比如后面 Qt 那个例子里就有）。</li>
+  </ul>
+
+  <p>原笔记把 <code class="language-plaintext highlighter-rouge">rclpy.init()</code> 注释成”初始化节点”是不准确的，容易和 <code class="language-plaintext highlighter-rouge">Node()</code> 混淆。</p>
+</blockquote>
+
+<blockquote>
+  <p>⚠️ <strong>注意</strong>：上面补了 <code class="language-plaintext highlighter-rouge">if __name__ == "__main__": main()</code>。
+原笔记漏了这句。虽然通过 <code class="language-plaintext highlighter-rouge">setup.py</code> 的入口点启动时会直接调用 <code class="language-plaintext highlighter-rouge">main</code>，但如果你想<strong>直接 <code class="language-plaintext highlighter-rouge">python 文件名.py</code> 调试</strong>，没这句什么都不会发生。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">rclpy.spin()</code> 到底在干什么</strong></p>
+
+  <p>它是<strong>阻塞式的事件循环</strong>。节点不是”自动运行”的——你注册的每个回调（订阅收到消息、定时器到点、服务被调用）都排队等着，<code class="language-plaintext highlighter-rouge">spin()</code> 就是那个不断取出并执行它们的循环。</p>
+
+  <p>这也解释了一个后面会踩的坑：<strong><code class="language-plaintext highlighter-rouge">spin()</code> 是单线程的</strong>，如果你在某个回调里写了个耗时/阻塞的操作，其它所有回调都会被卡住。详见 <a href="#3客户端定时请求目标点">四.3 客户端</a> 里的分析。</p>
+</blockquote>
+
+<p><strong>2. 声明依赖</strong></p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">package.xml</code> 中写入所需的依赖库，例如：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;depend&gt;</span>rclpy<span class="nt">&lt;/depend&gt;</span>
+</code></pre></div></div>
+
+<p><strong>3. 配置入口点</strong></p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">setup.py</code> 中写入入口点信息，指定可执行文件与要运行的函数：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+    <span class="sh">'</span><span class="s">console_scripts</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span>
+        <span class="sh">'</span><span class="s">python_node = demo_python_pkg.python_node:main</span><span class="sh">'</span>
+    <span class="p">],</span>
+<span class="p">},</span>
+</code></pre></div></div>
+
+<p>格式说明：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>可执行文件名 = 包名.文件名:函数名
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">python_node</code>：生成的可执行文件名；</li>
+  <li><code class="language-plaintext highlighter-rouge">demo_python_pkg.python_node</code>：模块路径（包名.文件名）；</li>
+  <li><code class="language-plaintext highlighter-rouge">main</code>：要运行的函数名。</li>
+</ul>
+
+<p>即：指明该可执行文件运行的是哪个函数。</p>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">package.xml</code> 和 <code class="language-plaintext highlighter-rouge">setup.py</code> 各管什么</strong></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>文件</th>
+        <th>管什么</th>
+        <th>不写会怎样</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">package.xml</code></td>
+        <td><strong>依赖声明</strong>（给 ROS 的构建/运行系统看）</td>
+        <td>依赖装不上，<code class="language-plaintext highlighter-rouge">import</code> 失败</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">setup.py</code></td>
+        <td><strong>构建与安装规则</strong>（入口点、资源文件放哪）</td>
+        <td><code class="language-plaintext highlighter-rouge">ros2 run</code> 找不到可执行文件</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>两者是<strong>配合关系</strong>，不是二选一。新手最常见的报错 <code class="language-plaintext highlighter-rouge">Package 'xxx' not found</code> 或 <code class="language-plaintext highlighter-rouge">No executable found</code>，基本都出在这两个文件上。</p>
+</blockquote>
+
+<h3 id="3编译与运行">3、编译与运行</h3>
+
+<p><strong>1. 编译</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>colcon build
+</code></pre></div></div>
+
+<p>编译完成后会生成 <code class="language-plaintext highlighter-rouge">install</code> 产物目录，<code class="language-plaintext highlighter-rouge">build</code> 为中间产物目录，<code class="language-plaintext highlighter-rouge">log</code> 为日志目录。</p>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">colcon build</code> 的三个目录</strong></p>
+
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">build/</code>：编译中间产物（CMake 缓存等），<strong>可以删</strong>，删了要重新编译；</li>
+    <li><code class="language-plaintext highlighter-rouge">install/</code>：最终产物，<code class="language-plaintext highlighter-rouge">ros2 run</code> 真正去找东西的地方；</li>
+    <li><code class="language-plaintext highlighter-rouge">log/</code>：每次构建的日志，<strong>编译报错时先来这里翻</strong>，比终端刷屏的报错完整得多。</li>
+  </ul>
+
+  <p><strong>调试期建议用 <code class="language-plaintext highlighter-rouge">colcon build --symlink-install</code></strong>：它让 <code class="language-plaintext highlighter-rouge">install/</code> 里的文件软链回源码。这样改了 Python 代码<strong>不用重新编译</strong>，直接重跑节点就生效，能省下大量时间。C++ 包仍然需要重新编译。</p>
+</blockquote>
+
+<p><strong>2. 配置环境变量</strong></p>
+
+<p>运行 <code class="language-plaintext highlighter-rouge">install</code> 目录下的 <code class="language-plaintext highlighter-rouge">setup.bash</code> 完成一键环境变量配置：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source install</span>/setup.bash
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>注意：<code class="language-plaintext highlighter-rouge">source</code> 只在当前终端有效</strong></p>
+
+  <p>每开一个<strong>新终端</strong>都要重新 <code class="language-plaintext highlighter-rouge">source</code> 一次，否则 <code class="language-plaintext highlighter-rouge">ros2 run</code> 会找不到你的包。嫌麻烦可以把下面这行加到 <code class="language-plaintext highlighter-rouge">~/.bashrc</code>（通常在文件末尾）：</p>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> ~/你的工作空间路径/install/setup.bash
+</code></pre></div>  </div>
+
+  <p>另外，工作空间<strong>换了位置或改了目录名</strong>后必须重新 <code class="language-plaintext highlighter-rouge">colcon build</code> + 重新 source，因为 <code class="language-plaintext highlighter-rouge">setup.bash</code> 里写的是绝对路径。</p>
+</blockquote>
+
+<p><strong>3. 运行节点</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run demo_python_pkg python_node
+</code></pre></div></div>
+
+<p>即运行 <code class="language-plaintext highlighter-rouge">demo_python_pkg</code> 包下的 <code class="language-plaintext highlighter-rouge">python_node</code> 节点。</p>
+
+<h2 id="流程小结">流程小结</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>创建包 → 写代码 → 声明依赖(package.xml) → 配置入口(setup.py)
+      → colcon build → source setup.bash → ros2 run
+</code></pre></div></div>
+
+<hr />
+
+<!-- nav -->
+
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">⬅️ 上一章</th>
+      <th style="text-align: center">🏠 目录</th>
+      <th style="text-align: right">下一章 ➡️</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">—</td>
+      <td style="text-align: center"><a href="/tutorials/ROS2-bash/README/">返回目录</a></td>
+      <td style="text-align: right"><a href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">二、多线程示例</a></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/ROS2-bash/README/"><span>← 上一章</span><strong>课程导读</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/"><span>下一章 →</span><strong>多线程示例</strong></a>
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

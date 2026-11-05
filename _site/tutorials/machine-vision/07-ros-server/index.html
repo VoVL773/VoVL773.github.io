@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    ROS 2 视觉服务端 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS 2 机器视觉实战</div>
+    <p class="tutorial-course-subtitle">从颜色检测到视觉服务</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">课程导读</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/00-overview/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程介绍与学习路线</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">基础与接口</div>
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/01-interfaces/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>接口包与消息定义</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/02-hsv-config/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>包骨架与 HSV 配置</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">纯 Python 视觉模块</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/03-color-detector/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>颜色检测与目标跟踪</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/04-visualization/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>检测结果可视化</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/05-gui/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>交互调参与控制面板</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/06-image-sources/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>合成图像与测试场景</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">接入 ROS 2</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/machine-vision/07-ros-server/" aria-current="page">
+            <span class="tutorial-chapter-number">07</span>
+            <span>ROS 2 视觉服务端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/08-ros-client/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>ROS 2 订阅客户端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/09-launch-testing/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>配置、启动与测试</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    <a class="tutorial-source" href="https://github.com/VoVL773/Machine_vision-_color_sorting_system" target="_blank" rel="noopener">项目源码 ↗</a>
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/machine-vision/00-overview/">ROS 2 机器视觉实战</a><span>/</span>
+      <span>接入 ROS 2</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS 2 机器视觉实战 · 第 7 章</div>
+      <h1>ROS 2 视觉服务端</h1>
+      <p>读取图像、发布目标消息，并提供配置保存与加载服务。</p>
+    </header>
+    <div class="post-content tutorial-content"><blockquote>
+  <p>前面几章完成了配置、检测、绘图、滑块和合成场景。
+这一章把它们接入 ROS 2：读取图像、发布检测结果，并提供配置保存/加载服务。</p>
+</blockquote>
+
+<h2 id="一-补充依赖与服务端入口">一. 补充依赖与服务端入口</h2>
+
+<p>在 <code class="language-plaintext highlighter-rouge">src/Mvc_sorting/Mvc_sorting/</code> 下创建 <code class="language-plaintext highlighter-rouge">Mvc_sorting_server.py</code>。
+确认 <code class="language-plaintext highlighter-rouge">package.xml</code> 包含以下依赖，已有的条目不用重复添加：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;depend&gt;</span>rclpy<span class="nt">&lt;/depend&gt;</span>
+<span class="nt">&lt;depend&gt;</span>std_msgs<span class="nt">&lt;/depend&gt;</span>
+<span class="nt">&lt;depend&gt;</span>color_sorting_interfaces<span class="nt">&lt;/depend&gt;</span>
+<span class="nt">&lt;depend&gt;</span>sensor_msgs<span class="nt">&lt;/depend&gt;</span>
+<span class="nt">&lt;depend&gt;</span>std_srvs<span class="nt">&lt;/depend&gt;</span>
+<span class="nt">&lt;exec_depend&gt;</span>cv_bridge<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="nt">&lt;exec_depend&gt;</span>python3-opencv<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="nt">&lt;exec_depend&gt;</span>python3-numpy<span class="nt">&lt;/exec_depend&gt;</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>依赖</th>
+      <th>本章用法</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rclpy</code></td>
+      <td>节点、参数、定时器、发布/订阅和服务</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">color_sorting_interfaces</code></td>
+      <td>发布 <code class="language-plaintext highlighter-rouge">ColorTargetArray</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sensor_msgs</code></td>
+      <td>接收/发布 <code class="language-plaintext highlighter-rouge">Image</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std_srvs</code></td>
+      <td>配置保存/加载的 <code class="language-plaintext highlighter-rouge">Trigger</code> 服务</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cv_bridge</code></td>
+      <td>在 ROS <code class="language-plaintext highlighter-rouge">Image</code> 与 OpenCV 数组之间转换</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">setup.py</code> 的 <code class="language-plaintext highlighter-rouge">console_scripts</code> 中保留服务端入口：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sh">'</span><span class="s">Mvc_sorting_server = Mvc_sorting.Mvc_sorting_server:main</span><span class="sh">'</span><span class="p">,</span>
+</code></pre></div></div>
+
+<p>服务端较长，下面按源码顺序拆开讲解。所有带类内缩进的方法放在同一个 <code class="language-plaintext highlighter-rouge">MvcSortingServer</code> 类中，
+<code class="language-plaintext highlighter-rouge">main()</code> 放在类外；完整文件可对照 <a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/src/Mvc_sorting/Mvc_sorting/Mvc_sorting_server.py">服务端源码</a>。</p>
+
+<h2 id="二-逐步讲解-mvc_sorting_serverpyros-视觉服务端">二. 逐步讲解 Mvc_sorting_server.py（ROS 视觉服务端）</h2>
+
+<h3 id="1-导入模块和输入类型">1. 导入模块和输入类型</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">import</span> <span class="n">time</span>
+
+<span class="kn">from</span> <span class="n">color_sorting_interfaces.msg</span> <span class="kn">import</span> <span class="n">ColorTarget</span><span class="p">,</span> <span class="n">ColorTargetArray</span>
+<span class="kn">import</span> <span class="n">cv2</span>
+<span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">rclpy.qos</span> <span class="kn">import</span> <span class="n">qos_profile_sensor_data</span>
+<span class="kn">from</span> <span class="n">sensor_msgs.msg</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="n">std_srvs.srv</span> <span class="kn">import</span> <span class="n">Trigger</span>
+
+<span class="kn">from</span> <span class="n">.color_detector</span> <span class="kn">import</span> <span class="n">ColorDetector</span><span class="p">,</span> <span class="n">Detection</span>
+<span class="kn">from</span> <span class="n">.gui</span> <span class="kn">import</span> <span class="n">HSVTrackbarPanel</span><span class="p">,</span> <span class="n">TRACKBAR_HELP</span>
+<span class="kn">from</span> <span class="n">.hsv_config</span> <span class="kn">import</span> <span class="n">HSVConfig</span>
+<span class="kn">from</span> <span class="n">.image_sources</span> <span class="kn">import</span> <span class="n">SyntheticScene</span>
+<span class="kn">from</span> <span class="n">.visualization</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">annotate_frame</span><span class="p">,</span>
+    <span class="n">gui_is_available</span><span class="p">,</span>
+    <span class="n">make_mask_montage</span><span class="p">,</span>
+    <span class="n">sharpen_frame</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="n">cv_bridge</span> <span class="kn">import</span> <span class="n">CvBridge</span>
+<span class="k">except</span> <span class="nb">ImportError</span><span class="p">:</span>  <span class="c1"># pragma: no cover - only when cv_bridge is not installed
+</span>    <span class="n">CvBridge</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="n">VALID_INPUT_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="sh">'</span><span class="s">camera</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">video</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">topic</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">synthetic</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>模块或对象</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">os</code>、<code class="language-plaintext highlighter-rouge">sys</code></td>
+      <td>路径处理、平台判断和退出码</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">time.monotonic()</code></td>
+      <td>计算处理帧率和日志间隔，不受系统时间调整影响</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Node</code></td>
+      <td>ROS 2 节点基类</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">qos_profile_sensor_data</code></td>
+      <td>图像输入和调试图像使用的传感器 QoS（Best Effort）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Image</code>、<code class="language-plaintext highlighter-rouge">Trigger</code></td>
+      <td>图像消息与配置服务类型</td>
+    </tr>
+    <tr>
+      <td>前面章节的模块</td>
+      <td>分别提供检测、GUI、配置、合成图和绘图功能</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CvBridge</code></td>
+      <td>图像消息与 NumPy 数组转换，缺失时暂置为 <code class="language-plaintext highlighter-rouge">None</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">VALID_INPUT_TYPES</code> 限制可用输入模式为 <code class="language-plaintext highlighter-rouge">camera/video/topic/synthetic</code>。
+<code class="language-plaintext highlighter-rouge">cv_bridge</code> 缺失时，topic 输入无法运行；仅请求调试图像时会关闭该功能并记录警告。</p>
+
+<h3 id="2-mvcsortingserver-类初始化节点">2. MvcSortingServer 类：初始化节点</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MvcSortingServer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">Vision server that publishes detected colour targets.</span><span class="sh">"""</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Declare parameters, open the input source and start processing.</span><span class="sh">"""</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">'</span><span class="s">Mvc_sorting_server</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_shutdown_requested</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_shutdown_done</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_frame_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_fps</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_last_frame_time</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_last_log_time</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_consecutive_failures</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_config_changed_at</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_input_type</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_string_param</span><span class="p">(</span><span class="sh">'</span><span class="s">input_type</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">camera</span><span class="sh">'</span><span class="p">).</span><span class="nf">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_input_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">VALID_INPUT_TYPES</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">input_type must be one of </span><span class="si">{</span><span class="n">VALID_INPUT_TYPES</span><span class="si">}</span><span class="s">, got </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_input_type</span><span class="si">!r}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_camera_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_index</span><span class="sh">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_video_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expanduser</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">_string_param</span><span class="p">(</span><span class="sh">'</span><span class="s">video_path</span><span class="sh">'</span><span class="p">,</span> <span class="sh">''</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_image_topic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_string_param</span><span class="p">(</span><span class="sh">'</span><span class="s">image_topic</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">/camera/image_raw</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_targets_topic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_string_param</span><span class="p">(</span><span class="sh">'</span><span class="s">targets_topic</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">/color_targets</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_debug_image_topic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_string_param</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">debug_image_topic</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">/color_sorting/debug_image</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_frame_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_string_param</span><span class="p">(</span><span class="sh">'</span><span class="s">frame_id</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">camera_optical_frame</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_frame_width</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">frame_width</span><span class="sh">'</span><span class="p">,</span> <span class="mi">1280</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_frame_height</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">frame_height</span><span class="sh">'</span><span class="p">,</span> <span class="mi">720</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_fps_limit</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_float_param</span><span class="p">(</span><span class="sh">'</span><span class="s">fps</span><span class="sh">'</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_camera_backend</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_string_param</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">camera_backend</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">auto</span><span class="sh">'</span><span class="p">).</span><span class="nf">strip</span><span class="p">().</span><span class="nf">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_camera_backend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="sh">'</span><span class="s">auto</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">v4l2</span><span class="sh">'</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">"</span><span class="s">camera_backend must be </span><span class="sh">'</span><span class="s">auto</span><span class="sh">'</span><span class="s"> or </span><span class="sh">'</span><span class="s">v4l2</span><span class="sh">'"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_camera_fourcc</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_string_param</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">camera_fourcc</span><span class="sh">'</span><span class="p">,</span> <span class="sh">''</span><span class="p">).</span><span class="nf">strip</span><span class="p">().</span><span class="nf">upper</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_camera_autofocus</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_bool_param</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_autofocus</span><span class="sh">'</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_camera_focus</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_focus</span><span class="sh">'</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_camera_sharpness</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_sharpness</span><span class="sh">'</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_camera_warmup_frames</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_warmup_frames</span><span class="sh">'</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_display_sharpen</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span>
+            <span class="mf">0.0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_float_param</span><span class="p">(</span><span class="sh">'</span><span class="s">display_sharpen</span><span class="sh">'</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_loop_video</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_bool_param</span><span class="p">(</span><span class="sh">'</span><span class="s">loop_video</span><span class="sh">'</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_max_frames</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">max_frames</span><span class="sh">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_max_targets</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">max_targets</span><span class="sh">'</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_publish_empty</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_bool_param</span><span class="p">(</span><span class="sh">'</span><span class="s">publish_empty</span><span class="sh">'</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_publish_debug_image</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_bool_param</span><span class="p">(</span><span class="sh">'</span><span class="s">publish_debug_image</span><span class="sh">'</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_print_targets</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_bool_param</span><span class="p">(</span><span class="sh">'</span><span class="s">print_targets</span><span class="sh">'</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_log_period</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_float_param</span><span class="p">(</span><span class="sh">'</span><span class="s">log_period</span><span class="sh">'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_auto_save</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_bool_param</span><span class="p">(</span><span class="sh">'</span><span class="s">auto_save</span><span class="sh">'</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_enable_tracking</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_bool_param</span><span class="p">(</span><span class="sh">'</span><span class="s">enable_tracking</span><span class="sh">'</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_track_max_distance</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span>
+            <span class="mf">0.0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_float_param</span><span class="p">(</span><span class="sh">'</span><span class="s">track_max_distance</span><span class="sh">'</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_track_max_age</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">track_max_age</span><span class="sh">'</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_min_hits</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">min_hits</span><span class="sh">'</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_config_path</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_load_initial_config</span><span class="p">()</span>
+        <span class="n">min_area_override</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">initial_min_area</span><span class="sh">'</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">morph_override</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_int_param</span><span class="p">(</span><span class="sh">'</span><span class="s">initial_morph_kernel</span><span class="sh">'</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">min_area_override</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="n">min_area</span> <span class="o">=</span> <span class="n">min_area_override</span>
+        <span class="k">if</span> <span class="n">morph_override</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="n">morph_kernel</span> <span class="o">=</span> <span class="n">morph_override</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="nf">validate</span><span class="p">()</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="nc">ColorDetector</span><span class="p">(</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">enable_tracking</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_enable_tracking</span><span class="p">,</span>
+            <span class="n">track_max_distance</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_track_max_distance</span><span class="p">,</span>
+            <span class="n">track_max_age</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_track_max_age</span><span class="p">,</span>
+            <span class="n">min_hits</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_min_hits</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_targets_publisher</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span>
+            <span class="n">ColorTargetArray</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_targets_topic</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_bridge</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_publish_debug_image</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">_input_type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">topic</span><span class="sh">'</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">CvBridge</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_input_type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">topic</span><span class="sh">'</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="nc">RuntimeError</span><span class="p">(</span>
+                        <span class="sh">'</span><span class="s">input_type=topic requires cv_bridge (ros-jazzy-cv-bridge)</span><span class="sh">'</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span>
+                    <span class="sh">'</span><span class="s">cv_bridge is not available; debug image publishing disabled</span><span class="sh">'</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">_publish_debug_image</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">_bridge</span> <span class="o">=</span> <span class="nc">CvBridge</span><span class="p">()</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_debug_publisher</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_publish_debug_image</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_debug_publisher</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span>
+                <span class="n">Image</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_debug_image_topic</span><span class="p">,</span> <span class="n">qos_profile_sensor_data</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_save_service</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_service</span><span class="p">(</span>
+            <span class="n">Trigger</span><span class="p">,</span> <span class="sh">'</span><span class="s">~/save_config</span><span class="sh">'</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_save_config</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_load_service</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_service</span><span class="p">(</span>
+            <span class="n">Trigger</span><span class="p">,</span> <span class="sh">'</span><span class="s">~/load_config</span><span class="sh">'</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_load_config</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_capture</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_synthetic</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_subscription</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_timer</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_input_type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">topic</span><span class="sh">'</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_subscription</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_subscription</span><span class="p">(</span>
+                <span class="n">Image</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_image_topic</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_image</span><span class="p">,</span> <span class="n">qos_profile_sensor_data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_open_input_source</span><span class="p">()</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_timer</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">self</span><span class="p">.</span><span class="n">_fps_limit</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_timer</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_window_name</span> <span class="o">=</span> <span class="sh">'</span><span class="s">Color Sorting</span><span class="sh">'</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_control_window_name</span> <span class="o">=</span> <span class="sh">'</span><span class="s">HSV Controls</span><span class="sh">'</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_mask_window_name</span> <span class="o">=</span> <span class="sh">'</span><span class="s">HSV Masks</span><span class="sh">'</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_gui_requested</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_bool_param</span><span class="p">(</span><span class="sh">'</span><span class="s">show_window</span><span class="sh">'</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_show_masks</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_bool_param</span><span class="p">(</span><span class="sh">'</span><span class="s">show_masks</span><span class="sh">'</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_show_trackbars</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_bool_param</span><span class="p">(</span><span class="sh">'</span><span class="s">show_trackbars</span><span class="sh">'</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_gui_requested</span> <span class="ow">and</span> <span class="nf">gui_is_available</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_panel</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_masks_visible</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_mask_window_was_shown</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_window_was_shown</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_display_size</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_gui_requested</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">show_window=True but no usable display was found; running headless</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">_setup_gui</span><span class="p">()</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">vision server ready: input=</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_input_type</span><span class="si">}</span><span class="s">, </span><span class="sh">'</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">targets=</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_targets_topic</span><span class="si">}</span><span class="s">, config=</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_config_path</span><span class="si">}</span><span class="s">, </span><span class="sh">'</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">gui=</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span><span class="si">}</span><span class="s">, tracking=</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_enable_tracking</span><span class="si">}</span><span class="s">, </span><span class="sh">'</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">min_hits=</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_min_hits</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_input_type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">synthetic</span><span class="sh">'</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">synthetic scene: 8 moving blobs (2 per colour), </span><span class="sh">'</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_frame_width</span><span class="si">}</span><span class="s">x</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_frame_height</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="n">TRACKBAR_HELP</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="1-初始化状态和参数">1. 初始化状态和参数</h4>
+
+<p><code class="language-plaintext highlighter-rouge">super().__init__('Mvc_sorting_server')</code> 创建节点。
+接着记录退出标志、帧数、帧率、连续读帧失败次数，再声明参数。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>参数组</th>
+      <th>主要参数</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>输入</td>
+      <td><code class="language-plaintext highlighter-rouge">input_type</code>、<code class="language-plaintext highlighter-rouge">camera_index</code>、<code class="language-plaintext highlighter-rouge">video_path</code>、<code class="language-plaintext highlighter-rouge">image_topic</code></td>
+      <td>选择图像来源</td>
+    </tr>
+    <tr>
+      <td>相机</td>
+      <td><code class="language-plaintext highlighter-rouge">frame_width/height</code>、<code class="language-plaintext highlighter-rouge">fps</code>、<code class="language-plaintext highlighter-rouge">camera_backend/fourcc</code>、对焦参数</td>
+      <td>请求采集格式与属性</td>
+    </tr>
+    <tr>
+      <td>输出</td>
+      <td><code class="language-plaintext highlighter-rouge">targets_topic</code>、<code class="language-plaintext highlighter-rouge">debug_image_topic</code>、<code class="language-plaintext highlighter-rouge">publish_debug_image</code></td>
+      <td>目标列表和标注图像</td>
+    </tr>
+    <tr>
+      <td>检测</td>
+      <td><code class="language-plaintext highlighter-rouge">min_hits</code>、<code class="language-plaintext highlighter-rouge">enable_tracking</code>、<code class="language-plaintext highlighter-rouge">track_max_distance/age</code></td>
+      <td>跟踪与命中确认</td>
+    </tr>
+    <tr>
+      <td>配置</td>
+      <td><code class="language-plaintext highlighter-rouge">config_path</code>、<code class="language-plaintext highlighter-rouge">initial_min_area</code>、<code class="language-plaintext highlighter-rouge">initial_morph_kernel</code></td>
+      <td>加载配置与启动时覆盖</td>
+    </tr>
+    <tr>
+      <td>GUI</td>
+      <td><code class="language-plaintext highlighter-rouge">show_window</code>、<code class="language-plaintext highlighter-rouge">show_masks</code>、<code class="language-plaintext highlighter-rouge">show_trackbars</code></td>
+      <td>控制三个显示窗口</td>
+    </tr>
+    <tr>
+      <td>运行</td>
+      <td><code class="language-plaintext highlighter-rouge">max_frames</code>、<code class="language-plaintext highlighter-rouge">max_targets</code>、<code class="language-plaintext highlighter-rouge">publish_empty</code>、<code class="language-plaintext highlighter-rouge">auto_save</code></td>
+      <td>帧数上限、目标数上限、空结果和退出保存</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>参数在这里声明并读取。当前节点没有注册运行时参数更新回调，所以 <code class="language-plaintext highlighter-rouge">ros2 param set</code> 改值后，
+不代表对应内部属性会同步更新；实时 HSV 调参走滑块/配置服务。
+<code class="language-plaintext highlighter-rouge">max_targets</code> 按检测列表顺序截断，不是按面积挑选最大的目标。</p>
+
+<h4 id="2-加载配置创建检测器">2. 加载配置，创建检测器</h4>
+
+<p>先加载 JSON，再应用非负的启动覆盖值，校验后创建 <code class="language-plaintext highlighter-rouge">ColorDetector</code>。
+服务端默认 <code class="language-plaintext highlighter-rouge">min_hits=2</code>，因此新目标通常从第二次命中开始发布。</p>
+
+<h4 id="3-创建话题服务和输入入口">3. 创建话题、服务和输入入口</h4>
+
+<p>目标列表使用深度为 10 的默认 QoS；图像使用 sensor-data QoS。
+配置服务使用 <code class="language-plaintext highlighter-rouge">~/save_config</code> 和 <code class="language-plaintext highlighter-rouge">~/load_config</code>，<code class="language-plaintext highlighter-rouge">~</code> 表示相对节点的私有名称。
+默认展开为 <code class="language-plaintext highlighter-rouge">/Mvc_sorting_server/save_config</code> 和 <code class="language-plaintext highlighter-rouge">/Mvc_sorting_server/load_config</code>。</p>
+
+<p>topic 模式创建图像订阅；其他三种模式打开输入源，并按 <code class="language-plaintext highlighter-rouge">1 / fps</code> 创建定时器。
+因此 topic 模式由图像到达驱动，<code class="language-plaintext highlighter-rouge">fps</code> 不会限制订阅回调的输入频率。</p>
+
+<h4 id="4-初始化-gui">4. 初始化 GUI</h4>
+
+<p>显示名分别是 <code class="language-plaintext highlighter-rouge">Color Sorting</code>、<code class="language-plaintext highlighter-rouge">HSV Controls</code>、<code class="language-plaintext highlighter-rouge">HSV Masks</code>。
+只有请求显示且环境初步检查通过时才创建窗口，否则继续 headless 运行。</p>
+
+<h3 id="3-参数辅助方法">3. 参数辅助方法</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_string_param</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Declare and read a string parameter.</span><span class="sh">"""</span>
+        <span class="k">return</span> <span class="nf">str</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">).</span><span class="n">value</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_int_param</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Declare and read an integer parameter.</span><span class="sh">"""</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">).</span><span class="n">value</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nf">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="nf">except </span><span class="p">(</span><span class="nb">TypeError</span><span class="p">,</span> <span class="nb">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">parameter </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s"> must be an integer</span><span class="sh">'</span><span class="p">)</span> <span class="k">from</span> <span class="n">exc</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_float_param</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Declare and read a floating point parameter.</span><span class="sh">"""</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">).</span><span class="n">value</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nf">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="nf">except </span><span class="p">(</span><span class="nb">TypeError</span><span class="p">,</span> <span class="nb">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">parameter </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s"> must be a number</span><span class="sh">'</span><span class="p">)</span> <span class="k">from</span> <span class="n">exc</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_bool_param</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Declare and read a boolean parameter, accepting string values.</span><span class="sh">"""</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">).</span><span class="n">value</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">value</span><span class="p">.</span><span class="nf">strip</span><span class="p">().</span><span class="nf">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="sh">'</span><span class="s">1</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">true</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">yes</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">on</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nf">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>这四个方法统一执行“声明参数 → 读取 <code class="language-plaintext highlighter-rouge">.value</code> → 转换类型”。
+整数、浮点转换失败时给出参数名称；布尔字符串只有 <code class="language-plaintext highlighter-rouge">1/true/yes/on</code> 被视为真，其他字符串为假。
+范围限制由初始化中的 <code class="language-plaintext highlighter-rouge">max()</code> 或显式判断完成，这些辅助方法本身不检查业务范围。</p>
+
+<h3 id="4-配置管理">4. 配置管理</h3>
+
+<h4 id="_load_initial_config确定配置路径">_load_initial_config()：确定配置路径</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_load_initial_config</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">HSVConfig</span><span class="p">]:</span>
+        <span class="sh">"""</span><span class="s">Resolve config_path and load or create the initial configuration.</span><span class="sh">"""</span>
+        <span class="n">default_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expanduser</span><span class="p">(</span><span class="sh">'</span><span class="s">~/.ros/color_sorting_hsv.json</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">raw_path</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_string_param</span><span class="p">(</span><span class="sh">'</span><span class="s">config_path</span><span class="sh">'</span><span class="p">,</span> <span class="sh">''</span><span class="p">).</span><span class="nf">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">raw_path</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">abspath</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expanduser</span><span class="p">(</span><span class="n">raw_path</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isfile</span><span class="p">(</span><span class="n">config_path</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="nc">FileNotFoundError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">config_path does not exist: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">HSVConfig</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">loaded HSV config: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">config_path</span><span class="p">,</span> <span class="n">config</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isfile</span><span class="p">(</span><span class="n">default_path</span><span class="p">):</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">HSVConfig</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="n">default_path</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">loaded HSV config: </span><span class="si">{</span><span class="n">default_path</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">default_path</span><span class="p">,</span> <span class="n">config</span>
+        <span class="k">return</span> <span class="n">default_path</span><span class="p">,</span> <span class="n">HSVConfig</span><span class="p">.</span><span class="nf">default</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>启动方式</th>
+      <th>行为</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>显式设置非空 <code class="language-plaintext highlighter-rouge">config_path</code></td>
+      <td>文件必须已经存在，否则抛出 <code class="language-plaintext highlighter-rouge">FileNotFoundError</code></td>
+    </tr>
+    <tr>
+      <td>未指定路径，默认文件存在</td>
+      <td>加载 <code class="language-plaintext highlighter-rouge">~/.ros/color_sorting_hsv.json</code></td>
+    </tr>
+    <tr>
+      <td>未指定路径，默认文件不存在</td>
+      <td>使用内置默认值，记录默认保存路径</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注意：显式指定一个不存在的文件，不会自动回退到默认值。验收时应先生成 JSON，再传入路径。</p>
+
+<h4 id="_apply_config让检测器和面板使用同一份配置">_apply_config()：让检测器和面板使用同一份配置</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_apply_config</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">HSVConfig</span><span class="p">,</span> <span class="n">reset_tracking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Apply a new configuration to the detector and GUI.</span><span class="sh">"""</span>
+        <span class="n">config</span><span class="p">.</span><span class="nf">validate</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_detector</span><span class="p">.</span><span class="nf">set_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reset_tracking</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_detector</span><span class="p">.</span><span class="nf">reset_tracking</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_panel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_panel</span><span class="p">.</span><span class="nf">set_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>先校验配置，再替换服务端与检测器持有的对象，默认重置跟踪。
+如果面板已经存在，也同步替换面板配置；所以加载/恢复默认后 ID 可能重新从 1 开始。</p>
+
+<h4 id="保存加载与恢复默认">保存、加载与恢复默认</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_save_config</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="sh">"""</span><span class="s">Save the current configuration to ``config_path``.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_config_path</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="sh">'</span><span class="s">config_path is empty</span><span class="sh">'</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">saved_path</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_config_path</span><span class="p">)</span>
+        <span class="nf">except </span><span class="p">(</span><span class="nb">OSError</span><span class="p">,</span> <span class="nb">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="s">failed to save HSV config: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">message</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="s">saved HSV config to </span><span class="si">{</span><span class="n">saved_path</span><span class="si">}</span><span class="sh">'</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="n">message</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_load_config</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="sh">"""</span><span class="s">Load the configuration from ``config_path``.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_config_path</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="sh">'</span><span class="s">config_path is empty</span><span class="sh">'</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isfile</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_config_path</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="s">config file does not exist: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_config_path</span><span class="si">}</span><span class="sh">'</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">message</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">HSVConfig</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_config_path</span><span class="p">)</span>
+        <span class="nf">except </span><span class="p">(</span><span class="nb">OSError</span><span class="p">,</span> <span class="nb">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="s">failed to load HSV config: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">message</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">_apply_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="s">loaded HSV config from </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_config_path</span><span class="si">}</span><span class="sh">'</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="n">message</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_reset_config</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Restore the built-in default HSV configuration.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">_apply_config</span><span class="p">(</span><span class="n">HSVConfig</span><span class="p">.</span><span class="nf">default</span><span class="p">())</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">'</span><span class="s">restored default HSV configuration</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>保存与加载返回 <code class="language-plaintext highlighter-rouge">(是否成功, 提示文字)</code>，便于快捷键和 ROS 服务复用。
+<code class="language-plaintext highlighter-rouge">quiet=True</code> 只抑制方法内的部分日志，不改变保存行为。
+读取失败时不会把失败结果应用到检测器；恢复默认只更改内存，需保存才会写入文件。</p>
+
+<h4 id="trigger-服务回调">Trigger 服务回调</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_on_save_config</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">_request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">Handle the ~/save_config Trigger service.</span><span class="sh">"""</span>
+        <span class="n">success</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_save_config</span><span class="p">()</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">success</span> <span class="o">=</span> <span class="n">success</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="k">return</span> <span class="n">response</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_on_load_config</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">_request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">Handle the ~/load_config Trigger service.</span><span class="sh">"""</span>
+        <span class="n">success</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_load_config</span><span class="p">()</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">success</span> <span class="o">=</span> <span class="n">success</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="k">return</span> <span class="n">response</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Trigger</code> 请求没有业务字段，响应包含 <code class="language-plaintext highlighter-rouge">success</code> 和 <code class="language-plaintext highlighter-rouge">message</code>。
+回调把前面方法返回的状态填入响应并返回，不需要重复实现文件读写。</p>
+
+<h3 id="5-相机打开与回退">5. 相机打开与回退</h3>
+
+<h4 id="fourcc-解码和属性设置">FOURCC 解码和属性设置</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_decode_fourcc</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Decode an OpenCV FOURCC numeric value into four ASCII characters.</span><span class="sh">"""</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">characters</span> <span class="o">=</span> <span class="p">[</span><span class="nf">chr</span><span class="p">((</span><span class="n">code</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">index</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="sh">''</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">char</span> <span class="k">if</span> <span class="mi">32</span> <span class="o">&lt;=</span> <span class="nf">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">127</span> <span class="k">else</span> <span class="sh">'</span><span class="s">.</span><span class="sh">'</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">characters</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_set_camera_property</span><span class="p">(</span>
+        <span class="n">self</span><span class="p">,</span> <span class="n">capture</span><span class="p">,</span> <span class="n">prop</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">warn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Set one camera property, optionally logging unsupported values.</span><span class="sh">"""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">accepted</span> <span class="o">=</span> <span class="nf">bool</span><span class="p">(</span><span class="n">capture</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">camera setting </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s"> failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">accepted</span> <span class="ow">and</span> <span class="n">warn</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">camera did not accept </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s">=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s">; keeping current value</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">accepted</span>
+</code></pre></div></div>
+
+<p>FOURCC 是四字符格式标识，如 <code class="language-plaintext highlighter-rouge">MJPG</code>。解码方法从整数中逐字节提取 ASCII 字符，便于打印日志。
+属性设置封装了驱动拒绝参数或 OpenCV 报错的情况；设备不支持某项时记录警告并返回 <code class="language-plaintext highlighter-rouge">False</code>。</p>
+
+<h4 id="_try_camera尝试一种采集配置">_try_camera()：尝试一种采集配置</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_try_camera</span><span class="p">(</span>
+        <span class="n">self</span><span class="p">,</span>
+        <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">fourcc_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">autofocus</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">focus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">sharpness</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sh">"""</span><span class="s">
+        Open and validate one camera configuration.
+
+        Returns ``(capture, backend_label)`` on success or ``(None, reason)``.
+        A frame is read before accepting the configuration so a broken
+        GStreamer/V4L2 pipeline cannot be mistaken for a working camera.
+        </span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="sh">'</span><span class="s">v4l2</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">sys</span><span class="p">.</span><span class="n">platform</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">'</span><span class="s">linux</span><span class="sh">'</span><span class="p">):</span>
+            <span class="n">capture</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nc">VideoCapture</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_camera_index</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">CAP_V4L2</span><span class="p">)</span>
+            <span class="n">backend_label</span> <span class="o">=</span> <span class="sh">'</span><span class="s">V4L2</span><span class="sh">'</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">capture</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nc">VideoCapture</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_camera_index</span><span class="p">)</span>
+            <span class="n">backend_label</span> <span class="o">=</span> <span class="sh">'</span><span class="s">auto</span><span class="sh">'</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">capture</span><span class="p">.</span><span class="nf">isOpened</span><span class="p">():</span>
+            <span class="n">capture</span><span class="p">.</span><span class="nf">release</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">backend_label</span><span class="si">}</span><span class="s"> could not open camera </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_camera_index</span><span class="si">}</span><span class="sh">'</span>
+
+        <span class="k">if</span> <span class="n">fourcc_text</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">fourcc_text</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">fourcc</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nc">VideoWriter_fourcc</span><span class="p">(</span><span class="o">*</span><span class="n">fourcc_text</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">_set_camera_property</span><span class="p">(</span>
+                    <span class="n">capture</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FOURCC</span><span class="p">,</span> <span class="n">fourcc</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">fourcc </span><span class="si">{</span><span class="n">fourcc_text</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span>
+                    <span class="sh">'</span><span class="s">camera_fourcc must contain exactly four characters; ignoring</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">_set_camera_property</span><span class="p">(</span>
+            <span class="n">capture</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="sh">'</span><span class="s">width</span><span class="sh">'</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">_set_camera_property</span><span class="p">(</span>
+            <span class="n">capture</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="sh">'</span><span class="s">height</span><span class="sh">'</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">_set_camera_property</span><span class="p">(</span>
+            <span class="n">capture</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FPS</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_fps_limit</span><span class="p">,</span> <span class="sh">'</span><span class="s">fps</span><span class="sh">'</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">focus</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_set_camera_property</span><span class="p">(</span>
+                <span class="n">capture</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_AUTOFOCUS</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="sh">'</span><span class="s">autofocus</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_set_camera_property</span><span class="p">(</span>
+                <span class="n">capture</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FOCUS</span><span class="p">,</span> <span class="n">focus</span><span class="p">,</span> <span class="sh">'</span><span class="s">focus</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">autofocus</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_set_camera_property</span><span class="p">(</span>
+                <span class="n">capture</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_AUTOFOCUS</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="sh">'</span><span class="s">autofocus</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sharpness</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_set_camera_property</span><span class="p">(</span>
+                <span class="n">capture</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_SHARPNESS</span><span class="p">,</span> <span class="n">sharpness</span><span class="p">,</span> <span class="sh">'</span><span class="s">sharpness</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">capture</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_BUFFERSIZE</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">attempts</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_camera_warmup_frames</span><span class="p">)</span>
+        <span class="n">successful_reads</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">attempts</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ok</span><span class="p">,</span> <span class="n">_frame</span> <span class="o">=</span> <span class="n">capture</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">capture</span><span class="p">.</span><span class="nf">release</span><span class="p">()</span>
+                <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">backend_label</span><span class="si">}</span><span class="s"> read failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span>
+            <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
+                <span class="n">successful_reads</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">successful_reads</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">capture</span><span class="p">,</span> <span class="n">backend_label</span>
+
+        <span class="n">capture</span><span class="p">.</span><span class="nf">release</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">backend_label</span><span class="si">}</span><span class="s"> opened but returned no frames</span><span class="sh">'</span>
+</code></pre></div></div>
+
+<p>流程是“打开设备 → 请求格式/尺寸/帧率 → 请求对焦/锐度 → 预热并读帧验证”。
+仅 <code class="language-plaintext highlighter-rouge">isOpened()</code> 成功还不够，实际读到有效图像才接受这个配置。
+手动 <code class="language-plaintext highlighter-rouge">camera_focus &gt;= 0</code> 时先关闭自动对焦，再请求手动值；属性是否生效取决于相机驱动。
+失败时释放设备，避免占用句柄。</p>
+
+<h4 id="记录实际格式并尝试安全配置">记录实际格式并尝试安全配置</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_log_opened_camera</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">capture</span><span class="p">,</span> <span class="n">backend_label</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Log the actual resolution, FOURCC and focus values.</span><span class="sh">"""</span>
+        <span class="n">actual_width</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">capture</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">actual_height</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">capture</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">actual_fps</span> <span class="o">=</span> <span class="n">capture</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FPS</span><span class="p">)</span>
+        <span class="n">actual_fourcc</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_decode_fourcc</span><span class="p">(</span><span class="n">capture</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FOURCC</span><span class="p">))</span>
+        <span class="n">focus</span> <span class="o">=</span> <span class="n">capture</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FOCUS</span><span class="p">)</span>
+        <span class="n">fps_text</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">actual_fps</span><span class="si">:</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="sh">'</span> <span class="k">if</span> <span class="n">actual_fps</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="sh">'</span><span class="s">unknown</span><span class="sh">'</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">opened camera </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_camera_index</span><span class="si">}</span><span class="s"> </span><span class="sh">'</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">(</span><span class="si">{</span><span class="n">actual_width</span><span class="si">}</span><span class="s">x</span><span class="si">{</span><span class="n">actual_height</span><span class="si">}</span><span class="s"> @ </span><span class="si">{</span><span class="n">fps_text</span><span class="si">}</span><span class="s"> fps, </span><span class="sh">'</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">fourcc=</span><span class="si">{</span><span class="n">actual_fourcc</span><span class="si">}</span><span class="s">, focus=</span><span class="si">{</span><span class="n">focus</span><span class="si">:</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="s">, backend=</span><span class="si">{</span><span class="n">backend_label</span><span class="si">}</span><span class="s">)</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_open_camera</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">Open the camera with the requested settings and safe fallbacks.</span><span class="sh">"""</span>
+        <span class="n">preferred</span> <span class="o">=</span> <span class="sh">'</span><span class="s">auto</span><span class="sh">'</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="p">.</span><span class="n">platform</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">'</span><span class="s">linux</span><span class="sh">'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">_camera_backend</span> <span class="ow">in</span> <span class="p">(</span><span class="sh">'</span><span class="s">auto</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">v4l2</span><span class="sh">'</span><span class="p">):</span>
+            <span class="n">preferred</span> <span class="o">=</span> <span class="sh">'</span><span class="s">v4l2</span><span class="sh">'</span>
+
+        <span class="n">capture</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_try_camera</span><span class="p">(</span>
+            <span class="n">preferred</span><span class="p">,</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_frame_width</span><span class="p">,</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_frame_height</span><span class="p">,</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_camera_fourcc</span><span class="p">,</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_camera_autofocus</span><span class="p">,</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_camera_focus</span><span class="p">,</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_camera_sharpness</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">capture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_log_opened_camera</span><span class="p">(</span><span class="n">capture</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">capture</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s">; retrying camera with safe 640x480 defaults </span><span class="sh">'</span>
+            <span class="sh">'</span><span class="s">(no MJPG, no autofocus)</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">capture</span><span class="p">,</span> <span class="n">safe_reason</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_try_camera</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">auto</span><span class="sh">'</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">,</span> <span class="sh">''</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">capture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">using safe camera fallback; set frame_width/frame_height/</span><span class="sh">'</span>
+                <span class="sh">'</span><span class="s">camera_fourcc explicitly if you need another mode</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_log_opened_camera</span><span class="p">(</span><span class="n">capture</span><span class="p">,</span> <span class="n">safe_reason</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">capture</span>
+
+        <span class="k">raise</span> <span class="nc">RuntimeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">camera </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_camera_index</span><span class="si">}</span><span class="s"> could not provide frames: </span><span class="si">{</span><span class="n">safe_reason</span><span class="si">}</span><span class="s">; </span><span class="sh">'</span>
+            <span class="sh">'</span><span class="s">try another camera_index, close other camera applications, or use </span><span class="sh">'</span>
+            <span class="sh">'</span><span class="s">input_type:=topic/synthetic</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Linux 下优先尝试 V4L2；请求配置失败后，使用 auto 后端、640×480、不显式请求 FOURCC、
+不请求自动对焦/手动对焦/锐度的安全配置重试。这里“不请求自动对焦”不等同于强制关闭设备原有自动对焦状态。
+即使 <code class="language-plaintext highlighter-rouge">camera_backend=v4l2</code>，失败后的安全重试仍使用 auto。
+最终实际分辨率、帧率和格式以日志为准，不能只看请求参数。</p>
+
+<h3 id="6-统一图像输入">6. 统一图像输入</h3>
+
+<h4 id="打开输入源与读取下一帧">打开输入源与读取下一帧</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_open_input_source</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Open a camera, video file or synthetic scene.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_input_type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">synthetic</span><span class="sh">'</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_synthetic</span> <span class="o">=</span> <span class="nc">SyntheticScene</span><span class="p">(</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_frame_width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_frame_height</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_input_type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">video</span><span class="sh">'</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_video_path</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">input_type=video requires video_path</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isfile</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_video_path</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="nc">FileNotFoundError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">video_path does not exist: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_video_path</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">capture</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nc">VideoCapture</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_video_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">capture</span><span class="p">.</span><span class="nf">isOpened</span><span class="p">():</span>
+                <span class="n">capture</span><span class="p">.</span><span class="nf">release</span><span class="p">()</span>
+                <span class="k">raise</span> <span class="nc">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">could not open video: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_video_path</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_capture</span> <span class="o">=</span> <span class="n">capture</span>
+            <span class="n">actual_width</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span>
+                <span class="n">capture</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">)</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">_frame_width</span><span class="p">)</span>
+            <span class="n">actual_height</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span>
+                <span class="n">capture</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">)</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">_frame_height</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">opened </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_video_path</span><span class="si">}</span><span class="s"> (</span><span class="si">{</span><span class="n">actual_width</span><span class="si">}</span><span class="s">x</span><span class="si">{</span><span class="n">actual_height</span><span class="si">}</span><span class="s">)</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_capture</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_open_camera</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_read_frame</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">Read the next frame, handling video loop and end of stream.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_synthetic</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_synthetic</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_capture</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="n">ok</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_capture</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">frame</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_input_type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">video</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">_loop_video</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_capture</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_POS_FRAMES</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">ok</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_capture</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">frame</span>
+        <span class="k">return</span> <span class="bp">None</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>输入模式</th>
+      <th>读帧方式</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>synthetic</td>
+      <td><code class="language-plaintext highlighter-rouge">SyntheticScene.read()</code> 直接返回图像</td>
+    </tr>
+    <tr>
+      <td>video</td>
+      <td>检查路径，再用 <code class="language-plaintext highlighter-rouge">VideoCapture</code> 读取；<code class="language-plaintext highlighter-rouge">loop_video</code> 开启时回到第 0 帧</td>
+    </tr>
+    <tr>
+      <td>camera</td>
+      <td>使用前面的相机打开与回退逻辑</td>
+    </tr>
+    <tr>
+      <td>topic</td>
+      <td>不经过这里，直接由图像订阅回调接收</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">_read_frame()</code> 把输入统一为“图像或 <code class="language-plaintext highlighter-rouge">None</code>”，避免后续处理区分合成场景与 OpenCV 返回格式。
+视频按定时器频率读取，不按视频原时间戳调度。</p>
+
+<h4 id="定时器输入与话题输入">定时器输入与话题输入</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_on_timer</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Capture and process one frame on a timer.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_shutdown_requested</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_read_frame</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">frame capture failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">frame</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_consecutive_failures</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_consecutive_failures</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">_request_shutdown</span><span class="p">(</span><span class="sh">'</span><span class="s">input stream ended or is unavailable</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_consecutive_failures</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">_process_frame</span><span class="p">(</span>
+            <span class="n">frame</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_clock</span><span class="p">().</span><span class="nf">now</span><span class="p">().</span><span class="nf">to_msg</span><span class="p">(),</span> <span class="n">self</span><span class="p">.</span><span class="n">_frame_id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_on_image</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Image</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Process a frame received from a ROS image topic.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_shutdown_requested</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_bridge</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_request_shutdown</span><span class="p">(</span><span class="sh">'</span><span class="s">cv_bridge is not available</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_bridge</span><span class="p">.</span><span class="nf">imgmsg_to_cv2</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">desired_encoding</span><span class="o">=</span><span class="sh">'</span><span class="s">bgr8</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># cv_bridge raises various exceptions
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">failed to convert image: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">,</span> <span class="n">throttle_duration_sec</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">stamp</span> <span class="o">=</span> <span class="n">message</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">stamp</span>
+        <span class="k">if</span> <span class="n">stamp</span><span class="p">.</span><span class="n">sec</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">stamp</span><span class="p">.</span><span class="n">nanosec</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">stamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_clock</span><span class="p">().</span><span class="nf">now</span><span class="p">().</span><span class="nf">to_msg</span><span class="p">()</span>
+        <span class="n">frame_id</span> <span class="o">=</span> <span class="n">message</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">frame_id</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">_frame_id</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">_process_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">stamp</span><span class="p">,</span> <span class="n">frame_id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>定时器模式连续读帧失败 10 次后请求退出；成功读帧会把失败计数清零。
+图像话题模式通过 <code class="language-plaintext highlighter-rouge">CvBridge</code> 转为 <code class="language-plaintext highlighter-rouge">bgr8</code>，保留原时间戳和坐标系；
+原时间戳全零时改用当前 ROS 时间，坐标系为空时使用配置的默认值。
+两条入口最终都调用 <code class="language-plaintext highlighter-rouge">_process_frame()</code>。</p>
+
+<h3 id="7-_process_frame检测发布与显示">7. _process_frame()：检测、发布与显示</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_process_frame</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">stamp</span><span class="p">,</span> <span class="n">frame_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Detect targets, publish messages and update the display.</span><span class="sh">"""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">detections</span><span class="p">,</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_detector</span><span class="p">.</span><span class="nf">detect</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+        <span class="nf">except </span><span class="p">(</span><span class="nb">ValueError</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">detection failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_frame_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="nf">monotonic</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_last_frame_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">_last_frame_time</span>
+            <span class="k">if</span> <span class="n">delta</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">instantaneous</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">delta</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">_fps</span> <span class="o">=</span> <span class="p">(</span><span class="n">instantaneous</span> <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_fps</span> <span class="o">&lt;=</span> <span class="mf">0.0</span>
+                             <span class="k">else</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_fps</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">instantaneous</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_last_frame_time</span> <span class="o">=</span> <span class="n">now</span>
+
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_max_targets</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">detections</span> <span class="o">=</span> <span class="n">detections</span><span class="p">[:</span><span class="n">self</span><span class="p">.</span><span class="n">_max_targets</span><span class="p">]</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">_publish_targets</span><span class="p">(</span><span class="n">detections</span><span class="p">,</span> <span class="n">stamp</span><span class="p">,</span> <span class="n">frame_id</span><span class="p">)</span>
+
+        <span class="n">needs_image</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_publish_debug_image</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span>
+        <span class="n">annotated</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">needs_image</span><span class="p">:</span>
+            <span class="n">status_parts</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_panel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">status_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">edit </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_panel</span><span class="p">.</span><span class="n">current_color_name</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_enable_tracking</span><span class="p">:</span>
+                <span class="n">status_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sh">'</span><span class="s">tracking off</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">view_frame</span> <span class="o">=</span> <span class="nf">sharpen_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_display_sharpen</span><span class="p">)</span>
+            <span class="n">annotated</span> <span class="o">=</span> <span class="nf">annotate_frame</span><span class="p">(</span>
+                <span class="n">view_frame</span><span class="p">,</span> <span class="n">detections</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_fps</span><span class="p">,</span>
+                <span class="n">frame_index</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_frame_count</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="sh">'</span><span class="s"> | </span><span class="sh">'</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">status_parts</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_publish_debug_image</span> <span class="ow">and</span> <span class="n">annotated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_publish_debug</span><span class="p">(</span><span class="n">annotated</span><span class="p">,</span> <span class="n">stamp</span><span class="p">,</span> <span class="n">frame_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span> <span class="ow">and</span> <span class="n">annotated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_show_frame</span><span class="p">(</span><span class="n">annotated</span><span class="p">,</span> <span class="n">masks</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_print_targets</span> <span class="ow">and</span> <span class="n">now</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">_last_log_time</span> <span class="o">&gt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">_log_period</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_last_log_time</span> <span class="o">=</span> <span class="n">now</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">_format_targets</span><span class="p">(</span><span class="n">detections</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_max_frames</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">_frame_count</span> <span class="o">&gt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">_max_frames</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_request_shutdown</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">max_frames=</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_max_frames</span><span class="si">}</span><span class="s"> reached</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>顺序</th>
+      <th>处理内容</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>检测图像，失败时记录日志并跳过当前帧</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>递增成功处理帧数，用单调时钟计算帧间隔</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>使用 <code class="language-plaintext highlighter-rouge">0.9 × 原帧率 + 0.1 × 瞬时帧率</code> 平滑 FPS</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>截断目标数量并发布目标列表</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>GUI 或调试图像需要画面时，才锐化、绘制标注</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>发布调试图像、刷新窗口并按周期打印摘要</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>达到 <code class="language-plaintext highlighter-rouge">max_frames</code> 时请求退出</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>检测先于显示锐化执行，锐化不改变检测用的像素。
+<code class="language-plaintext highlighter-rouge">max_frames</code> 统计成功处理的帧；topic 模式没有收到足够图像时，不会仅因时间流逝而退出。</p>
+
+<h3 id="8-日志与消息发布">8. 日志与消息发布</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_format_targets</span><span class="p">(</span><span class="n">detections</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Detection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Format a compact one-line target summary for logging.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">detections</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sh">'</span><span class="s">no colour targets</span><span class="sh">'</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">item</span><span class="p">.</span><span class="n">color</span><span class="si">}</span><span class="s">#</span><span class="si">{</span><span class="n">item</span><span class="p">.</span><span class="nb">id</span><span class="si">}</span><span class="sh">'</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">(</span><span class="si">{</span><span class="n">item</span><span class="p">.</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="s">,</span><span class="si">{</span><span class="n">item</span><span class="p">.</span><span class="n">y</span><span class="si">:</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="s">,a=</span><span class="si">{</span><span class="n">item</span><span class="p">.</span><span class="n">area</span><span class="si">:</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="s">)</span><span class="sh">'</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">[:</span><span class="mi">12</span><span class="p">]</span>
+        <span class="p">]</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="sh">''</span> <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">detections</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">12</span> <span class="k">else</span> <span class="sa">f</span><span class="sh">'</span><span class="s"> ... (+</span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">detections</span><span class="p">)</span> <span class="o">-</span> <span class="mi">12</span><span class="si">}</span><span class="s">)</span><span class="sh">'</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">detections</span><span class="p">)</span><span class="si">}</span><span class="s"> target(s): </span><span class="sh">'</span> <span class="o">+</span> <span class="sh">'</span><span class="s">, </span><span class="sh">'</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">+</span> <span class="n">suffix</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_publish_targets</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">detections</span><span class="p">,</span> <span class="n">stamp</span><span class="p">,</span> <span class="n">frame_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Publish the target list as a ColorTargetArray message.</span><span class="sh">"""</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="nc">ColorTargetArray</span><span class="p">()</span>
+        <span class="n">message</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="n">stamp</span>
+        <span class="n">message</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="n">frame_id</span>
+        <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="nc">ColorTarget</span><span class="p">()</span>
+            <span class="n">target</span><span class="p">.</span><span class="nb">id</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">detection</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>
+            <span class="n">target</span><span class="p">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">detection</span><span class="p">.</span><span class="n">color</span>
+            <span class="n">target</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">detection</span><span class="p">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">target</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">detection</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">target</span><span class="p">.</span><span class="n">area</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">detection</span><span class="p">.</span><span class="n">area</span><span class="p">)</span>
+            <span class="n">message</span><span class="p">.</span><span class="n">targets</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_publish_empty</span> <span class="ow">or</span> <span class="n">message</span><span class="p">.</span><span class="n">targets</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_targets_publisher</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_publish_debug</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">annotated</span><span class="p">,</span> <span class="n">stamp</span><span class="p">,</span> <span class="n">frame_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Publish the annotated frame on the optional debug image topic.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_debug_publisher</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">_bridge</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">image_message</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_bridge</span><span class="p">.</span><span class="nf">cv2_to_imgmsg</span><span class="p">(</span><span class="n">annotated</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">'</span><span class="s">bgr8</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># cv_bridge raises various exceptions
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">failed to convert debug image: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">,</span> <span class="n">throttle_duration_sec</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">image_message</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="n">stamp</span>
+        <span class="n">image_message</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="n">frame_id</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_debug_publisher</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">image_message</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="目标数组">目标数组</h4>
+
+<p>为每帧创建 <code class="language-plaintext highlighter-rouge">ColorTargetArray</code>，填入时间戳、坐标系，再把检测对象转换为 <code class="language-plaintext highlighter-rouge">ColorTarget</code>。
+<code class="language-plaintext highlighter-rouge">bbox</code> 只用于本地图像显示，不在当前 ROS 消息中传输。
+<code class="language-plaintext highlighter-rouge">publish_empty=True</code> 时，没有目标也发布空数组，订阅端可以据此清除过期显示。</p>
+
+<h4 id="调试图像与摘要">调试图像与摘要</h4>
+
+<p>调试图像通过 <code class="language-plaintext highlighter-rouge">cv2_to_imgmsg(..., encoding='bgr8')</code> 转换，并沿用当前处理帧的 Header。
+订阅端需兼容 Best Effort QoS。
+摘要最多列出前 12 个目标，剩余数量用后缀提示，不改变实际发布的目标列表。</p>
+
+<h3 id="9-窗口滑块和快捷键">9. 窗口、滑块和快捷键</h3>
+
+<h4 id="创建与更新窗口">创建与更新窗口</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_setup_gui</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Create the video, control and mask windows.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">namedWindow</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_window_name</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_show_trackbars</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">_panel</span> <span class="o">=</span> <span class="nc">HSVTrackbarPanel</span><span class="p">(</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">_control_window_name</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">,</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">_on_config_changed</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_show_masks</span><span class="p">:</span>
+                <span class="n">cv2</span><span class="p">.</span><span class="nf">namedWindow</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_mask_window_name</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">_masks_visible</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">except</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">failed to create GUI windows: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_disable_gui</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_on_config_changed</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Record live threshold edits from the Trackbar panel.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_config_changed_at</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="nf">monotonic</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_show_frame</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">annotated</span><span class="p">,</span> <span class="n">masks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Display the annotated frame, masks and process keyboard input.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_window_was_shown</span> <span class="ow">and</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">getWindowProperty</span><span class="p">(</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">_window_name</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">WND_PROP_VISIBLE</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">'</span><span class="s">display window closed; continuing headless</span><span class="sh">'</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">_disable_gui</span><span class="p">()</span>
+                <span class="k">return</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_window_name</span><span class="p">,</span> <span class="n">annotated</span><span class="p">)</span>
+            <span class="n">display_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">annotated</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">annotated</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">display_size</span> <span class="o">!=</span> <span class="n">self</span><span class="p">.</span><span class="n">_display_size</span><span class="p">:</span>
+                <span class="n">cv2</span><span class="p">.</span><span class="nf">resizeWindow</span><span class="p">(</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">_window_name</span><span class="p">,</span> <span class="n">display_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">display_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">_display_size</span> <span class="o">=</span> <span class="n">display_size</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_window_was_shown</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_masks_visible</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">_mask_window_was_shown</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">getWindowProperty</span><span class="p">(</span>
+                            <span class="n">self</span><span class="p">.</span><span class="n">_mask_window_name</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">WND_PROP_VISIBLE</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">self</span><span class="p">.</span><span class="n">_masks_visible</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">except</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span><span class="p">:</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">_masks_visible</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_masks_visible</span><span class="p">:</span>
+                <span class="n">canvas_width</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="n">annotated</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">canvas_height</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="n">annotated</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">montage</span> <span class="o">=</span> <span class="nf">make_mask_montage</span><span class="p">(</span>
+                    <span class="n">masks</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">,</span>
+                    <span class="n">canvas_width</span><span class="o">=</span><span class="n">canvas_width</span><span class="p">,</span> <span class="n">canvas_height</span><span class="o">=</span><span class="n">canvas_height</span><span class="p">)</span>
+                <span class="n">cv2</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_mask_window_name</span><span class="p">,</span> <span class="n">montage</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">_mask_window_was_shown</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_handle_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">GUI disabled after error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_disable_gui</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>面板与检测器共享配置对象；滑块修改后回调只记录变化时间，下一帧检测会读取新值。
+<code class="language-plaintext highlighter-rouge">waitKey(1)</code> 不只是读按键，也让 OpenCV 处理窗口事件。
+关闭标注窗口时，当前实现会切换到 headless 继续处理；关闭掩码窗口只停止显示掩码。</p>
+
+<h4 id="处理快捷键和窗口开关">处理快捷键和窗口开关</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_handle_key</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Process a single OpenCV keyboard event.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="nf">ord</span><span class="p">(</span><span class="sh">'</span><span class="s">q</span><span class="sh">'</span><span class="p">)):</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_request_shutdown</span><span class="p">(</span><span class="sh">'</span><span class="s">quit requested from GUI</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="nf">ord</span><span class="p">(</span><span class="sh">'</span><span class="s">s</span><span class="sh">'</span><span class="p">):</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_save_config</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="nf">ord</span><span class="p">(</span><span class="sh">'</span><span class="s">l</span><span class="sh">'</span><span class="p">):</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_load_config</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="nf">ord</span><span class="p">(</span><span class="sh">'</span><span class="s">r</span><span class="sh">'</span><span class="p">):</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_reset_config</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="nf">ord</span><span class="p">(</span><span class="sh">'</span><span class="s">m</span><span class="sh">'</span><span class="p">):</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_toggle_masks</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="nf">ord</span><span class="p">(</span><span class="sh">'</span><span class="s">h</span><span class="sh">'</span><span class="p">):</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="n">TRACKBAR_HELP</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_toggle_masks</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Show or hide the mask preview window.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_masks_visible</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">cv2</span><span class="p">.</span><span class="nf">destroyWindow</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_mask_window_name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_masks_visible</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_mask_window_was_shown</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">namedWindow</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_mask_window_name</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_masks_visible</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_mask_window_was_shown</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">except</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">could not open mask window: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_disable_gui</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Disable all GUI output and close OpenCV windows.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_masks_visible</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_mask_window_was_shown</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_display_size</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">destroyAllWindows</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">cv2</span><span class="p">.</span><span class="n">error</span><span class="p">:</span>
+            <span class="k">pass</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>按键</th>
+      <th>动作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">s</code> / <code class="language-plaintext highlighter-rouge">l</code></td>
+      <td>保存 / 加载 JSON</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">r</code></td>
+      <td>恢复内置配置，同时重置跟踪</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">m</code></td>
+      <td>显示 / 隐藏掩码窗口</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">h</code></td>
+      <td>打印滑块与快捷键帮助</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">q</code> / <code class="language-plaintext highlighter-rouge">Esc</code></td>
+      <td>请求退出</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>按键需要 OpenCV 窗口获得焦点。
+GUI 抛出可捕获的 OpenCV 错误时会关闭显示，保留检测和话题发布。</p>
+
+<h3 id="10-退出与-main-入口">10. 退出与 main() 入口</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_request_shutdown</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Stop the ROS executor after logging the reason.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_shutdown_requested</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_shutdown_requested</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">stopping vision server: </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Release capture, optionally save config and close windows.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_shutdown_done</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_shutdown_done</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_shutdown_requested</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_timer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_timer</span><span class="p">.</span><span class="nf">cancel</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_capture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_capture</span><span class="p">.</span><span class="nf">release</span><span class="p">()</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_capture</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_auto_save</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">_config_path</span><span class="p">:</span>
+            <span class="n">success</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_save_config</span><span class="p">(</span><span class="n">quiet</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warning</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_gui_enabled</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_disable_gui</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Run the colour sorting server node.</span><span class="sh">"""</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">exit_code</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="nc">MvcSortingServer</span><span class="p">()</span>
+        <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="nf">except </span><span class="p">(</span><span class="nb">RuntimeError</span><span class="p">,</span> <span class="nb">ValueError</span><span class="p">,</span> <span class="nb">FileNotFoundError</span><span class="p">,</span> <span class="nb">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">[Mvc_sorting_server] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">fatal</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span>
+        <span class="n">exit_code</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">node</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+            <span class="n">node</span><span class="p">.</span><span class="nf">destroy_node</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">exit_code</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="nf">main</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">_request_shutdown()</code> 先记录原因，再停止 ROS 执行器。
+<code class="language-plaintext highlighter-rouge">shutdown()</code> 负责取消定时器、释放相机/视频、按需保存配置和关闭窗口，退出标志避免重复清理。
+<code class="language-plaintext highlighter-rouge">main()</code> 在 <code class="language-plaintext highlighter-rouge">finally</code> 中清理已经成功创建的节点；预期的启动错误返回非零退出码。</p>
+
+<blockquote>
+  <p>自此，Mvc_sorting_server.py 的 ROS 视觉服务端部分结束。</p>
+</blockquote>
+
+<h2 id="检测成果">检测成果</h2>
+
+<p>先生成一份独立配置，避免个人已有阈值影响合成验收。
+以下命令在工作区根目录运行；首次先构建接口包，再构建视觉包：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> <span class="s2">"</span><span class="nv">$WS</span><span class="s2">"</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+colcon build <span class="nt">--packages-select</span> color_sorting_interfaces
+<span class="nb">source install</span>/setup.bash
+colcon build <span class="nt">--packages-select</span> Mvc_sorting
+<span class="nb">source install</span>/setup.bash
+
+<span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"src/Mvc_sorting"</span> python3 - <span class="o">&lt;&lt;</span><span class="sh">'</span><span class="no">PY</span><span class="sh">'
+from Mvc_sorting.hsv_config import HSVConfig
+HSVConfig.default().save('replication_hsv.json')
+</span><span class="no">PY
+
+</span>ros2 run Mvc_sorting Mvc_sorting_server <span class="nt">--ros-args</span>   <span class="nt">-p</span> input_type:<span class="o">=</span>synthetic <span class="nt">-p</span> show_window:<span class="o">=</span><span class="nb">false</span>   <span class="nt">-p</span> config_path:<span class="o">=</span><span class="s2">"</span><span class="nv">$WS</span><span class="s2">/replication_hsv.json"</span> <span class="nt">-p</span> publish_debug_image:<span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<p>服务端保持运行，在另一个已加载 ROS 和工作区环境的终端检查：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic <span class="nb">echo</span> /color_targets <span class="nt">--once</span>
+ros2 topic info /color_sorting/debug_image
+ros2 service call /Mvc_sorting_server/save_config std_srvs/srv/Trigger
+ros2 service call /Mvc_sorting_server/load_config std_srvs/srv/Trigger
+</code></pre></div></div>
+
+<p>预期：稳定帧中有 8 个目标、每种颜色两个；调试话题存在发布者；两个服务返回 <code class="language-plaintext highlighter-rouge">success: true</code>。
+第一帧可能因 <code class="language-plaintext highlighter-rouge">min_hits=2</code> 为空，重新加载配置后也需要重新积累命中次数。
+按 <code class="language-plaintext highlighter-rouge">Ctrl+C</code> 停止。有限帧验收时，在服务端命令中加 <code class="language-plaintext highlighter-rouge">-p max_frames:=120</code>，处理完成后应退出。</p>
+
+<p>其他输入示例（一次运行一个；视频路径、话题名按实际情况修改）：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 摄像头：需要桌面显示环境</span>
+ros2 run Mvc_sorting Mvc_sorting_server <span class="nt">--ros-args</span>   <span class="nt">-p</span> input_type:<span class="o">=</span>camera <span class="nt">-p</span> camera_index:<span class="o">=</span>0 <span class="nt">-p</span> show_window:<span class="o">=</span><span class="nb">true</span>
+
+<span class="c"># 视频文件</span>
+ros2 run Mvc_sorting Mvc_sorting_server <span class="nt">--ros-args</span>   <span class="nt">-p</span> input_type:<span class="o">=</span>video <span class="nt">-p</span> video_path:<span class="o">=</span>/absolute/path/demo.mp4 <span class="nt">-p</span> show_window:<span class="o">=</span><span class="nb">false</span>
+
+<span class="c"># 图像话题：先启动相机驱动或仿真发布端</span>
+ros2 run Mvc_sorting Mvc_sorting_server <span class="nt">--ros-args</span>   <span class="nt">-p</span> input_type:<span class="o">=</span>topic <span class="nt">-p</span> image_topic:<span class="o">=</span>/camera/image_raw <span class="nt">-p</span> show_window:<span class="o">=</span><span class="nb">false</span>
+</code></pre></div></div>
+
+<hr />
+</div>
+    <div class="tutorial-edit"><a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/md/%E4%B8%83.ROS%E8%A7%86%E8%A7%89%E6%9C%8D%E5%8A%A1%E7%AB%AF%EF%BC%9AMvc_sorting_server.py.md" target="_blank" rel="noopener">在 GitHub 查看原文 ↗</a></div>
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/machine-vision/06-image-sources/"><span>← 上一章</span><strong>合成图像与测试场景</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/machine-vision/08-ros-client/"><span>下一章 →</span><strong>ROS 2 订阅客户端</strong></a>
+          
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    TF 坐标变换 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS2 基础教程</div>
+    <p class="tutorial-course-subtitle">ROS2基础 · ROS2实战 · 巡游小车实战</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2基础</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/README/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程导读</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/01-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>创建工作空间</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>多线程示例</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>话题通信</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>服务和参数</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/" aria-current="page">
+            <span class="tutorial-chapter-number">05</span>
+            <span>TF 坐标变换</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>可视化与数据工具</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>仿真与导航</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07B-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%93%8D%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>仿真与导航实操手册</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E9%99%84%E5%BD%95-%E5%8B%98%E8%AF%AF%E4%B8%8E%E9%80%9F%E6%9F%A5/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>附录：勘误与速查</span>
+          </a>
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/ROS2%E5%AE%9E%E6%88%98%E9%83%A8%E5%88%86%E8%AF%A6%E7%BB%86%E8%AE%B0%E5%BD%95/">
+            <span class="tutorial-chapter-number">10</span>
+            <span>ROS2 实战：海龟案例与通信练习</span>
+          </a>
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">巡游小车实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E5%B7%A1%E6%B8%B8%E5%B0%8F%E8%BD%A6%E4%BB%BF%E7%9C%9F-%E4%BB%8E%E9%9B%B6%E5%A4%8D%E5%88%BB%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">11</span>
+            <span>巡游小车实战：从零复刻</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/ROS2-bash/README/">ROS2 基础教程</a><span>/</span>
+      <span>ROS2基础</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS2 基础教程 · 第 5 章</div>
+      <h1>TF 坐标变换</h1>
+      <p>发布和监听坐标变换，排查 TF 与 QoS 问题。</p>
+    </header>
+    <div class="post-content tutorial-content"><!-- nav -->
+<blockquote>
+  <p>📖 <a href="/tutorials/ROS2-bash/README/">ROS 2 学习随笔</a> ｜ ⬅️ 上一章：<a href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">四、服务和参数</a> ｜ <a href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/">下一章：六、可视化与数据工具</a> ➡️</p>
+</blockquote>
+
+<p>前面讲的都是”数据怎么传”，TF 解决的是另一个问题：<strong>数据在哪个坐标系里</strong>。</p>
+
+<h3 id="1tf-是什么">1、TF 是什么</h3>
+
+<p>机器人上每个部件都有自己的坐标系（frame）：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        base_link          ← 车体中心
+       ┌────┼────┐
+   base_laser  imu  camera_link
+</code></pre></div></div>
+
+<p>TF 维护的就是这些坐标系之间的<strong>变换关系树</strong>。典型用途：</p>
+
+<ul>
+  <li>激光雷达测到一个障碍物在 <code class="language-plaintext highlighter-rouge">base_laser</code> 下的坐标是 (1.0, 0.0)，但导航算法需要知道它在 <code class="language-plaintext highlighter-rouge">base_link</code>（甚至 <code class="language-plaintext highlighter-rouge">map</code>）下是哪儿 → 靠 TF 换算</li>
+  <li>rviz 里能把机器人模型、点云、地图<strong>对齐显示</strong>，也是靠 TF</li>
+</ul>
+
+<blockquote>
+  <p>💡 <strong>知识点：静态变换 vs 动态变换</strong></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th> </th>
+        <th>静态变换</th>
+        <th>动态变换</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>话题</td>
+        <td><code class="language-plaintext highlighter-rouge">/tf_static</code></td>
+        <td><code class="language-plaintext highlighter-rouge">/tf</code></td>
+      </tr>
+      <tr>
+        <td>变化吗</td>
+        <td>安装好就不动了</td>
+        <td>实时变化</td>
+      </tr>
+      <tr>
+        <td>例子</td>
+        <td>雷达装在车体上的固定偏移</td>
+        <td>轮子转动、机械臂关节、里程计</td>
+      </tr>
+      <tr>
+        <td>发布方式</td>
+        <td><code class="language-plaintext highlighter-rouge">static_transform_publisher</code> 一条命令</td>
+        <td>自己写节点，定时器里持续发</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>判断口诀：<strong>两个部件的相对位置会不会变？不会就是静态。</strong></p>
+</blockquote>
+
+<h3 id="2发布静态变换static_transform_publisher">2、发布静态变换：<code class="language-plaintext highlighter-rouge">static_transform_publisher</code></h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run tf2_ros static_transform_publisher <span class="se">\</span>
+  <span class="nt">--x</span> 0.1 <span class="nt">--y</span> 0.0 <span class="nt">--z</span> 0.2 <span class="se">\</span>
+  <span class="nt">--roll</span> 0.0 <span class="nt">--pitch</span> 0.0 <span class="nt">--yaw</span> 0.0 <span class="se">\</span>
+  <span class="nt">--frame-id</span> base_link <span class="nt">--child-frame-id</span> base_laser
+</code></pre></div></div>
+
+<p>参数说明：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>参数</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">--x --y --z</code></td>
+      <td>平移量，单位<strong>米</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">--roll --pitch --yaw</code></td>
+      <td>旋转量，单位<strong>弧度</strong>（rad）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">--frame-id</code></td>
+      <td><strong>父</strong>坐标系</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">--child-frame-id</code></td>
+      <td><strong>子</strong>坐标系</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>上面这条命令的意思是：<strong>激光雷达装在车体中心前方 0.1 米、上方 0.2 米处</strong>。</p>
+
+<p>实测输出：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[INFO] [static_transform_publisher_xxx]: Spinning until stopped - publishing transform
+translation: ('0.100000', '0.000000', '0.200000')
+rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+</code></pre></div></div>
+
+<p>最后那四个数是四元数 <code class="language-plaintext highlighter-rouge">(x, y, z, w)</code>，<code class="language-plaintext highlighter-rouge">(0,0,0,1)</code> 表示<strong>没有旋转</strong>。</p>
+
+<blockquote>
+  <p>⚠️ <strong>两处极易踩的坑</strong></p>
+
+  <p><strong>1. 旋转单位是弧度，不是角度。</strong>
+想转 90°，得写 <code class="language-plaintext highlighter-rouge">--yaw 1.5708</code>（= π/2）而不是 <code class="language-plaintext highlighter-rouge">--yaw 90</code>。
+记不住就用四元数直接填 <code class="language-plaintext highlighter-rouge">--qx --qy --qz --qw</code>。</p>
+
+  <p><strong>2. <code class="language-plaintext highlighter-rouge">--</code> 不能漏。</strong> 少写一个短横线就会报：</p>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error parsing command line arguments: Extra unparsed arguments on command-line
+</code></pre></div>  </div>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么用 <code class="language-plaintext highlighter-rouge">static_transform_publisher</code> 不需要写代码</strong></p>
+
+  <p>它内部就是创建了一个节点，往 <code class="language-plaintext highlighter-rouge">/tf_static</code> 发<strong>一条</strong>消息，然后一直挂着（latched）。
+消息只发一次，但因为是 <code class="language-plaintext highlighter-rouge">TRANSIENT_LOCAL</code> QoS，<strong>后启动的节点也能收到</strong>——这正是”静态”的体现。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：父子方向怎么定</strong></p>
+
+  <p><code class="language-plaintext highlighter-rouge">--frame-id base_link --child-frame-id base_laser</code> 读作：</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>base_link  ──(x=0.1, z=0.2)──▶  base_laser
+  （父）                            （子）
+</code></pre></div>  </div>
+
+  <p><strong>箭头方向 = 从父指向子。</strong> 反过来写（父=laser、子=base_link）会让整棵树颠倒，rviz 里表现就是机器人模型上下颠倒或位置乱飞。</p>
+
+  <p>判断方法：<strong>“子”是那个相对”父”有固定偏移的东西。</strong> 雷达相对车体有偏移，所以雷达是子。</p>
+</blockquote>
+
+<h3 id="3查询两个坐标系的关系tf2_echo">3、查询两个坐标系的关系：<code class="language-plaintext highlighter-rouge">tf2_echo</code></h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run tf2_ros tf2_echo base_link base_laser
+</code></pre></div></div>
+
+<p>持续打印 <code class="language-plaintext highlighter-rouge">base_link</code> → <code class="language-plaintext highlighter-rouge">base_laser</code> 的变换，包括平移、旋转（四元数和欧拉角两种表示）。</p>
+
+<blockquote>
+  <p>💡 <strong>排查套路</strong>：<code class="language-plaintext highlighter-rouge">tf2_echo</code> 报错说”找不到某个 frame”时，<strong>第一件事是跑 <code class="language-plaintext highlighter-rouge">view_frames</code> 看两个坐标系在不在同一棵树上</strong>（见下一节）。</p>
+</blockquote>
+
+<h3 id="4可视化整棵树view_frames">4、可视化整棵树：<code class="language-plaintext highlighter-rouge">view_frames</code></h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run tf2_tools view_frames
+</code></pre></div></div>
+
+<p>它会监听 tf 几秒，然后生成一张<strong>坐标系树状图</strong>的 PDF。</p>
+
+<p><strong>默认产物落在「当前工作目录」</strong>，文件名带时间戳：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>frames_2026-09-24_10.49.05.gv     ← Graphviz 源文件
+frames_2026-09-24_10.49.05.pdf    ← 最终图
+</code></pre></div></div>
+
+<p><strong>想指定输出位置，用 <code class="language-plaintext highlighter-rouge">-o</code>：</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> ~/tf图
+ros2 run tf2_tools view_frames <span class="nt">-o</span> ~/tf图/frames
+<span class="c"># 生成 ~/tf图/frames.gv 和 ~/tf图/frames.pdf</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong><code class="language-plaintext highlighter-rouge">-o</code> 后面给的是「不带扩展名的前缀」</strong>，<code class="language-plaintext highlighter-rouge">.gv</code> 和 <code class="language-plaintext highlighter-rouge">.pdf</code> 由它自己补上。
+而且<strong>目录必须事先存在</strong>，它不会自动创建。</p>
+</blockquote>
+
+<p><strong>完整参数：</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run tf2_tools view_frames <span class="nt">--help</span>
+<span class="c">#   -t, --wait-time   监听 tf 的秒数（默认 5.0）</span>
+<span class="c">#   -o, --output      输出文件名（不带扩展名）</span>
+</code></pre></div></div>
+
+<p>坐标系多、广播频率低的时候，5 秒可能收不全，用 <code class="language-plaintext highlighter-rouge">-t 10</code> 加长。</p>
+
+<p><strong>依赖与前置条件：</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>graphviz        <span class="c"># 需要 dot 命令才能生成 PDF</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-tf2-tools
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么会卡在 <code class="language-plaintext highlighter-rouge">service not available</code></strong></p>
+
+  <p><code class="language-plaintext highlighter-rouge">view_frames</code> 内部调一个叫 <code class="language-plaintext highlighter-rouge">tf2_frames</code> 的服务。这个服务<strong>不是独立节点提供的</strong>，而是 <code class="language-plaintext highlighter-rouge">tf2_ros.Buffer</code> 创建时自动注册的。
+换句话说：<strong>你至少得有一个节点在正常收发 tf</strong>，这个服务才存在。完全没有 tf 活动时会一直等，这是正常的。</p>
+</blockquote>
+
+<h4 id="图怎么读">图怎么读</h4>
+
+<p>生成的 PDF 长这样：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                  view_frames Result
+          Recorded at time: 1790218145.6626148
+
+                     ╭───────────╮
+                     │ base_link │
+                     ╰─────┬─────╯
+                           │  Broadcaster: default_authority
+                           │  Average rate: 10000.0
+                           │  Buffer length: 0.0
+                           │  Most recent transform: 0.0
+                           │  Oldest transform: 0.0
+                           ▼
+                     ╭────────────╮
+                     │ base_laser │
+                     ╰────────────╯
+</code></pre></div></div>
+
+<p><strong>箭头方向 = 父 → 子。</strong> 树顶上的是根，往下是各级子坐标系。</p>
+
+<p>四个标注字段的含义：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>字段</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Broadcaster</code></td>
+      <td>发布者身份。<code class="language-plaintext highlighter-rouge">static_transform_publisher</code> 没设置这个字段，显示 <code class="language-plaintext highlighter-rouge">default_authority</code>，<strong>不是错误</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Average rate</code></td>
+      <td>该变换的发布频率（Hz）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Buffer length</code></td>
+      <td>缓存了多少秒的历史</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Most/Oldest transform</code></td>
+      <td>最新/最旧一条变换的时间戳</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>⚠️ <strong>静态变换的这几个数字都没有参考价值</strong></p>
+
+  <p>因为 <code class="language-plaintext highlighter-rouge">/tf_static</code> 只在启动时发一次，tf2 算不出真实频率，于是给了个占位值：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>字段</th>
+        <th>静态变换显示</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">Average rate</code></td>
+        <td><code class="language-plaintext highlighter-rouge">10000.0</code></td>
+        <td>假的，<strong>不是真的 10000 Hz</strong></td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">Buffer length</code></td>
+        <td><code class="language-plaintext highlighter-rouge">0.0</code></td>
+        <td>静态变换不分时间</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">Most/Oldest transform</code></td>
+        <td><code class="language-plaintext highlighter-rouge">0.0</code></td>
+        <td>表示”对所有时间都有效”</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>只有动态变换的这些数字才有意义</strong>——那时 <code class="language-plaintext highlighter-rouge">Average rate</code> 能告诉你里程计是不是在按预期频率发布。</p>
+</blockquote>
+
+<h4 id="图的真正用处看树的形状">图的真正用处：看树的「形状」</h4>
+
+<p><code class="language-plaintext highlighter-rouge">view_frames</code> 最大的价值不是看单个变换，而是<strong>一眼看出整棵树有没有长歪</strong>。健康的树：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        base_link
+       ┌────┼────┐
+   laser  imu  camera
+</code></pre></div></div>
+
+<p>两种<strong>有问题</strong>的形态：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>坏形态</th>
+      <th>症状</th>
+      <th>常见原因</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>两个独立的根</strong></td>
+      <td>树断成两截，中间没有连线</td>
+      <td>缺少连接两部分的变换（比如忘了发 <code class="language-plaintext highlighter-rouge">base_link → odom</code>）</td>
+    </tr>
+    <tr>
+      <td><strong>出现环</strong></td>
+      <td>a→b→c→a</td>
+      <td>配置错误，同一个 frame 被两个父节点认领</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>💡 <strong>规则：TF 树必须是一棵「树」</strong>——每个坐标系<strong>只能有一个父节点</strong>，但可以有多个子节点。</p>
+</blockquote>
+
+<h3 id="5tf-和-tf_static-的坑为什么-echo-出好几条一样的">5、<code class="language-plaintext highlighter-rouge">/tf</code> 和 <code class="language-plaintext highlighter-rouge">/tf_static</code> 的坑：为什么 echo 出好几条一样的</h3>
+
+<p>先看 <code class="language-plaintext highlighter-rouge">/tf_static</code> 的 QoS：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic info /tf_static <span class="nt">--verbose</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Durability: TRANSIENT_LOCAL      ← 关键
+Reliability: RELIABLE
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">TRANSIENT_LOCAL</code>（俗称 <strong>latched</strong>）的含义是”<strong>晚加入的订阅者也能拿到最后一条</strong>“。而关键在于：</p>
+
+<blockquote>
+  <p><strong>这个”最后一条”是每个发布者各自留一份的。</strong></p>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>发布者A ──┐
+          ├──► /tf_static  (TRANSIENT_LOCAL)
+发布者B ──┘
+
+新订阅者接入 → 分别向 A、B 各要一份"最后一条"
+            → 收到 2 条，哪怕内容一模一样
+</code></pre></div></div>
+
+<p><strong>所以：<code class="language-plaintext highlighter-rouge">ros2 topic echo /tf_static</code> 显示几条消息 = 当前有几个发布者</strong>，与内容是否重复无关。</p>
+
+<blockquote>
+  <p>⚠️ <strong>这不只是”无害的重复”——内容不同就会出大问题</strong></p>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 终端A：雷达在 z=0.2</span>
+ros2 run tf2_ros static_transform_publisher <span class="nt">--z</span> 0.2 <span class="se">\</span>
+  <span class="nt">--frame-id</span> base_link <span class="nt">--child-frame-id</span> base_laser
+
+<span class="c"># 终端B：改了参数，但忘了关终端A</span>
+ros2 run tf2_ros static_transform_publisher <span class="nt">--z</span> 0.5 <span class="se">\</span>
+  <span class="nt">--frame-id</span> base_link <span class="nt">--child-frame-id</span> base_laser
+</code></pre></div>  </div>
+
+  <p>tf2 会收到两条自称 <code class="language-plaintext highlighter-rouge">base_link → base_laser</code> 但数值矛盾的变换，它会：</p>
+  <ul>
+    <li>刷 <code class="language-plaintext highlighter-rouge">TF_OLD_DATA</code> 冲突告警</li>
+    <li><strong>按到达顺序和时间戳随机采用其中一条</strong></li>
+  </ul>
+
+  <p>表现就是<strong>时好时坏的诡异现象</strong>——位置偶尔跳一下、rviz 里模型闪。每一步单独看都对，极难定位。</p>
+
+  <p><strong>规矩：同一个 <code class="language-plaintext highlighter-rouge">child_frame_id</code> 只能有一个发布者。</strong> 调试改参数时，一定先 <code class="language-plaintext highlighter-rouge">Ctrl+C</code> 掉旧的。</p>
+</blockquote>
+
+<p><strong>排查方法：</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic info /tf_static        <span class="c"># Publisher count 应该是 1</span>
+pgrep <span class="nt">-af</span> static_transform_publisher
+pkill <span class="nt">-f</span> static_transform_publisher   <span class="c"># 一次性全清</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong><code class="language-plaintext highlighter-rouge">kill</code> 要注意杀对进程</strong></p>
+
+  <p><code class="language-plaintext highlighter-rouge">pgrep</code> 会同时列出<strong>两个 PID</strong>：<code class="language-plaintext highlighter-rouge">ros2 run</code> 的 Python 外壳，和真正干活的 C++ 二进制（<code class="language-plaintext highlighter-rouge">/opt/ros/jazzy/lib/tf2_ros/static_transform_publisher</code>）。
+<strong>只杀外壳，子进程会活下来继续发变换。</strong> 最可靠的是在原终端按 <code class="language-plaintext highlighter-rouge">Ctrl+C</code>，或者直接 <code class="language-plaintext highlighter-rouge">pkill -f</code>。</p>
+</blockquote>
+
+<h3 id="6踩坑记录humble-教程--jazzy-系统">6、踩坑记录：Humble 教程 × Jazzy 系统</h3>
+
+<p>跟着 <strong>Humble（Ubuntu 22.04）时代的教程</strong>在 <strong>Jazzy（Ubuntu 24.04）</strong>上做，包名对不上是最常见的障碍。</p>
+
+<p><strong>基本规律：</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros-humble-XXX   →   ros-jazzy-XXX
+</code></pre></div></div>
+
+<p>大部分包换个前缀就行。但<strong>少数包被拆分了</strong>，需要单独查：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-cache search <span class="nt">--names-only</span> <span class="s2">"^ros-jazzy-关键词"</span>
+</code></pre></div></div>
+
+<p><strong>实例：MRPT</strong></p>
+
+<p>教程里写 <code class="language-plaintext highlighter-rouge">sudo apt install ros-humble-mrpt2</code>，在 Jazzy 上会报 <code class="language-plaintext highlighter-rouge">E: 无法定位软件包</code>。原因是：</p>
+
+<ol>
+  <li><strong>发行版不同</strong>：<code class="language-plaintext highlighter-rouge">ros-humble-*</code> 只存在于 <code class="language-plaintext highlighter-rouge">jammy</code> 源</li>
+  <li><strong>包被拆分</strong>：MRPT 2.x 已经把一个大包拆成了几十个模块化小包（<code class="language-plaintext highlighter-rouge">mrpt-libcore</code>、<code class="language-plaintext highlighter-rouge">mrpt-libmaps</code>、<code class="language-plaintext highlighter-rouge">mrpt-libslam</code>……），<strong>Jazzy 里根本没有 <code class="language-plaintext highlighter-rouge">mrpt2</code> 这个名字</strong></li>
+</ol>
+
+<p>对应关系：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>教程里的东西</th>
+      <th>Jazzy 里装什么</th>
+      <th>路径</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MRPT 图形工具（含 <strong>3D rotation converter</strong>）</td>
+      <td><code class="language-plaintext highlighter-rouge">ros-jazzy-mrpt-apps-gui</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/opt/ros/jazzy/bin/3d-rotation-converter</code></td>
+    </tr>
+    <tr>
+      <td>MRPT 命令行工具</td>
+      <td><code class="language-plaintext highlighter-rouge">ros-jazzy-mrpt-apps-cli</code></td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>ROS 消息接口</td>
+      <td><code class="language-plaintext highlighter-rouge">ros-jazzy-mrpt-msgs</code></td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>自己写代码调 MRPT 库 + ROS 桥接</td>
+      <td><code class="language-plaintext highlighter-rouge">ros-jazzy-mrpt-libros-bridge</code></td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>ROS 导航/建图整合</td>
+      <td><code class="language-plaintext highlighter-rouge">ros-jazzy-mrpt-navigation</code></td>
+      <td>—</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-mrpt-apps-gui
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+3d-rotation-converter
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong><code class="language-plaintext highlighter-rouge">3d-rotation-converter</code> 是干什么的</strong></p>
+
+  <p>它负责在 <strong>yaw-pitch-roll / SO(3) 旋转矩阵 / 四元数</strong> 之间互相换算。</p>
+
+  <p>和 TF 配合的用法是：<strong>先用它试出角度，再把数值抄到 <code class="language-plaintext highlighter-rouge">static_transform_publisher</code> 命令里</strong>。
+左边调 yaw/pitch/roll，右边实时显示旋转矩阵和四元数——想用四元数写法时直接抄右边的 <code class="language-plaintext highlighter-rouge">(x, y, z, w)</code> 就行。</p>
+</blockquote>
+
+<blockquote>
+  <p>⚠️ <strong>记住确认发行版</strong></p>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 <span class="nt">--version</span> 2&gt;/dev/null<span class="p">;</span> <span class="nb">echo</span> <span class="nv">$ROS_DISTRO</span>     <span class="c"># 看当前发行版</span>
+<span class="nb">ls</span> /opt/ros/                                      <span class="c"># 看装了哪些</span>
+<span class="nb">grep</span> <span class="nt">-r</span> <span class="s2">"packages.ros.org</span><span class="se">\|</span><span class="s2">ros2/ubuntu"</span> /etc/apt/sources.list.d/
+</code></pre></div>  </div>
+
+  <p>包名的前缀必须和你的发行版一致，否则一律”无法定位软件包”。</p>
+</blockquote>
+
+<h3 id="7tf-常用命令速查">7、TF 常用命令速查</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 发布静态变换 ──────────────────────────────</span>
+ros2 run tf2_ros static_transform_publisher <span class="se">\</span>
+  <span class="nt">--x</span> 0.1 <span class="nt">--y</span> 0 <span class="nt">--z</span> 0.2 <span class="nt">--roll</span> 0 <span class="nt">--pitch</span> 0 <span class="nt">--yaw</span> 0 <span class="se">\</span>
+  <span class="nt">--frame-id</span> base_link <span class="nt">--child-frame-id</span> base_laser
+
+<span class="c"># 用四元数代替欧拉角</span>
+ros2 run tf2_ros static_transform_publisher <span class="se">\</span>
+  <span class="nt">--x</span> 0.1 <span class="nt">--z</span> 0.2 <span class="nt">--qx</span> 0 <span class="nt">--qy</span> 0 <span class="nt">--qz</span> 0 <span class="nt">--qw</span> 1 <span class="se">\</span>
+  <span class="nt">--frame-id</span> base_link <span class="nt">--child-frame-id</span> base_laser
+
+<span class="c"># ── 查询变换 ─────────────────────────────────</span>
+ros2 run tf2_ros tf2_echo base_link base_laser
+
+<span class="c"># ── 查看原始消息 ──────────────────────────────</span>
+ros2 topic <span class="nb">echo</span> /tf_static        <span class="c"># 静态变换</span>
+ros2 topic <span class="nb">echo</span> /tf               <span class="c"># 动态变换</span>
+
+<span class="c"># ── 可视化整棵树 ──────────────────────────────</span>
+ros2 run tf2_tools view_frames                 <span class="c"># 输出到当前目录</span>
+ros2 run tf2_tools view_frames <span class="nt">-t</span> 10 <span class="nt">-o</span> ~/tf图/frames   <span class="c"># 监听10秒，指定路径</span>
+
+<span class="c"># .gv 转成其它格式</span>
+dot <span class="nt">-Tpng</span> frames.gv <span class="nt">-o</span> frames.png
+dot <span class="nt">-Tsvg</span> frames.gv <span class="nt">-o</span> frames.svg
+
+<span class="c"># ── 排查 ─────────────────────────────────────</span>
+ros2 topic info /tf_static        <span class="c"># 看有几个发布者</span>
+pgrep <span class="nt">-af</span> static_transform_publisher
+pkill <span class="nt">-f</span> static_transform_publisher
+</code></pre></div></div>
+
+<h3 id="8python-代码中的坐标变换">8、Python 代码中的坐标变换</h3>
+
+<p>前面用的都是命令行工具，这一节把整条链路用代码走一遍：<strong>静态发布器 + 动态发布器 + 监听器</strong>，三个节点串成 <code class="language-plaintext highlighter-rouge">base_link → camera_link → bottle_link</code> 一棵树。</p>
+
+<p><strong>先安装依赖</strong>（<code class="language-plaintext highlighter-rouge">tf_transformations</code> 提供欧拉角 ↔ 四元数互转）：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-tf-transformations
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么要用 <code class="language-plaintext highlighter-rouge">tf_transformations</code></strong></p>
+
+  <p>ROS 2 的消息里旋转统一用<strong>四元数</strong>（<code class="language-plaintext highlighter-rouge">rotation.x/y/z/w</code>）表示，但人习惯看<strong>欧拉角</strong>（roll/pitch/yaw）。这个包提供两个方向的转换：</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">quaternion_from_euler</span><span class="p">(</span><span class="n">roll</span><span class="p">,</span> <span class="n">pitch</span><span class="p">,</span> <span class="n">yaw</span><span class="p">)</span>   <span class="c1"># → [x, y, z, w]
+</span><span class="nf">euler_from_quaternion</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">])</span>       <span class="c1"># → (roll, pitch, yaw)
+</span></code></pre></div>  </div>
+
+  <p>注意两者<strong>返回值顺序不同</strong>：前者返回列表、顺序是 <code class="language-plaintext highlighter-rouge">x,y,z,w</code>；后者返回元组、顺序是 <code class="language-plaintext highlighter-rouge">roll,pitch,yaw</code>。
+不装这个包就得自己手写三角函数，很容易搞错正负号。</p>
+</blockquote>
+
+<p><strong>三个节点的分工：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>文件</th>
+      <th>发布器类型</th>
+      <th>负责的变换</th>
+      <th>发布频率</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">static_tf_broadcaster.py</code></td>
+      <td><code class="language-plaintext highlighter-rouge">StaticTransformBroadcaster</code></td>
+      <td><code class="language-plaintext highlighter-rouge">base_link → camera_link</code></td>
+      <td><strong>只发一次</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dynamic_tf_broadcaster.py</code></td>
+      <td><code class="language-plaintext highlighter-rouge">TransformBroadcaster</code></td>
+      <td><code class="language-plaintext highlighter-rouge">camera_link → bottle_link</code></td>
+      <td>1 Hz</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">tf_listener.py</code></td>
+      <td>（订阅）</td>
+      <td>查询 <code class="language-plaintext highlighter-rouge">base_link → bottle_link</code></td>
+      <td>1 Hz</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>static_tf_broadcaster.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">tf2_ros</span> <span class="kn">import</span> <span class="n">StaticTransformBroadcaster</span>  <span class="c1"># 静态坐标发布器
+</span><span class="kn">from</span> <span class="n">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">TransformStamped</span>  <span class="c1"># 消息接口
+</span><span class="kn">from</span> <span class="n">tf_transformations</span> <span class="kn">import</span> <span class="n">quaternion_from_euler</span>  <span class="c1"># 欧拉角转四元数函数
+</span><span class="kn">import</span> <span class="n">math</span>
+
+<span class="k">class</span> <span class="nc">StaticTFBroadcaster</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">'</span><span class="s">static_tf2_broadcaster</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">static_broadcaster_</span> <span class="o">=</span> <span class="nc">StaticTransformBroadcaster</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">publish_static_tf</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">publish_static_tf</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">transform</span> <span class="o">=</span> <span class="nc">TransformStamped</span><span class="p">()</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_clock</span><span class="p">().</span><span class="nf">now</span><span class="p">().</span><span class="nf">to_msg</span><span class="p">()</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="sh">'</span><span class="s">base_link</span><span class="sh">'</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">child_frame_id</span> <span class="o">=</span> <span class="sh">'</span><span class="s">camera_link</span><span class="sh">'</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.3</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.6</span>
+        <span class="n">rotation_quat</span> <span class="o">=</span> <span class="nf">quaternion_from_euler</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="nf">radians</span><span class="p">(</span><span class="mi">180</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">rotation_quat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">rotation_quat</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">rotation_quat</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">rotation_quat</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">static_broadcaster_</span><span class="p">.</span><span class="nf">sendTransform</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">发布TF: </span><span class="si">{</span><span class="n">transform</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">static_tf_broadcaster</span> <span class="o">=</span> <span class="nc">StaticTFBroadcaster</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">static_tf_broadcaster</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p>dynamic_tf_broadcaster.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">tf2_ros</span> <span class="kn">import</span> <span class="n">TransformBroadcaster</span>  <span class="c1"># 动态坐标发布器
+</span><span class="kn">from</span> <span class="n">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">TransformStamped</span>  <span class="c1"># 消息接口
+</span><span class="kn">from</span> <span class="n">tf_transformations</span> <span class="kn">import</span> <span class="n">quaternion_from_euler</span>  <span class="c1"># 欧拉角转四元数函数
+</span>
+
+<span class="k">class</span> <span class="nc">DynamicTFBroadcaster</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">'</span><span class="s">dynamic_tf2_broadcaster</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">dynamic_broadcaster_</span> <span class="o">=</span> <span class="nc">TransformBroadcaster</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">timer_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">publish_transform</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">publish_transform</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">transform</span> <span class="o">=</span> <span class="nc">TransformStamped</span><span class="p">()</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_clock</span><span class="p">().</span><span class="nf">now</span><span class="p">().</span><span class="nf">to_msg</span><span class="p">()</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="sh">'</span><span class="s">camera_link</span><span class="sh">'</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">child_frame_id</span> <span class="o">=</span> <span class="sh">'</span><span class="s">bottle_link</span><span class="sh">'</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.2</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="n">rotation_quat</span> <span class="o">=</span> <span class="nf">quaternion_from_euler</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">rotation_quat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">rotation_quat</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">rotation_quat</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">rotation_quat</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">dynamic_broadcaster_</span><span class="p">.</span><span class="nf">sendTransform</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">发布TF: </span><span class="si">{</span><span class="n">transform</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">dynamic_tf_broadcaster</span> <span class="o">=</span> <span class="nc">DynamicTFBroadcaster</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">dynamic_tf_broadcaster</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p>tf_listener.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">tf2_ros</span> <span class="kn">import</span> <span class="n">TransformListener</span><span class="p">,</span> <span class="n">Buffer</span>
+<span class="kn">from</span> <span class="n">tf_transformations</span> <span class="kn">import</span> <span class="n">euler_from_quaternion</span>
+
+<span class="k">class</span> <span class="nc">TfListener</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">'</span><span class="s">tf_listener</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nb">buffer</span> <span class="o">=</span> <span class="nc">Buffer</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">listener</span> <span class="o">=</span> <span class="nc">TransformListener</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nb">buffer</span><span class="p">,</span> <span class="n">self</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">get_transform</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># lookup_transform(目标坐标系, 源坐标系, 时间, 超时)
+</span>            <span class="c1"># 返回的是「源坐标系在目标坐标系下的位姿」，即 T_base_link_bottle_link
+</span>            <span class="n">result</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nb">buffer</span><span class="p">.</span><span class="nf">lookup_transform</span><span class="p">(</span><span class="sh">'</span><span class="s">base_link</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">bottle_link</span><span class="sh">'</span><span class="p">,</span>  <span class="n">rclpy</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="nc">Time</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="nc">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">transform</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">transform</span>       <span class="c1"># ⚠️ 原笔记拼成了 tranform（少了个 s）
+</span>            <span class="n">rotation_euler</span> <span class="o">=</span> <span class="nf">euler_from_quaternion</span><span class="p">([</span><span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">z</span><span class="p">,</span> <span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="p">.</span><span class="n">w</span><span class="p">])</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">平移：</span><span class="si">{</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="si">}</span><span class="s">，旋转欧拉角：</span><span class="si">{</span><span class="n">rotation_euler</span><span class="si">}</span><span class="s">, 旋转四元数：</span><span class="si">{</span><span class="n">transform</span><span class="p">.</span><span class="n">rotation</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">无法获取变换矩阵: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">TfListener</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>launch/demo_tf.launch.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">launch</span> <span class="kn">import</span> <span class="n">LaunchDescription</span>
+<span class="kn">from</span> <span class="n">launch_ros.actions</span> <span class="kn">import</span> <span class="n">Node</span>
+
+
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+    <span class="n">node_static</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">demo_python_tf</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">static_tf_broadcaster</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">node_dynamic</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">demo_python_tf</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">dynamic_tf_broadcaster</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">node_listener</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">demo_python_tf</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">tf_listener</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="nc">LaunchDescription</span><span class="p">([</span><span class="n">node_static</span><span class="p">,</span> <span class="n">node_dynamic</span><span class="p">,</span> <span class="n">node_listener</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>setup.py 添加如下</p>
+
+<blockquote>
+  <p>⚠️ <strong>必须先补两行 import，否则 <code class="language-plaintext highlighter-rouge">colcon build</code> 直接失败</strong></p>
+
+  <p>Jazzy 用 <code class="language-plaintext highlighter-rouge">ros2 pkg create</code> 生成的 <code class="language-plaintext highlighter-rouge">setup.py</code>，<strong>开头只有一行 import</strong>：</p>
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">setuptools</span> <span class="kn">import</span> <span class="n">find_packages</span><span class="p">,</span> <span class="n">setup</span>      <span class="c1"># 就这一行，没有 os 和 glob
+</span></code></pre></div>  </div>
+  <p>而下面用到了 <code class="language-plaintext highlighter-rouge">os.path.join(...)</code> 和 <code class="language-plaintext highlighter-rouge">glob(...)</code>，所以必须在文件顶部补上：</p>
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
+<span class="kn">from</span> <span class="n">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span> <span class="n">setuptools</span> <span class="kn">import</span> <span class="n">find_packages</span><span class="p">,</span> <span class="n">setup</span>
+</code></pre></div>  </div>
+  <p>漏掉的报错是这样的（实测）：</p>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NameError: name 'os' is not defined. Did you forget to import 'os'?
+Summary: 1 package failed: demo_python_tf
+</code></pre></div>  </div>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data_files</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="sh">'</span><span class="s">share/ament_index/resource_index/packages</span><span class="sh">'</span><span class="p">,</span>
+            <span class="p">[</span><span class="sh">'</span><span class="s">resource/</span><span class="sh">'</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">]),</span>
+        <span class="p">(</span><span class="sh">'</span><span class="s">share/</span><span class="sh">'</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">,</span> <span class="p">[</span><span class="sh">'</span><span class="s">package.xml</span><span class="sh">'</span><span class="p">]),</span>
+        <span class="c1"># 把 launch 目录安装到 share/&lt;包名&gt;/launch/，ros2 launch 才能找到
+</span>        <span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="sh">'</span><span class="s">share</span><span class="sh">'</span><span class="p">,</span> <span class="n">package_name</span><span class="p">,</span> <span class="sh">'</span><span class="s">launch</span><span class="sh">'</span><span class="p">),</span> <span class="nf">glob</span><span class="p">(</span><span class="sh">'</span><span class="s">launch/*.launch.py</span><span class="sh">'</span><span class="p">)),</span>
+    <span class="p">],</span>
+
+<span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+        <span class="sh">'</span><span class="s">console_scripts</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span>
+            <span class="c1"># 可执行名 = 包名.文件名:函数名
+</span>            <span class="sh">'</span><span class="s">static_tf_broadcaster = demo_python_tf.static_tf_broadcaster:main</span><span class="sh">'</span><span class="p">,</span>
+            <span class="sh">'</span><span class="s">dynamic_tf_broadcaster = demo_python_tf.dynamic_tf_broadcaster:main</span><span class="sh">'</span><span class="p">,</span>
+            <span class="sh">'</span><span class="s">tf_listener = demo_python_tf.tf_listener:main</span><span class="sh">'</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+</code></pre></div></div>
+
+<p>之后正常 <code class="language-plaintext highlighter-rouge">colcon build --symlink-install</code>，再 <code class="language-plaintext highlighter-rouge">ros2 launch demo_python_tf demo_tf.launch.py</code> 即可。</p>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">os.path.join('share', ...)</code> 和 <code class="language-plaintext highlighter-rouge">glob</code> 各自在干什么</strong></p>
+
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">os.path.join('share', package_name, 'launch')</code> → 拼出 <code class="language-plaintext highlighter-rouge">share/demo_python_tf/launch</code>。用 <code class="language-plaintext highlighter-rouge">os.path.join</code> 而不是直接写 <code class="language-plaintext highlighter-rouge">'share/demo_python_tf/launch'</code>，是为了<strong>跨平台</strong>（Windows 会用 <code class="language-plaintext highlighter-rouge">\</code>）。</li>
+    <li><code class="language-plaintext highlighter-rouge">glob('launch/*.launch.py')</code> → 把 <code class="language-plaintext highlighter-rouge">launch/</code> 下所有匹配的文件<strong>展开成列表</strong>。这样以后加新 launch 文件不用改 <code class="language-plaintext highlighter-rouge">setup.py</code>。</li>
+  </ul>
+
+  <p>这一条对<strong>所有 Python 节点</strong>都适用：<strong>源码目录里放的文件，不在 <code class="language-plaintext highlighter-rouge">data_files</code> 里登记就不会被装进 <code class="language-plaintext highlighter-rouge">install/</code></strong>。图片、yaml、launch 文件都是如此。</p>
+</blockquote>
+
+<h3 id="9实测结果与一个反直觉的地方">9、实测结果与一个反直觉的地方</h3>
+
+<p>上面三个节点跑起来后，监听器实际输出（已在本机验证）：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[tf_listener]: 平移：(0.700, 0.300, 0.100)，旋转欧拉角：(3.1416, -0.0000, 0.0000)
+</code></pre></div></div>
+
+<p><strong>先看这个 <code class="language-plaintext highlighter-rouge">0.1</code>——它最容易算错。</strong></p>
+
+<p>直觉上，两段平移直接相加就行：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>base_link → camera_link : (0.5, 0.3, 0.6)
+camera_link → bottle_link: (0.2, 0.0, 0.5)
+相加（❌ 错）:              (0.7, 0.3, 1.1)
+实际结果（✅ 对）:          (0.7, 0.3, 0.1)
+</code></pre></div></div>
+
+<p>x、y 都对，<strong>只有 z 变成了 0.1 而不是 1.1</strong>。原因是中间那个 <code class="language-plaintext highlighter-rouge">camera_link</code> 有个 <strong>绕 X 轴 180° 的旋转</strong>：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      base_link
+          │  平移 (0.5, 0.3, 0.6)
+          │  旋转 绕X轴 180°   ← 关键在这
+          ▼
+      camera_link
+          │  平移 (0.2, 0.0, 0.5)
+          ▼
+      bottle_link
+</code></pre></div></div>
+
+<p>180° 旋转把 camera_link 的 <strong>z 轴翻了个方向</strong>（同时 y 也翻）。所以 <code class="language-plaintext highlighter-rouge">(0.2, 0, 0.5)</code> 这段位移到了 base_link 坐标系里变成了 <code class="language-plaintext highlighter-rouge">(0.2, 0, -0.5)</code>：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.6 + (-0.5) = 0.1     ← z 是减不是加
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：变换不能简单相加，必须做矩阵乘法</strong></p>
+
+  <p>坐标系链上的变换要<strong>依次相乘</strong>：</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>T_base_link_bottle_link = T_base_link_camera_link  ×  T_camera_link_bottle_link
+</code></pre></div>  </div>
+
+  <p>每个 <code class="language-plaintext highlighter-rouge">T</code> 都是 4×4 齐次变换矩阵（3×3 旋转 + 3×1 平移）。<strong>旋转会影响平移的表示方向</strong>——这就是为什么”看着像加法”的地方经常算错。</p>
+
+  <p>验证公式（用 numpy 手算）：</p>
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span><span class="p">,</span> <span class="n">math</span>
+<span class="k">def</span> <span class="nf">T</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">rx</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">rx</span><span class="p">),</span> <span class="n">math</span><span class="p">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">rx</span><span class="p">)</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">M</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="o">-</span><span class="n">s</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">c</span><span class="p">]]</span>
+    <span class="n">M</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">M</span>
+
+<span class="n">M</span> <span class="o">=</span> <span class="nc">T</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">math</span><span class="p">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">@</span> <span class="nc">T</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">M</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>     <span class="c1"># → [0.7, 0.3, 0.1]  与实测一致
+</span></code></pre></div>  </div>
+
+  <p><strong>这个坑在实机上代价很大</strong>：静态变换的旋转填错了，整棵树下所有传感器的数据都会偏。所以改完 <code class="language-plaintext highlighter-rouge">static_transform_publisher</code> 的参数，务必用 <code class="language-plaintext highlighter-rouge">tf2_echo</code> 或 <code class="language-plaintext highlighter-rouge">view_frames</code> 确认一下。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：启动后头两秒报错是正常的</strong></p>
+
+  <p>实测日志开头会看到：</p>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ERROR] [tf_listener]: 无法获取变换: "bottle_link" passed to lookupTransform
+        argument source_frame does not exist.
+</code></pre></div>  </div>
+  <p>这是<strong>启动竞态</strong>：三个节点同时起，<code class="language-plaintext highlighter-rouge">tf_listener</code> 比 <code class="language-plaintext highlighter-rouge">dynamic_tf_broadcaster</code> 先就绪，那一刻 <code class="language-plaintext highlighter-rouge">bottle_link</code> 这个坐标系还没被发布出来。</p>
+
+  <p>等动态发布器发第一条（最多 1 秒）之后，日志就正常了。<strong>所以代码里那个 <code class="language-plaintext highlighter-rouge">try/except</code> 不是多余的</strong>——它就是为了扛过这段空窗期，而不是掩盖 bug。</p>
+
+  <p>如果想连这两秒的报错都不想看到，可以把监听器的定时器周期设长一点，或者先 <code class="language-plaintext highlighter-rouge">time.sleep(1)</code> 再开始查询。</p>
+</blockquote>
+
+<blockquote>
+  <p>⚠️ <strong>一个可以改进的写法：<code class="language-plaintext highlighter-rouge">Buffer()</code> 建议传 node</strong></p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">self</span><span class="p">.</span><span class="nb">buffer</span> <span class="o">=</span> <span class="nc">Buffer</span><span class="p">()</span>                      <span class="c1"># 能跑，但不带时钟
+</span><span class="n">self</span><span class="p">.</span><span class="nb">buffer</span> <span class="o">=</span> <span class="nc">Buffer</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="n">self</span><span class="p">)</span>             <span class="c1"># ✅ 推荐
+</span></code></pre></div>  </div>
+
+  <p>构造签名是 <code class="language-plaintext highlighter-rouge">Buffer(cache_time=None, node=None)</code>，<code class="language-plaintext highlighter-rouge">node</code> 是可选参数，所以不传也能跑。但<strong>不传 node 时 buffer 拿不到时钟</strong>——一旦你开了仿真时间（<code class="language-plaintext highlighter-rouge">use_sim_time</code>），查询就会因为时间对不上而失败。
+传上 node 是零成本的保险。</p>
+</blockquote>
+
+<hr />
+
+<!-- nav -->
+
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">⬅️ 上一章</th>
+      <th style="text-align: center">🏠 目录</th>
+      <th style="text-align: right">下一章 ➡️</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><a href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">四、服务和参数</a></td>
+      <td style="text-align: center"><a href="/tutorials/ROS2-bash/README/">返回目录</a></td>
+      <td style="text-align: right"><a href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/">六、可视化与数据工具</a></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/"><span>← 上一章</span><strong>服务和参数</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/"><span>下一章 →</span><strong>可视化与数据工具</strong></a>
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

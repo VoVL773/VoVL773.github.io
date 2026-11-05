@@ -77,7 +77,8 @@ layout: default
         <a class="section-more" href="{{ '/projects/' | relative_url }}">查看全部项目 →</a>
       </div>
       <div class="project-grid">
-        {% for proj in site.projects %}
+        {% assign featured_projects = site.projects | sort: 'order' | slice: 0, 4 %}
+        {% for proj in featured_projects %}
         <article class="project-card">
           <a class="project-card-link" href="{{ proj.url | relative_url }}" aria-label="查看项目:{{ proj.title }}"></a>
           <div class="project-cover">
@@ -123,6 +124,10 @@ layout: default
             {% when '教程' %}📖
             {% when '笔记' %}📝
             {% when '公告' %}📢
+            {% when '大模型' %}🤖
+            {% when '具身智能' %}🦾
+            {% when '物联网' %}📡
+            {% when 'MQTT' %}🔗
             {% else %}📌
             {% endcase %}
           </div>

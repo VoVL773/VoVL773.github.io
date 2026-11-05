@@ -1,0 +1,2700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    仿真与导航实操手册 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS2 基础教程</div>
+    <p class="tutorial-course-subtitle">ROS2基础 · ROS2实战 · 巡游小车实战</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2基础</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/README/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程导读</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/01-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>创建工作空间</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>多线程示例</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>话题通信</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>服务和参数</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>TF 坐标变换</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>可视化与数据工具</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>仿真与导航</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/ROS2-bash/07B-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%93%8D%E6%89%8B%E5%86%8C/" aria-current="page">
+            <span class="tutorial-chapter-number">08</span>
+            <span>仿真与导航实操手册</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E9%99%84%E5%BD%95-%E5%8B%98%E8%AF%AF%E4%B8%8E%E9%80%9F%E6%9F%A5/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>附录：勘误与速查</span>
+          </a>
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/ROS2%E5%AE%9E%E6%88%98%E9%83%A8%E5%88%86%E8%AF%A6%E7%BB%86%E8%AE%B0%E5%BD%95/">
+            <span class="tutorial-chapter-number">10</span>
+            <span>ROS2 实战：海龟案例与通信练习</span>
+          </a>
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">巡游小车实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E5%B7%A1%E6%B8%B8%E5%B0%8F%E8%BD%A6%E4%BB%BF%E7%9C%9F-%E4%BB%8E%E9%9B%B6%E5%A4%8D%E5%88%BB%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">11</span>
+            <span>巡游小车实战：从零复刻</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/ROS2-bash/README/">ROS2 基础教程</a><span>/</span>
+      <span>ROS2基础</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS2 基础教程 · 第 8 章</div>
+      <h1>仿真与导航实操手册</h1>
+      <p>按步骤完成建模、仿真、建图和导航配置。</p>
+    </header>
+    <div class="post-content tutorial-content"><blockquote>
+  <p><strong>这份文档解决什么问题</strong></p>
+
+  <p>你照着《ROS2机器人开发：从入门到实践》做第七章，会发现书里的仿真命令<strong>一条都跑不通</strong>：
+书基于 <strong>ROS 2 Humble + Gazebo Classic</strong>，而你的系统是 <strong>Ubuntu 24.04 + ROS 2 Jazzy</strong>，
+官方搭配的仿真器变成了 <strong>Gazebo Harmonic</strong>（命令是 <code class="language-plaintext highlighter-rouge">gz sim</code>），
+插件体系和生成机器人的方式<strong>整个换了</strong>。</p>
+
+  <p>笔记正文（<a href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">第七章</a>）讲的是”为什么”和”概念”，
+<strong>这份手册讲的是”具体敲什么”</strong>：从建包、写文件、到每个终端跑什么命令，
+按顺序照着做就能把第七章的<strong>全部实例</strong>跑起来（仿真 → ros2_control → SLAM 建图 → Nav2 导航 → 代码发目标）。</p>
+
+  <p><strong>本手册的验证程度</strong>：第 1~7 步（建模 + Gazebo 仿真）的核心命令都在本机实测过。
+第 8~12 步依赖的包（<code class="language-plaintext highlighter-rouge">gz_ros2_control</code>、<code class="language-plaintext highlighter-rouge">slam_toolbox</code>、Nav2）<strong>本机已全部安装</strong>，
+其中 <strong>第 9 步 SLAM 建图已完整实测通过</strong>（地图能建出来、能长大）；
+第 8 / 10~12 步仍按官方文档核对，正文里逐处标注。凡标 ⚠️ 的地方，第一次做请慢一点看。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="0-开始之前">0. 开始之前</h2>
+
+<h3 id="01-环境确认">0.1 环境确认</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 系统与 ROS</span>
+lsb_release <span class="nt">-d</span>          <span class="c"># 期望：Ubuntu 24.04.x LTS</span>
+<span class="nb">echo</span> <span class="nv">$ROS_DISTRO</span>        <span class="c"># 期望：jazzy（没输出就先 source，见 0.2）</span>
+
+<span class="c"># 仿真器</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+gz sim <span class="nt">--version</span>        <span class="c"># 期望：Gazebo Sim, version 8.15.0</span>
+</code></pre></div></div>
+
+<h3 id="02-每开一个新终端第一件事">0.2 每开一个新终端，第一件事</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> /opt/ros/jazzy/setup.bash
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>这一步不能省。</strong> 不 source 的话，<code class="language-plaintext highlighter-rouge">gz</code> 只会列出 <code class="language-plaintext highlighter-rouge">help</code> 和 <code class="language-plaintext highlighter-rouge">sdf</code> 两个子命令，
+敲 <code class="language-plaintext highlighter-rouge">gz sim</code> 会吐一段帮助文本，看起来像”没装 sim”——其实只是 <code class="language-plaintext highlighter-rouge">GZ_CONFIG_PATH</code> 没被补全。</p>
+
+  <p>嫌麻烦就把这行写进 <code class="language-plaintext highlighter-rouge">~/.bashrc</code> 末尾。</p>
+</blockquote>
+
+<h3 id="03-装齐依赖一次就够">0.3 装齐依赖（一次就够）</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 第 1~7 步（仿真）需要的：本机已全部具备，这条只是确认</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-ros-gz ros-jazzy-xacro <span class="se">\</span>
+                 ros-jazzy-robot-state-publisher ros-jazzy-joint-state-publisher-gui <span class="se">\</span>
+                 ros-jazzy-rviz2 ros-jazzy-teleop-twist-keyboard
+
+<span class="c"># 第 8 步（ros2_control）——本机还没装</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-ros2-control ros-jazzy-ros2-controllers ros-jazzy-gz-ros2-control
+
+<span class="c"># 第 9~12 步（SLAM + 导航）——本机还没装</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-slam-toolbox ros-jazzy-navigation2 ros-jazzy-nav2-bringup
+</code></pre></div></div>
+
+<h3 id="04-和原教程gazebo-classic的对应关系">0.4 和原教程（Gazebo Classic）的对应关系</h3>
+
+<p>全书命令的”翻译表”，做的时候对不上就来这里查：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>书里（Humble + Classic）</th>
+      <th><strong>你这里（Jazzy + Harmonic）</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo apt install gazebo</code></td>
+      <td><code class="language-plaintext highlighter-rouge">sudo apt install ros-jazzy-ros-gz</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gazebo 世界.world</code></td>
+      <td><code class="language-plaintext highlighter-rouge">gz sim -r 世界.sdf</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gazebo --verbose -s libgazebo_ros_init.so -s libgazebo_ros_factory.so</code></td>
+      <td><strong>不需要</strong>（改成显式桥接）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ros2 run gazebo_ros spawn_entity.py -entity X -file Y</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ros2 run ros_gz_sim create -world default -topic robot_description -name X</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">libgazebo_ros_diff_drive.so</code> + <code class="language-plaintext highlighter-rouge">&lt;ros&gt;&lt;remapping&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">gz-sim-diff-drive-system</code> + <code class="language-plaintext highlighter-rouge">parameter_bridge</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">libgazebo_ros_ray_sensor.so</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;sensor type="gpu_lidar"&gt;</code> + 桥 <code class="language-plaintext highlighter-rouge">/scan</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">wheel_diameter</code></td>
+      <td><strong><code class="language-plaintext highlighter-rouge">wheel_radius</code></strong>（半径，填错里程计差一倍）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">libgazebo_ros2_control.so</code></td>
+      <td><code class="language-plaintext highlighter-rouge">libgz_ros2_control-system.so</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gazebo_ros2_control/GazeboSystem</code></td>
+      <td><code class="language-plaintext highlighter-rouge">gz_ros2_control/GazeboSimSystem</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="05-最终要建出来的东西">0.5 最终要建出来的东西</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chapt7_ws/                                  ← 工作空间
+└── src/
+    ├── fishbot_description/                ← 第 1 步创建：机器人模型 + 仿真
+    │   ├── package.xml
+    │   ├── CMakeLists.txt
+    │   ├── urdf/fishbot/
+    │   │   ├── fishbot.urdf.xacro           ← 总装
+    │   │   ├── base.urdf.xacro              ← 车身
+    │   │   ├── wheel.urdf.xacro             ← 驱动轮
+    │   │   ├── caster.urdf.xacro            ← 万向轮
+    │   │   ├── common_inertia.xacro         ← 惯量公式
+    │   │   ├── sensor/
+    │   │   │   ├── imu.urdf.xacro
+    │   │   │   ├── laser.urdf.xacro
+    │   │   │   └── camera.urdf.xacro
+    │   │   └── plugins/
+    │   │       ├── gazebo_control_plugin.xacro   ← 差速驱动
+    │   │       └── gazebo_sensor_plugin.xacro    ← 传感器
+    │   ├── launch/
+    │   │   ├── display_robot.launch.py      ← 只看 RViz
+    │   │   └── gazebo_sim.launch.py         ← 仿真总启动
+    │   ├── world/fishbot.sdf                ← 仿真世界
+    │   └── config/fishbot_ros2_controller.yaml
+    └── fishbot_navigation2/                ← 第 9 步创建：地图 + 导航
+        ├── package.xml
+        ├── CMakeLists.txt
+        ├── maps/
+        ├── param/
+        └── launch/
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>为什么模型包用 <code class="language-plaintext highlighter-rouge">ament_cmake</code></strong>
+模型包只装数据（urdf/launch/world），不装 Python 代码。
+<code class="language-plaintext highlighter-rouge">ament_cmake</code> 的 <code class="language-plaintext highlighter-rouge">install(DIRECTORY ...)</code> 最省事；用 <code class="language-plaintext highlighter-rouge">ament_python</code> 反而要绕 <code class="language-plaintext highlighter-rouge">setup.py</code> 的 <code class="language-plaintext highlighter-rouge">data_files</code>。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="第-1-步建工作空间和功能包">第 1 步：建工作空间和功能包</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ① 建工作空间</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> ~/chapt7_ws/src
+<span class="nb">cd</span> ~/chapt7_ws/src
+
+<span class="c"># ② 建模型包（注意是 ament_cmake）</span>
+ros2 pkg create fishbot_description <span class="nt">--build-type</span> ament_cmake <span class="nt">--license</span> Apache-2.0
+
+<span class="c"># ③ 建目录骨架（一次建全）</span>
+<span class="nb">cd </span>fishbot_description
+<span class="nb">mkdir</span> <span class="nt">-p</span> urdf/fishbot/sensor urdf/fishbot/plugins launch world config
+</code></pre></div></div>
+
+<p><strong>做完检查：</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/chapt7_ws/src/fishbot_description
+find <span class="nb">.</span> <span class="nt">-type</span> d | <span class="nb">sort</span>
+<span class="c"># 期望看到：./urdf ./urdf/fishbot ./urdf/fishbot/sensor ./urdf/fishbot/plugins ./launch ./world ./config</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ 目录名一个都不能错。xacro 里 include 的路径、CMakeLists 里 install 的路径、
+launch 里拼的路径<strong>全都写死了</strong>，错一个字母就是 <code class="language-plaintext highlighter-rouge">file not found</code>。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="第-2-步写模型文件">第 2 步：写模型文件</h2>
+
+<blockquote>
+  <p>这一步是第七章 §1~§8 的产物。如果你已经跟着笔记做过建模，可以直接把已有的文件
+拷进来（但<strong>务必补上 <code class="language-plaintext highlighter-rouge">&lt;collision&gt;</code> 和 <code class="language-plaintext highlighter-rouge">&lt;inertial&gt;</code></strong>，不然进 Gazebo 会穿模/乱飞）。</p>
+
+  <p>下面给的是一套<strong>能直接跑通的完整版</strong>，可直接照抄。
+与你 <code class="language-plaintext highlighter-rouge">笔记/var/</code> 里那几份草稿相比，修正了：<code class="language-plaintext highlighter-rouge">parame</code> 拼写、<code class="language-plaintext highlighter-rouge">imu_link</code> 名字对不上、
+轮子没旋转、缺 collision/inertial、总装里没挂轮子这几处。</p>
+</blockquote>
+
+<h3 id="21-urdffishbotcommon_inertiaxacro">2.1 <code class="language-plaintext highlighter-rouge">urdf/fishbot/common_inertia.xacro</code></h3>
+
+<p>惯量公式统一放这里，其它文件 include 它。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- 长方体：x/y/z 是三条边长，m 是质量 --&gt;</span>
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"box_inertia"</span> <span class="na">params=</span><span class="s">"m x y z"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;inertial&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;mass</span> <span class="na">value=</span><span class="s">"${m}"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;inertia</span> <span class="na">ixx=</span><span class="s">"${m*(y*y+z*z)/12}"</span> <span class="na">ixy=</span><span class="s">"0"</span> <span class="na">ixz=</span><span class="s">"0"</span>
+                     <span class="na">iyy=</span><span class="s">"${m*(x*x+z*z)/12}"</span> <span class="na">iyz=</span><span class="s">"0"</span>
+                     <span class="na">izz=</span><span class="s">"${m*(x*x+y*y)/12}"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/inertial&gt;</span>
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+
+    <span class="c">&lt;!-- 圆柱：默认轴沿 Z；如果模型里把圆柱转了，用 rpy 把惯量一起转 --&gt;</span>
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"cylinder_inertia"</span> <span class="na">params=</span><span class="s">"m r h rpy:='0 0 0'"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;inertial&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"${rpy}"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;mass</span> <span class="na">value=</span><span class="s">"${m}"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;inertia</span> <span class="na">ixx=</span><span class="s">"${m*(3*r*r+h*h)/12}"</span> <span class="na">ixy=</span><span class="s">"0"</span> <span class="na">ixz=</span><span class="s">"0"</span>
+                     <span class="na">iyy=</span><span class="s">"${m*(3*r*r+h*h)/12}"</span> <span class="na">iyz=</span><span class="s">"0"</span>
+                     <span class="na">izz=</span><span class="s">"${m*r*r/2}"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/inertial&gt;</span>
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+
+    <span class="c">&lt;!-- 球 --&gt;</span>
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"sphere_inertia"</span> <span class="na">params=</span><span class="s">"m r"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;inertial&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;mass</span> <span class="na">value=</span><span class="s">"${m}"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;inertia</span> <span class="na">ixx=</span><span class="s">"${2*m*r*r/5}"</span> <span class="na">ixy=</span><span class="s">"0"</span> <span class="na">ixz=</span><span class="s">"0"</span>
+                     <span class="na">iyy=</span><span class="s">"${2*m*r*r/5}"</span> <span class="na">iyz=</span><span class="s">"0"</span>
+                     <span class="na">izz=</span><span class="s">"${2*m*r*r/5}"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/inertial&gt;</span>
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <code class="language-plaintext highlighter-rouge">rpy:='0 0 0'</code> 是 xacro 宏参数的<strong>默认值</strong>写法（<code class="language-plaintext highlighter-rouge">:=</code> 后面跟默认值）。
+不传就用默认，传了就用传的。</p>
+</blockquote>
+
+<h3 id="22-urdffishbotbaseurdfxacro">2.2 <code class="language-plaintext highlighter-rouge">urdf/fishbot/base.urdf.xacro</code></h3>
+
+<p>车身 + 导航用的虚拟根 <code class="language-plaintext highlighter-rouge">base_footprint</code>。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"common_inertia.xacro"</span><span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"base_xacro"</span> <span class="na">params=</span><span class="s">"length radius"</span><span class="nt">&gt;</span>
+
+        <span class="c">&lt;!-- ① 导航用的"贴地虚拟根"：Nav2 要求机器人有一个 z=0 的根坐标系 --&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"base_footprint"</span><span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- ② 车身本体 --&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"base_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;visual&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;cylinder</span> <span class="na">radius=</span><span class="s">"${radius}"</span> <span class="na">length=</span><span class="s">"${length}"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+                <span class="nt">&lt;material</span> <span class="na">name=</span><span class="s">"white"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"1.0 1.0 1.0 0.8"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/material&gt;</span>
+            <span class="nt">&lt;/visual&gt;</span>
+
+            <span class="c">&lt;!-- 仿真必须有 collision，否则会直接穿过地面 --&gt;</span>
+            <span class="nt">&lt;collision&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;cylinder</span> <span class="na">radius=</span><span class="s">"${radius}"</span> <span class="na">length=</span><span class="s">"${length}"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;/collision&gt;</span>
+
+            <span class="c">&lt;!-- 仿真必须有 inertial，否则物理引擎会警告并给个乱猜的质量 --&gt;</span>
+            <span class="nt">&lt;xacro:cylinder_inertia</span> <span class="na">m=</span><span class="s">"1.0"</span> <span class="na">r=</span><span class="s">"${radius}"</span> <span class="na">h=</span><span class="s">"${length}"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/link&gt;</span>
+
+        <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"base_joint"</span> <span class="na">type=</span><span class="s">"fixed"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;parent</span> <span class="na">link=</span><span class="s">"base_footprint"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;child</span> <span class="na">link=</span><span class="s">"base_link"</span><span class="nt">/&gt;</span>
+            <span class="c">&lt;!-- 车身抬高到 ${length/2 + 0.01}，让轮子刚好着地 --&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 ${length/2 + 0.01}"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/joint&gt;</span>
+
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong><code class="language-plaintext highlighter-rouge">base_footprint</code> 是干嘛的</strong></p>
+
+  <p>它是机器人在地面上的”投影点”，z 恒为 0。
+里程计、SLAM、Nav2 全都以它为基准，TF 链是 <code class="language-plaintext highlighter-rouge">map → odom → base_footprint → base_link</code>。
+少了它，Nav2 会报坐标系找不到（笔记 §16.2 第 20 条）。</p>
+</blockquote>
+
+<h3 id="23-urdffishbotwheelurdfxacro">2.3 <code class="language-plaintext highlighter-rouge">urdf/fishbot/wheel.urdf.xacro</code></h3>
+
+<p>驱动轮。<strong>两个地方最容易写错</strong>：圆柱要转 90°、要有 collision/inertial。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"common_inertia.xacro"</span><span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"wheel_xacro"</span> <span class="na">params=</span><span class="s">"wheel_name xyz"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"${wheel_name}_wheel_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;visual&gt;</span>
+                <span class="c">&lt;!-- 圆柱默认轴沿 Z；绕 X 转 90° 后轴变成 Y，才能绕 Y 滚动 --&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"1.5707963 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;cylinder</span> <span class="na">radius=</span><span class="s">"0.032"</span> <span class="na">length=</span><span class="s">"0.02"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+                <span class="nt">&lt;material</span> <span class="na">name=</span><span class="s">"yellow"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"1.0 1.0 0.0 1.0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/material&gt;</span>
+            <span class="nt">&lt;/visual&gt;</span>
+
+            <span class="nt">&lt;collision&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"1.5707963 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;cylinder</span> <span class="na">radius=</span><span class="s">"0.032"</span> <span class="na">length=</span><span class="s">"0.02"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;/collision&gt;</span>
+
+            <span class="c">&lt;!-- rpy 要和上面一致，惯量才跟着转过去 --&gt;</span>
+            <span class="nt">&lt;xacro:cylinder_inertia</span> <span class="na">m=</span><span class="s">"0.05"</span> <span class="na">r=</span><span class="s">"0.032"</span> <span class="na">h=</span><span class="s">"0.02"</span> <span class="na">rpy=</span><span class="s">"1.5707963 0 0"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/link&gt;</span>
+
+        <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"${wheel_name}_wheel_joint"</span> <span class="na">type=</span><span class="s">"continuous"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"${xyz}"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;parent</span> <span class="na">link=</span><span class="s">"base_link"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;child</span> <span class="na">link=</span><span class="s">"${wheel_name}_wheel_link"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;axis</span> <span class="na">xyz=</span><span class="s">"0 1 0"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/joint&gt;</span>
+
+        <span class="c">&lt;!-- 橡胶胎要有抓地力，不然原地打滑、里程计乱飘 --&gt;</span>
+        <span class="nt">&lt;gazebo</span> <span class="na">reference=</span><span class="s">"${wheel_name}_wheel_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;mu1</span> <span class="na">value=</span><span class="s">"20.0"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;mu2</span> <span class="na">value=</span><span class="s">"20.0"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;kp</span> <span class="na">value=</span><span class="s">"1000000000.0"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;kd</span> <span class="na">value=</span><span class="s">"1.0"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/gazebo&gt;</span>
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<h3 id="24-urdffishbotcasterurdfxacro">2.4 <code class="language-plaintext highlighter-rouge">urdf/fishbot/caster.urdf.xacro</code></h3>
+
+<p>万向轮（支撑轮）。<strong>摩擦必须设成 0</strong>。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"common_inertia.xacro"</span><span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"caster_xacro"</span> <span class="na">params=</span><span class="s">"xyz"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"caster_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;visual&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;sphere</span> <span class="na">radius=</span><span class="s">"0.01"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+                <span class="nt">&lt;material</span> <span class="na">name=</span><span class="s">"yellow"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"1.0 1.0 0.0 1.0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/material&gt;</span>
+            <span class="nt">&lt;/visual&gt;</span>
+            <span class="nt">&lt;collision&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;sphere</span> <span class="na">radius=</span><span class="s">"0.01"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;/collision&gt;</span>
+            <span class="nt">&lt;xacro:sphere_inertia</span> <span class="na">m=</span><span class="s">"0.01"</span> <span class="na">r=</span><span class="s">"0.01"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/link&gt;</span>
+
+        <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"caster_joint"</span> <span class="na">type=</span><span class="s">"fixed"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"${xyz}"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;parent</span> <span class="na">link=</span><span class="s">"base_link"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;child</span> <span class="na">link=</span><span class="s">"caster_link"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/joint&gt;</span>
+
+        <span class="c">&lt;!-- 万向轮摩擦必须为 0：有摩擦就会和主动轮"别着"，机器人走不直 --&gt;</span>
+        <span class="nt">&lt;gazebo</span> <span class="na">reference=</span><span class="s">"caster_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;mu1</span> <span class="na">value=</span><span class="s">"0.0"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;mu2</span> <span class="na">value=</span><span class="s">"0.0"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;kp</span> <span class="na">value=</span><span class="s">"1000000000.0"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;kd</span> <span class="na">value=</span><span class="s">"1.0"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/gazebo&gt;</span>
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<h3 id="25-urdffishbotsensorimuurdfxacro">2.5 <code class="language-plaintext highlighter-rouge">urdf/fishbot/sensor/imu.urdf.xacro</code></h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"../common_inertia.xacro"</span><span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"imu_xacro"</span> <span class="na">params=</span><span class="s">"xyz"</span><span class="nt">&gt;</span>
+        <span class="c">&lt;!-- link 名和 joint 的 child 必须一致，这里统一叫 imu_link --&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"imu_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;visual&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;box</span> <span class="na">size=</span><span class="s">"0.02 0.02 0.02"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+                <span class="nt">&lt;material</span> <span class="na">name=</span><span class="s">"black"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"0.0 0.0 0.0 0.8"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/material&gt;</span>
+            <span class="nt">&lt;/visual&gt;</span>
+            <span class="nt">&lt;collision&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;box</span> <span class="na">size=</span><span class="s">"0.02 0.02 0.02"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;/collision&gt;</span>
+            <span class="nt">&lt;xacro:box_inertia</span> <span class="na">m=</span><span class="s">"0.01"</span> <span class="na">x=</span><span class="s">"0.02"</span> <span class="na">y=</span><span class="s">"0.02"</span> <span class="na">z=</span><span class="s">"0.02"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/link&gt;</span>
+
+        <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"imu_joint"</span> <span class="na">type=</span><span class="s">"fixed"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"${xyz}"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;parent</span> <span class="na">link=</span><span class="s">"base_link"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;child</span> <span class="na">link=</span><span class="s">"imu_link"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/joint&gt;</span>
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<h3 id="26-urdffishbotsensorlaserurdfxacro">2.6 <code class="language-plaintext highlighter-rouge">urdf/fishbot/sensor/laser.urdf.xacro</code></h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"../common_inertia.xacro"</span><span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"laser_xacro"</span> <span class="na">params=</span><span class="s">"xyz"</span><span class="nt">&gt;</span>
+        <span class="c">&lt;!-- 雷达支撑杆 --&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"laser_cylinder_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;visual&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;cylinder</span> <span class="na">length=</span><span class="s">"0.10"</span> <span class="na">radius=</span><span class="s">"0.01"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+                <span class="nt">&lt;material</span> <span class="na">name=</span><span class="s">"green"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"0.0 1.0 0.0 0.8"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/material&gt;</span>
+            <span class="nt">&lt;/visual&gt;</span>
+            <span class="nt">&lt;collision&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;cylinder</span> <span class="na">length=</span><span class="s">"0.10"</span> <span class="na">radius=</span><span class="s">"0.01"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;/collision&gt;</span>
+            <span class="nt">&lt;xacro:cylinder_inertia</span> <span class="na">m=</span><span class="s">"0.02"</span> <span class="na">r=</span><span class="s">"0.01"</span> <span class="na">h=</span><span class="s">"0.10"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/link&gt;</span>
+
+        <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"laser_cylinder_joint"</span> <span class="na">type=</span><span class="s">"fixed"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;parent</span> <span class="na">link=</span><span class="s">"base_link"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;child</span> <span class="na">link=</span><span class="s">"laser_cylinder_link"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"${xyz}"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/joint&gt;</span>
+
+        <span class="c">&lt;!-- 雷达本体 --&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"laser_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;visual&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;cylinder</span> <span class="na">length=</span><span class="s">"0.02"</span> <span class="na">radius=</span><span class="s">"0.02"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+                <span class="nt">&lt;material</span> <span class="na">name=</span><span class="s">"green"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"0.0 1.0 0.0 0.8"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/material&gt;</span>
+            <span class="nt">&lt;/visual&gt;</span>
+            <span class="nt">&lt;collision&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;cylinder</span> <span class="na">length=</span><span class="s">"0.02"</span> <span class="na">radius=</span><span class="s">"0.02"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;/collision&gt;</span>
+            <span class="nt">&lt;xacro:cylinder_inertia</span> <span class="na">m=</span><span class="s">"0.02"</span> <span class="na">r=</span><span class="s">"0.02"</span> <span class="na">h=</span><span class="s">"0.02"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/link&gt;</span>
+
+        <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"laser_joint"</span> <span class="na">type=</span><span class="s">"fixed"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;parent</span> <span class="na">link=</span><span class="s">"laser_cylinder_link"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;child</span> <span class="na">link=</span><span class="s">"laser_link"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0.05"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/joint&gt;</span>
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<h3 id="27-urdffishbotsensorcameraurdfxacro">2.7 <code class="language-plaintext highlighter-rouge">urdf/fishbot/sensor/camera.urdf.xacro</code></h3>
+
+<p>相机 + 光学坐标系（<strong>这个不能少，否则图像/点云方向是拧的</strong>）。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"../common_inertia.xacro"</span><span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!-- ⚠️ 注意是 params，不是 parame（原草稿里拼错了，xacro 会直接报错） --&gt;</span>
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"camera_xacro"</span> <span class="na">params=</span><span class="s">"xyz"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"camera_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;visual&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;box</span> <span class="na">size=</span><span class="s">"0.02 0.10 0.02"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+                <span class="nt">&lt;material</span> <span class="na">name=</span><span class="s">"green"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"0.0 1.0 0.0 0.8"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/material&gt;</span>
+            <span class="nt">&lt;/visual&gt;</span>
+            <span class="nt">&lt;collision&gt;</span>
+                <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;geometry&gt;</span>
+                    <span class="nt">&lt;box</span> <span class="na">size=</span><span class="s">"0.02 0.10 0.02"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;/collision&gt;</span>
+            <span class="nt">&lt;xacro:box_inertia</span> <span class="na">m=</span><span class="s">"0.01"</span> <span class="na">x=</span><span class="s">"0.02"</span> <span class="na">y=</span><span class="s">"0.10"</span> <span class="na">z=</span><span class="s">"0.02"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/link&gt;</span>
+
+        <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"camera_joint"</span> <span class="na">type=</span><span class="s">"fixed"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"${xyz}"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;parent</span> <span class="na">link=</span><span class="s">"base_link"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;child</span> <span class="na">link=</span><span class="s">"camera_link"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/joint&gt;</span>
+
+        <span class="c">&lt;!-- 光学坐标系：ROS 约定相机是"z 向前、x 向右、y 向下"，
+             而 URDF 里 link 是"x 向前"。这个 rpy 就是那两次旋转。 --&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"camera_optical_link"</span><span class="nt">/&gt;</span>
+
+        <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"camera_optical_joint"</span> <span class="na">type=</span><span class="s">"fixed"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span> <span class="na">rpy=</span><span class="s">"-1.5708 0 -1.5708"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;parent</span> <span class="na">link=</span><span class="s">"camera_link"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;child</span> <span class="na">link=</span><span class="s">"camera_optical_link"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/joint&gt;</span>
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<h3 id="28-urdffishbotpluginsgazebo_control_pluginxacro">2.8 <code class="language-plaintext highlighter-rouge">urdf/fishbot/plugins/gazebo_control_plugin.xacro</code></h3>
+
+<p>差速驱动插件（Harmonic 的写法，<strong>不再有 <code class="language-plaintext highlighter-rouge">&lt;ros&gt;&lt;remapping&gt;</code></strong>）。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"gazebo_control_plugin"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;gazebo&gt;</span>
+            <span class="nt">&lt;plugin</span> <span class="na">filename=</span><span class="s">"gz-sim-diff-drive-system"</span>
+                    <span class="na">name=</span><span class="s">"gz::sim::systems::DiffDrive"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;left_joint&gt;</span>left_wheel_joint<span class="nt">&lt;/left_joint&gt;</span>
+                <span class="nt">&lt;right_joint&gt;</span>right_wheel_joint<span class="nt">&lt;/right_joint&gt;</span>
+
+                <span class="c">&lt;!-- 运动学：轮距与轮半径，正逆解和里程计都靠它俩 --&gt;</span>
+                <span class="nt">&lt;wheel_separation&gt;</span>0.20<span class="nt">&lt;/wheel_separation&gt;</span>
+                <span class="nt">&lt;wheel_radius&gt;</span>0.032<span class="nt">&lt;/wheel_radius&gt;</span>
+
+                <span class="nt">&lt;odom_publish_frequency&gt;</span>30<span class="nt">&lt;/odom_publish_frequency&gt;</span>
+
+                <span class="c">&lt;!-- ★ 必须显式写！默认是 "&lt;模型名&gt;/base_footprint"，
+                     也就是 fishbot/base_footprint，而 URDF 里机器人根是 base_footprint
+                     —— 两段接不上，TF 会变成两棵独立的树。 --&gt;</span>
+                <span class="nt">&lt;child_frame_id&gt;</span>base_footprint<span class="nt">&lt;/child_frame_id&gt;</span>
+
+                <span class="nt">&lt;max_linear_acceleration&gt;</span>1.0<span class="nt">&lt;/max_linear_acceleration&gt;</span>
+                <span class="nt">&lt;min_linear_acceleration&gt;</span>-1.0<span class="nt">&lt;/min_linear_acceleration&gt;</span>
+                <span class="nt">&lt;max_angular_acceleration&gt;</span>2.0<span class="nt">&lt;/max_angular_acceleration&gt;</span>
+                <span class="nt">&lt;min_angular_acceleration&gt;</span>-2.0<span class="nt">&lt;/min_angular_acceleration&gt;</span>
+                <span class="nt">&lt;max_linear_velocity&gt;</span>0.5<span class="nt">&lt;/max_linear_velocity&gt;</span>
+                <span class="nt">&lt;min_linear_velocity&gt;</span>-0.5<span class="nt">&lt;/min_linear_velocity&gt;</span>
+                <span class="nt">&lt;max_angular_velocity&gt;</span>1.0<span class="nt">&lt;/max_angular_velocity&gt;</span>
+                <span class="nt">&lt;min_angular_velocity&gt;</span>-1.0<span class="nt">&lt;/min_angular_velocity&gt;</span>
+            <span class="nt">&lt;/plugin&gt;</span>
+        <span class="nt">&lt;/gazebo&gt;</span>
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong><code class="language-plaintext highlighter-rouge">wheel_radius</code> 是半径，不是直径。</strong>
+书里（Classic）写的是 <code class="language-plaintext highlighter-rouge">wheel_diameter</code>，这里换了名字也换了含义。
+填错的话里程计直接差一倍——机器人”自信地”走错位置，但看起来一切正常。</p>
+</blockquote>
+
+<blockquote>
+  <p>⚠️ <strong><code class="language-plaintext highlighter-rouge">child_frame_id</code> 为什么必须写</strong>（Harmonic 最容易踩的坑之一）</p>
+
+  <p>Harmonic 的 DiffDrive 插件默认给 TF 坐标系加<strong>模型名前缀</strong>，
+发出来的是 <code class="language-plaintext highlighter-rouge">fishbot/odom → fishbot/base_footprint</code>。
+而 URDF 里机器人根是 <code class="language-plaintext highlighter-rouge">base_footprint</code>，robot_state_publisher 发的是<strong>不带前缀</strong>的。
+结果 TF 变成<strong>两棵互不相连的树</strong>：</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fishbot/odom → fishbot/base_footprint     ← 差速插件发的（悬空，没有下游）
+base_footprint → base_link → ...          ← URDF 发的（没有上游 odom）
+</code></pre></div>  </div>
+
+  <p><strong>症状</strong>：<code class="language-plaintext highlighter-rouge">ros2 topic list</code> 里 <code class="language-plaintext highlighter-rouge">/tf</code> 明明有数据，但</p>
+  <ul>
+    <li>RViz 里 <code class="language-plaintext highlighter-rouge">LaserScan</code> 一直刷 <code class="language-plaintext highlighter-rouge">No transform from [fishbot/base_footprint/laser_sensor]</code></li>
+    <li><code class="language-plaintext highlighter-rouge">Odometry</code> 显示画不出来</li>
+    <li><code class="language-plaintext highlighter-rouge">tf2_echo odom base_footprint</code> 报 <strong>“not part of the same tree”</strong></li>
+  </ul>
+
+  <p><strong>修法</strong>：加 <code class="language-plaintext highlighter-rouge">&lt;child_frame_id&gt;base_footprint&lt;/child_frame_id&gt;</code>。</p>
+
+  <p>★ 注意 <code class="language-plaintext highlighter-rouge">odom</code> 帧名在 Harmonic 里<strong>改不了</strong>——插件根本没有这个参数，
+写死成 <code class="language-plaintext highlighter-rouge">&lt;模型名&gt;/odom</code>。所以 RViz 的 <code class="language-plaintext highlighter-rouge">Fixed Frame</code> 要填 <strong><code class="language-plaintext highlighter-rouge">fishbot/odom</code></strong>，
+不是 <code class="language-plaintext highlighter-rouge">odom</code>。这一点和第 7.4 节配套看。</p>
+</blockquote>
+
+<blockquote>
+  <p>⚠️ <strong>传感器的 <code class="language-plaintext highlighter-rouge">gz_frame_id</code> 同理。</strong>
+不写的话 <code class="language-plaintext highlighter-rouge">/scan</code> 的 <code class="language-plaintext highlighter-rouge">frame_id</code> 是 <code class="language-plaintext highlighter-rouge">fishbot/base_footprint/laser_sensor</code>
+（模型名 + 父链 + 传感器名拼起来的），和 URDF 里的 <code class="language-plaintext highlighter-rouge">laser_link</code> 对不上，
+RViz 里点云/扫描永远画不出来。三个传感器都要写：</p>
+
+  <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;sensor</span> <span class="na">name=</span><span class="s">"laser_sensor"</span> <span class="na">type=</span><span class="s">"gpu_lidar"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;gz_frame_id&gt;</span>laser_link<span class="nt">&lt;/gz_frame_id&gt;</span>     <span class="c">&lt;!-- ★ 让它等于 URDF 里的 link 名 --&gt;</span>
+    ...
+</code></pre></div>  </div>
+
+  <p>验证：<code class="language-plaintext highlighter-rouge">ros2 topic echo /scan --once | grep frame_id</code> 应该打出 <code class="language-plaintext highlighter-rouge">laser_link</code>。</p>
+</blockquote>
+
+<h3 id="29-urdffishbotpluginsgazebo_sensor_pluginxacro">2.9 <code class="language-plaintext highlighter-rouge">urdf/fishbot/plugins/gazebo_sensor_plugin.xacro</code></h3>
+
+<p>三个传感器的”仿真定义”。<strong>注意这里只声明传感器，能不能出数据还要看世界文件（第 5 步）。</strong></p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"gazebo_sensor_plugin"</span><span class="nt">&gt;</span>
+
+        <span class="c">&lt;!-- ============ ① 激光雷达 ============ --&gt;</span>
+        <span class="nt">&lt;gazebo</span> <span class="na">reference=</span><span class="s">"laser_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;sensor</span> <span class="na">name=</span><span class="s">"laser_sensor"</span> <span class="na">type=</span><span class="s">"gpu_lidar"</span><span class="nt">&gt;</span>
+                <span class="c">&lt;!-- ★ 不写的话 frame_id 是 fishbot/base_footprint/laser_sensor，
+                     和 URDF 里的 laser_link 对不上，RViz 里 LaserScan 一直报错 --&gt;</span>
+                <span class="nt">&lt;gz_frame_id&gt;</span>laser_link<span class="nt">&lt;/gz_frame_id&gt;</span>
+                <span class="c">&lt;!-- 这个 &lt;topic&gt; 决定 gz 话题名：写 scan 就是 /scan --&gt;</span>
+                <span class="nt">&lt;topic&gt;</span>scan<span class="nt">&lt;/topic&gt;</span>
+                <span class="nt">&lt;always_on&gt;</span>1<span class="nt">&lt;/always_on&gt;</span>
+                <span class="nt">&lt;visualize&gt;</span>true<span class="nt">&lt;/visualize&gt;</span>
+                <span class="nt">&lt;update_rate&gt;</span>10<span class="nt">&lt;/update_rate&gt;</span>
+                <span class="nt">&lt;lidar&gt;</span>
+                    <span class="nt">&lt;scan&gt;</span>
+                        <span class="nt">&lt;horizontal&gt;</span>
+                            <span class="nt">&lt;samples&gt;</span>360<span class="nt">&lt;/samples&gt;</span>
+                            <span class="nt">&lt;resolution&gt;</span>1.0<span class="nt">&lt;/resolution&gt;</span>
+                            <span class="nt">&lt;min_angle&gt;</span>0.0<span class="nt">&lt;/min_angle&gt;</span>
+                            <span class="nt">&lt;max_angle&gt;</span>6.283185<span class="nt">&lt;/max_angle&gt;</span>
+                        <span class="nt">&lt;/horizontal&gt;</span>
+                    <span class="nt">&lt;/scan&gt;</span>
+                    <span class="nt">&lt;range&gt;</span>
+                        <span class="nt">&lt;min&gt;</span>0.12<span class="nt">&lt;/min&gt;</span>
+                        <span class="nt">&lt;max&gt;</span>3.5<span class="nt">&lt;/max&gt;</span>
+                        <span class="nt">&lt;resolution&gt;</span>0.015<span class="nt">&lt;/resolution&gt;</span>
+                    <span class="nt">&lt;/range&gt;</span>
+                    <span class="nt">&lt;noise&gt;</span>
+                        <span class="nt">&lt;type&gt;</span>gaussian<span class="nt">&lt;/type&gt;</span>
+                        <span class="nt">&lt;mean&gt;</span>0.0<span class="nt">&lt;/mean&gt;</span>
+                        <span class="nt">&lt;stddev&gt;</span>0.01<span class="nt">&lt;/stddev&gt;</span>
+                    <span class="nt">&lt;/noise&gt;</span>
+                <span class="nt">&lt;/lidar&gt;</span>
+            <span class="nt">&lt;/sensor&gt;</span>
+        <span class="nt">&lt;/gazebo&gt;</span>
+
+        <span class="c">&lt;!-- ============ ② IMU ============ --&gt;</span>
+        <span class="nt">&lt;gazebo</span> <span class="na">reference=</span><span class="s">"imu_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;sensor</span> <span class="na">name=</span><span class="s">"imu_sensor"</span> <span class="na">type=</span><span class="s">"imu"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;gz_frame_id&gt;</span>imu_link<span class="nt">&lt;/gz_frame_id&gt;</span>
+                <span class="nt">&lt;topic&gt;</span>imu<span class="nt">&lt;/topic&gt;</span>
+                <span class="nt">&lt;always_on&gt;</span>1<span class="nt">&lt;/always_on&gt;</span>
+                <span class="nt">&lt;update_rate&gt;</span>100<span class="nt">&lt;/update_rate&gt;</span>
+                <span class="nt">&lt;visualize&gt;</span>true<span class="nt">&lt;/visualize&gt;</span>
+                <span class="nt">&lt;imu&gt;</span>
+                    <span class="nt">&lt;angular_velocity&gt;</span>
+                        <span class="nt">&lt;x&gt;&lt;noise</span> <span class="na">type=</span><span class="s">"gaussian"</span><span class="nt">&gt;</span>
+                            <span class="nt">&lt;mean&gt;</span>0.0<span class="nt">&lt;/mean&gt;&lt;stddev&gt;</span>2e-4<span class="nt">&lt;/stddev&gt;</span>
+                            <span class="nt">&lt;bias_mean&gt;</span>0.0000075<span class="nt">&lt;/bias_mean&gt;&lt;bias_stddev&gt;</span>0.0000008<span class="nt">&lt;/bias_stddev&gt;</span>
+                        <span class="nt">&lt;/noise&gt;&lt;/x&gt;</span>
+                        <span class="nt">&lt;y&gt;&lt;noise</span> <span class="na">type=</span><span class="s">"gaussian"</span><span class="nt">&gt;</span>
+                            <span class="nt">&lt;mean&gt;</span>0.0<span class="nt">&lt;/mean&gt;&lt;stddev&gt;</span>2e-4<span class="nt">&lt;/stddev&gt;</span>
+                            <span class="nt">&lt;bias_mean&gt;</span>0.0000075<span class="nt">&lt;/bias_mean&gt;&lt;bias_stddev&gt;</span>0.0000008<span class="nt">&lt;/bias_stddev&gt;</span>
+                        <span class="nt">&lt;/noise&gt;&lt;/y&gt;</span>
+                        <span class="nt">&lt;z&gt;&lt;noise</span> <span class="na">type=</span><span class="s">"gaussian"</span><span class="nt">&gt;</span>
+                            <span class="nt">&lt;mean&gt;</span>0.0<span class="nt">&lt;/mean&gt;&lt;stddev&gt;</span>2e-4<span class="nt">&lt;/stddev&gt;</span>
+                            <span class="nt">&lt;bias_mean&gt;</span>0.0000075<span class="nt">&lt;/bias_mean&gt;&lt;bias_stddev&gt;</span>0.0000008<span class="nt">&lt;/bias_stddev&gt;</span>
+                        <span class="nt">&lt;/noise&gt;&lt;/z&gt;</span>
+                    <span class="nt">&lt;/angular_velocity&gt;</span>
+                    <span class="nt">&lt;linear_acceleration&gt;</span>
+                        <span class="nt">&lt;x&gt;&lt;noise</span> <span class="na">type=</span><span class="s">"gaussian"</span><span class="nt">&gt;</span>
+                            <span class="nt">&lt;mean&gt;</span>0.0<span class="nt">&lt;/mean&gt;&lt;stddev&gt;</span>1.7e-2<span class="nt">&lt;/stddev&gt;</span>
+                            <span class="nt">&lt;bias_mean&gt;</span>0.1<span class="nt">&lt;/bias_mean&gt;&lt;bias_stddev&gt;</span>0.001<span class="nt">&lt;/bias_stddev&gt;</span>
+                        <span class="nt">&lt;/noise&gt;&lt;/x&gt;</span>
+                        <span class="nt">&lt;y&gt;&lt;noise</span> <span class="na">type=</span><span class="s">"gaussian"</span><span class="nt">&gt;</span>
+                            <span class="nt">&lt;mean&gt;</span>0.0<span class="nt">&lt;/mean&gt;&lt;stddev&gt;</span>1.7e-2<span class="nt">&lt;/stddev&gt;</span>
+                            <span class="nt">&lt;bias_mean&gt;</span>0.1<span class="nt">&lt;/bias_mean&gt;&lt;bias_stddev&gt;</span>0.001<span class="nt">&lt;/bias_stddev&gt;</span>
+                        <span class="nt">&lt;/noise&gt;&lt;/y&gt;</span>
+                        <span class="nt">&lt;z&gt;&lt;noise</span> <span class="na">type=</span><span class="s">"gaussian"</span><span class="nt">&gt;</span>
+                            <span class="nt">&lt;mean&gt;</span>0.0<span class="nt">&lt;/mean&gt;&lt;stddev&gt;</span>1.7e-2<span class="nt">&lt;/stddev&gt;</span>
+                            <span class="nt">&lt;bias_mean&gt;</span>0.1<span class="nt">&lt;/bias_mean&gt;&lt;bias_stddev&gt;</span>0.001<span class="nt">&lt;/bias_stddev&gt;</span>
+                        <span class="nt">&lt;/noise&gt;&lt;/z&gt;</span>
+                    <span class="nt">&lt;/linear_acceleration&gt;</span>
+                <span class="nt">&lt;/imu&gt;</span>
+            <span class="nt">&lt;/sensor&gt;</span>
+        <span class="nt">&lt;/gazebo&gt;</span>
+
+        <span class="c">&lt;!-- ============ ③ 深度相机 ============ --&gt;</span>
+        <span class="nt">&lt;gazebo</span> <span class="na">reference=</span><span class="s">"camera_link"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;sensor</span> <span class="na">name=</span><span class="s">"camera_sensor"</span> <span class="na">type=</span><span class="s">"depth_camera"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;gz_frame_id&gt;</span>camera_link<span class="nt">&lt;/gz_frame_id&gt;</span>
+                <span class="nt">&lt;topic&gt;</span>camera<span class="nt">&lt;/topic&gt;</span>
+                <span class="nt">&lt;always_on&gt;</span>1<span class="nt">&lt;/always_on&gt;</span>
+                <span class="nt">&lt;visualize&gt;</span>true<span class="nt">&lt;/visualize&gt;</span>
+                <span class="nt">&lt;update_rate&gt;</span>30<span class="nt">&lt;/update_rate&gt;</span>
+                <span class="nt">&lt;camera&gt;</span>
+                    <span class="nt">&lt;horizontal_fov&gt;</span>1.204<span class="nt">&lt;/horizontal_fov&gt;</span>
+                    <span class="nt">&lt;image&gt;</span>
+                        <span class="nt">&lt;width&gt;</span>640<span class="nt">&lt;/width&gt;</span>
+                        <span class="nt">&lt;height&gt;</span>480<span class="nt">&lt;/height&gt;</span>
+                        <span class="nt">&lt;format&gt;</span>R8G8B8<span class="nt">&lt;/format&gt;</span>
+                    <span class="nt">&lt;/image&gt;</span>
+                    <span class="nt">&lt;clip&gt;</span>
+                        <span class="nt">&lt;near&gt;</span>0.02<span class="nt">&lt;/near&gt;</span>
+                        <span class="nt">&lt;far&gt;</span>8<span class="nt">&lt;/far&gt;</span>
+                    <span class="nt">&lt;/clip&gt;</span>
+                <span class="nt">&lt;/camera&gt;</span>
+            <span class="nt">&lt;/sensor&gt;</span>
+        <span class="nt">&lt;/gazebo&gt;</span>
+
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ 相机/雷达<strong>必须</strong>在世界文件里挂 <code class="language-plaintext highlighter-rouge">Sensors</code> 插件才会出数据（第 5 步），
+IMU <strong>必须</strong>挂 <code class="language-plaintext highlighter-rouge">Imu</code> 插件。少一个就是”没有任何报错，但话题不存在”。</p>
+</blockquote>
+
+<h3 id="210-urdffishbotfishboturdfxacro总装">2.10 <code class="language-plaintext highlighter-rouge">urdf/fishbot/fishbot.urdf.xacro</code>（总装）</h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span> <span class="na">name=</span><span class="s">"fishbot"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- ========== 引入各个部件 ========== --&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"base.urdf.xacro"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"wheel.urdf.xacro"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"caster.urdf.xacro"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"sensor/imu.urdf.xacro"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"sensor/laser.urdf.xacro"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"sensor/camera.urdf.xacro"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"plugins/gazebo_control_plugin.xacro"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"plugins/gazebo_sensor_plugin.xacro"</span><span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!-- ========== 参数（要改尺寸就改这里）========== --&gt;</span>
+    <span class="nt">&lt;xacro:property</span> <span class="na">name=</span><span class="s">"base_length"</span> <span class="na">value=</span><span class="s">"0.12"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:property</span> <span class="na">name=</span><span class="s">"base_radius"</span> <span class="na">value=</span><span class="s">"0.10"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:property</span> <span class="na">name=</span><span class="s">"wheel_sep"</span>   <span class="na">value=</span><span class="s">"0.20"</span><span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!-- ========== 装配 ========== --&gt;</span>
+    <span class="nt">&lt;xacro:base_xacro</span> <span class="na">length=</span><span class="s">"${base_length}"</span> <span class="na">radius=</span><span class="s">"${base_radius}"</span><span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!-- 左右驱动轮：y 方向各偏 ±轮距/2，z 让轮心落在 0.032（= 轮半径，刚好着地）
+         车身中心在 z = base_length/2 + 0.01 = 0.07，所以相对车身是 0.032 - 0.07 = -0.038 --&gt;</span>
+    <span class="nt">&lt;xacro:wheel_xacro</span> <span class="na">wheel_name=</span><span class="s">"left"</span>  <span class="na">xyz=</span><span class="s">"0  ${wheel_sep/2} -0.038"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:wheel_xacro</span> <span class="na">wheel_name=</span><span class="s">"right"</span> <span class="na">xyz=</span><span class="s">"0 -${wheel_sep/2} -0.038"</span><span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!-- 万向轮：放在车头前方，球心离地 0.01 --&gt;</span>
+    <span class="nt">&lt;xacro:caster_xacro</span> <span class="na">xyz=</span><span class="s">"0.08 0 -0.06"</span><span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!-- 传感器 --&gt;</span>
+    <span class="nt">&lt;xacro:imu_xacro</span>    <span class="na">xyz=</span><span class="s">"0 0 0.02"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:laser_xacro</span>  <span class="na">xyz=</span><span class="s">"0 0 0.10"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;xacro:camera_xacro</span> <span class="na">xyz=</span><span class="s">"0.10 0 0.075"</span><span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!-- ========== 仿真插件 ========== --&gt;</span>
+    <span class="nt">&lt;xacro:gazebo_control_plugin/&gt;</span>
+    <span class="nt">&lt;xacro:gazebo_sensor_plugin/&gt;</span>
+
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>先别急着进 Gazebo</strong>，下一节先在 RViz 里验证模型结构。
+模型本身有问题（link 名对不上、父子成环、惯量为负）的时候，
+RViz 的报错比 Gazebo 清楚得多。
+—</p>
+</blockquote>
+
+<h2 id="第-3-步填-packagexml-和-cmakeliststxt">第 3 步：填 <code class="language-plaintext highlighter-rouge">package.xml</code> 和 <code class="language-plaintext highlighter-rouge">CMakeLists.txt</code></h2>
+
+<h3 id="31-packagexml">3.1 <code class="language-plaintext highlighter-rouge">package.xml</code></h3>
+
+<p>用整个文件覆盖掉 <code class="language-plaintext highlighter-rouge">ros2 pkg create</code> 生成的版本：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="cp">&lt;?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?&gt;</span>
+<span class="nt">&lt;package</span> <span class="na">format=</span><span class="s">"3"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fishbot_description<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;version&gt;</span>0.0.0<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;description&gt;</span>FishBot 机器人模型与 Gazebo Harmonic 仿真<span class="nt">&lt;/description&gt;</span>
+  <span class="nt">&lt;maintainer</span> <span class="na">email=</span><span class="s">"you@example.com"</span><span class="nt">&gt;</span>you<span class="nt">&lt;/maintainer&gt;</span>
+  <span class="nt">&lt;license&gt;</span>Apache-2.0<span class="nt">&lt;/license&gt;</span>
+
+  <span class="nt">&lt;buildtool_depend&gt;</span>ament_cmake<span class="nt">&lt;/buildtool_depend&gt;</span>
+
+  <span class="c">&lt;!-- 模型与显示 --&gt;</span>
+  <span class="nt">&lt;exec_depend&gt;</span>xacro<span class="nt">&lt;/exec_depend&gt;</span>
+  <span class="nt">&lt;exec_depend&gt;</span>robot_state_publisher<span class="nt">&lt;/exec_depend&gt;</span>
+  <span class="nt">&lt;exec_depend&gt;</span>joint_state_publisher_gui<span class="nt">&lt;/exec_depend&gt;</span>
+  <span class="nt">&lt;exec_depend&gt;</span>rviz2<span class="nt">&lt;/exec_depend&gt;</span>
+
+  <span class="c">&lt;!-- Gazebo Harmonic 仿真 --&gt;</span>
+  <span class="nt">&lt;exec_depend&gt;</span>ros_gz_sim<span class="nt">&lt;/exec_depend&gt;</span>
+  <span class="nt">&lt;exec_depend&gt;</span>ros_gz_bridge<span class="nt">&lt;/exec_depend&gt;</span>
+  <span class="nt">&lt;exec_depend&gt;</span>ros_gz_image<span class="nt">&lt;/exec_depend&gt;</span>
+
+  <span class="nt">&lt;export&gt;</span>
+    <span class="nt">&lt;build_type&gt;</span>ament_cmake<span class="nt">&lt;/build_type&gt;</span>
+  <span class="nt">&lt;/export&gt;</span>
+<span class="nt">&lt;/package&gt;</span>
+</code></pre></div></div>
+
+<h3 id="32-cmakeliststxt">3.2 <code class="language-plaintext highlighter-rouge">CMakeLists.txt</code></h3>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.8<span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span>fishbot_description<span class="p">)</span>
+
+<span class="nb">find_package</span><span class="p">(</span>ament_cmake REQUIRED<span class="p">)</span>
+
+<span class="c1"># 把模型、launch、世界、配置统统装到 share/fishbot_description/ 下</span>
+<span class="nb">install</span><span class="p">(</span>DIRECTORY urdf launch world config
+        DESTINATION share/<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="p">)</span>
+
+<span class="nf">ament_package</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong><code class="language-plaintext highlighter-rouge">install(DIRECTORY ...)</code> 这行是命门。</strong>
+不写的话，<code class="language-plaintext highlighter-rouge">colcon build</code> 不会报错，但 <code class="language-plaintext highlighter-rouge">install/</code> 里没有你的模型文件，
+launch 里用 <code class="language-plaintext highlighter-rouge">get_package_share_directory()</code> 拼出来的路径就是空的，
+运行时报一堆 <code class="language-plaintext highlighter-rouge">file not found</code>。<strong>改了模型文件后记得重新 <code class="language-plaintext highlighter-rouge">colcon build</code>。</strong></p>
+</blockquote>
+
+<blockquote>
+  <p>⚠️ <strong>但是：改完 <code class="language-plaintext highlighter-rouge">urdf/</code> 里的 xacro，光跑 <code class="language-plaintext highlighter-rouge">colcon build</code> 经常【不会同步】。</strong></p>
+
+  <p>实测踩过：改了 <code class="language-plaintext highlighter-rouge">gazebo_control_plugin.xacro</code>，然后
+<code class="language-plaintext highlighter-rouge">colcon build --symlink-install</code> 只花了 <strong>0.17 秒</strong>就”Finished”——
+它认为这个包没变化，直接跳过了 install 步骤，
+<code class="language-plaintext highlighter-rouge">install/.../urdf/</code> 里还是旧的。</p>
+
+  <p><strong>症状</strong>：你明明改了代码、也”编译成功”了，跑起来行为却一点没变，
+然后开始怀疑人生。</p>
+
+  <p><strong>验证改动到底有没有生效</strong>（这一步很重要）：</p>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">grep </span>你刚加的某个关键字 <span class="nb">install</span>/fishbot_description/share/fishbot_description/urdf/fishbot/plugins/<span class="k">*</span>.xacro
+<span class="c"># 能 grep 到 → 生效了；grep 不到 → 没同步</span>
+</code></pre></div>  </div>
+
+  <p><strong>强制重建这个包</strong>：</p>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> <span class="nt">-rf</span> build/fishbot_description <span class="nb">install</span>/fishbot_description
+colcon build <span class="nt">--packages-select</span> fishbot_description
+</code></pre></div>  </div>
+
+  <p>💡 记一条经验：<strong>“编译成功”不等于”改动生效”</strong>。
+改完配置文件/模型文件，永远去 <code class="language-plaintext highlighter-rouge">install/</code> 里确认一眼。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="第-4-步编译--rviz-验证先不碰-gazebo">第 4 步：编译 + RViz 验证（先不碰 Gazebo）</h2>
+
+<h3 id="41-launchdisplay_robotlaunchpy">4.1 <code class="language-plaintext highlighter-rouge">launch/display_robot.launch.py</code></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
+
+<span class="kn">from</span> <span class="n">ament_index_python.packages</span> <span class="kn">import</span> <span class="n">get_package_share_directory</span>
+<span class="kn">from</span> <span class="n">launch</span> <span class="kn">import</span> <span class="n">LaunchDescription</span>
+<span class="kn">from</span> <span class="n">launch.substitutions</span> <span class="kn">import</span> <span class="n">Command</span>
+<span class="kn">from</span> <span class="n">launch_ros.actions</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">launch_ros.parameter_descriptions</span> <span class="kn">import</span> <span class="n">ParameterValue</span>
+
+
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+    <span class="n">pkg_share</span> <span class="o">=</span> <span class="nf">get_package_share_directory</span><span class="p">(</span><span class="sh">'</span><span class="s">fishbot_description</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">xacro_file</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">pkg_share</span><span class="p">,</span> <span class="sh">'</span><span class="s">urdf</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">fishbot</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">fishbot.urdf.xacro</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="n">robot_description</span> <span class="o">=</span> <span class="nc">ParameterValue</span><span class="p">(</span><span class="nc">Command</span><span class="p">([</span><span class="sh">'</span><span class="s">xacro </span><span class="sh">'</span><span class="p">,</span> <span class="n">xacro_file</span><span class="p">]),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nc">LaunchDescription</span><span class="p">([</span>
+        <span class="nc">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">robot_state_publisher</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">robot_state_publisher</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span><span class="sh">'</span><span class="s">robot_description</span><span class="sh">'</span><span class="p">:</span> <span class="n">robot_description</span><span class="p">}],</span>
+            <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">joint_state_publisher_gui</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">joint_state_publisher_gui</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">rviz2</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">rviz2</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">),</span>
+    <span class="p">])</span>
+</code></pre></div></div>
+
+<h3 id="42-编译并运行">4.2 编译并运行</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/chapt7_ws
+colcon build <span class="nt">--symlink-install</span>
+<span class="nb">source install</span>/setup.bash
+ros2 launch fishbot_description display_robot.launch.py
+</code></pre></div></div>
+
+<h3 id="43-这一步应该看到什么--出错怎么办">4.3 这一步应该看到什么 / 出错怎么办</h3>
+
+<p><strong>正常</strong>：RViz 打开，<code class="language-plaintext highlighter-rouge">Fixed Frame</code> 改成 <code class="language-plaintext highlighter-rouge">base_footprint</code> → <code class="language-plaintext highlighter-rouge">Add</code> → <code class="language-plaintext highlighter-rouge">RobotModel</code>，
+能看到白色圆柱车身 + 黄色两个轮子 + 黄色小球万向轮 + 黑色 IMU 方块 + 绿色雷达和相机。</p>
+
+<p><strong>如果 RViz 里一片空白</strong>，按顺序查：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ① 模型本身能不能展开（最快的一步）</span>
+xacro <span class="nb">install</span>/fishbot_description/share/fishbot_description/urdf/fishbot/fishbot.urdf.xacro <span class="o">&gt;</span> /tmp/m.urdf
+check_urdf /tmp/m.urdf
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>报错</th>
+      <th>原因</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">xacro: Invalid parameter "xyz"</code></td>
+      <td>宏的 <code class="language-plaintext highlighter-rouge">params</code> 拼成了 <code class="language-plaintext highlighter-rouge">parame</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">child link [xxx] of joint [yyy] not found</code></td>
+      <td>link 名和 joint 的 child 对不上（IMU 那个最常见）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Failed to build tree</code></td>
+      <td>父子成环，或有两个根 link</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">file not found</code> / include 不到</td>
+      <td>路径写错，或忘了 <code class="language-plaintext highlighter-rouge">colcon build</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>💡 <code class="language-plaintext highlighter-rouge">check_urdf</code> 只检查<strong>结构</strong>，不检查物理参数。
+惯量填 0、质量填 0 它都不管——那些只能在 Gazebo 里看出来。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="第-5-步写仿真世界">第 5 步：写仿真世界</h2>
+
+<h3 id="51-worldfishbotsdf">5.1 <code class="language-plaintext highlighter-rouge">world/fishbot.sdf</code></h3>
+
+<blockquote>
+  <p>⚠️ <strong>Harmonic 用 SDF</strong>（不是 Classic 的 <code class="language-plaintext highlighter-rouge">.world</code> 格式习惯）。
+这个文件里<strong>最关键的三个插件</strong>：<code class="language-plaintext highlighter-rouge">Physics</code>（没有它什么都不动）、
+<code class="language-plaintext highlighter-rouge">Sensors</code>（没有它相机/雷达不出数据）、<code class="language-plaintext highlighter-rouge">Imu</code>（没有它 IMU 不出数据）。</p>
+</blockquote>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" ?&gt;</span>
+<span class="nt">&lt;sdf</span> <span class="na">version=</span><span class="s">"1.10"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;world</span> <span class="na">name=</span><span class="s">"default"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- ===== 基础三件套：缺一个仿真就起不来或不动 ===== --&gt;</span>
+    <span class="nt">&lt;plugin</span> <span class="na">filename=</span><span class="s">"gz-sim-physics-system"</span>           <span class="na">name=</span><span class="s">"gz::sim::systems::Physics"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;plugin</span> <span class="na">filename=</span><span class="s">"gz-sim-user-commands-system"</span>     <span class="na">name=</span><span class="s">"gz::sim::systems::UserCommands"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;plugin</span> <span class="na">filename=</span><span class="s">"gz-sim-scene-broadcaster-system"</span> <span class="na">name=</span><span class="s">"gz::sim::systems::SceneBroadcaster"</span><span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!-- ===== 传感器：相机和雷达靠它渲染，不加就一个数据都没有 ===== --&gt;</span>
+    <span class="nt">&lt;plugin</span> <span class="na">filename=</span><span class="s">"gz-sim-sensors-system"</span> <span class="na">name=</span><span class="s">"gz::sim::systems::Sensors"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;render_engine&gt;</span>ogre2<span class="nt">&lt;/render_engine&gt;</span>
+    <span class="nt">&lt;/plugin&gt;</span>
+
+    <span class="c">&lt;!-- ===== IMU 要单独挂 ===== --&gt;</span>
+    <span class="nt">&lt;plugin</span> <span class="na">filename=</span><span class="s">"gz-sim-imu-system"</span> <span class="na">name=</span><span class="s">"gz::sim::systems::Imu"</span><span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!-- ===== 光照 ===== --&gt;</span>
+    <span class="nt">&lt;light</span> <span class="na">type=</span><span class="s">"directional"</span> <span class="na">name=</span><span class="s">"sun"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;cast_shadows&gt;</span>true<span class="nt">&lt;/cast_shadows&gt;</span>
+      <span class="nt">&lt;pose&gt;</span>0 0 10 0 0 0<span class="nt">&lt;/pose&gt;</span>
+      <span class="nt">&lt;diffuse&gt;</span>0.8 0.8 0.8 1<span class="nt">&lt;/diffuse&gt;</span>
+      <span class="nt">&lt;specular&gt;</span>0.2 0.2 0.2 1<span class="nt">&lt;/specular&gt;</span>
+      <span class="nt">&lt;direction&gt;</span>-0.5 0.1 -0.9<span class="nt">&lt;/direction&gt;</span>
+    <span class="nt">&lt;/light&gt;</span>
+
+    <span class="c">&lt;!-- ===== 地面 ===== --&gt;</span>
+    <span class="nt">&lt;model</span> <span class="na">name=</span><span class="s">"ground_plane"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;static&gt;</span>true<span class="nt">&lt;/static&gt;</span>
+      <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"link"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;collision</span> <span class="na">name=</span><span class="s">"collision"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;geometry&gt;</span>
+            <span class="nt">&lt;plane&gt;&lt;normal&gt;</span>0 0 1<span class="nt">&lt;/normal&gt;&lt;size&gt;</span>100 100<span class="nt">&lt;/size&gt;&lt;/plane&gt;</span>
+          <span class="nt">&lt;/geometry&gt;</span>
+          <span class="nt">&lt;surface&gt;</span>
+            <span class="nt">&lt;friction&gt;</span>
+              <span class="nt">&lt;ode&gt;&lt;mu&gt;</span>100<span class="nt">&lt;/mu&gt;&lt;mu2&gt;</span>50<span class="nt">&lt;/mu2&gt;&lt;/ode&gt;</span>
+            <span class="nt">&lt;/friction&gt;</span>
+          <span class="nt">&lt;/surface&gt;</span>
+        <span class="nt">&lt;/collision&gt;</span>
+        <span class="nt">&lt;visual</span> <span class="na">name=</span><span class="s">"visual"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;cast_shadows&gt;</span>false<span class="nt">&lt;/cast_shadows&gt;</span>
+          <span class="nt">&lt;geometry&gt;</span>
+            <span class="nt">&lt;plane&gt;&lt;normal&gt;</span>0 0 1<span class="nt">&lt;/normal&gt;&lt;size&gt;</span>100 100<span class="nt">&lt;/size&gt;&lt;/plane&gt;</span>
+          <span class="nt">&lt;/geometry&gt;</span>
+          <span class="nt">&lt;material&gt;</span>
+            <span class="nt">&lt;ambient&gt;</span>0.4 0.4 0.4 1<span class="nt">&lt;/ambient&gt;</span>
+            <span class="nt">&lt;diffuse&gt;</span>0.6 0.6 0.6 1<span class="nt">&lt;/diffuse&gt;</span>
+          <span class="nt">&lt;/material&gt;</span>
+        <span class="nt">&lt;/visual&gt;</span>
+      <span class="nt">&lt;/link&gt;</span>
+    <span class="nt">&lt;/model&gt;</span>
+
+    <span class="c">&lt;!-- ===== 几个障碍物：给后面 SLAM 建图和导航用 ===== --&gt;</span>
+    <span class="nt">&lt;model</span> <span class="na">name=</span><span class="s">"wall_east"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;static&gt;</span>true<span class="nt">&lt;/static&gt;</span>
+      <span class="nt">&lt;pose&gt;</span>3 0 0.5 0 0 0<span class="nt">&lt;/pose&gt;</span>
+      <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"link"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;collision</span> <span class="na">name=</span><span class="s">"collision"</span><span class="nt">&gt;&lt;geometry&gt;&lt;box&gt;&lt;size&gt;</span>0.2 6 1<span class="nt">&lt;/size&gt;&lt;/box&gt;&lt;/geometry&gt;&lt;/collision&gt;</span>
+        <span class="nt">&lt;visual</span> <span class="na">name=</span><span class="s">"visual"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;geometry&gt;&lt;box&gt;&lt;size&gt;</span>0.2 6 1<span class="nt">&lt;/size&gt;&lt;/box&gt;&lt;/geometry&gt;</span>
+          <span class="nt">&lt;material&gt;&lt;ambient&gt;</span>0.8 0.3 0.3 1<span class="nt">&lt;/ambient&gt;&lt;diffuse&gt;</span>0.9 0.4 0.4 1<span class="nt">&lt;/diffuse&gt;&lt;/material&gt;</span>
+        <span class="nt">&lt;/visual&gt;</span>
+      <span class="nt">&lt;/link&gt;</span>
+    <span class="nt">&lt;/model&gt;</span>
+
+    <span class="nt">&lt;model</span> <span class="na">name=</span><span class="s">"wall_west"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;static&gt;</span>true<span class="nt">&lt;/static&gt;</span>
+      <span class="nt">&lt;pose&gt;</span>-3 0 0.5 0 0 0<span class="nt">&lt;/pose&gt;</span>
+      <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"link"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;collision</span> <span class="na">name=</span><span class="s">"collision"</span><span class="nt">&gt;&lt;geometry&gt;&lt;box&gt;&lt;size&gt;</span>0.2 6 1<span class="nt">&lt;/size&gt;&lt;/box&gt;&lt;/geometry&gt;&lt;/collision&gt;</span>
+        <span class="nt">&lt;visual</span> <span class="na">name=</span><span class="s">"visual"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;geometry&gt;&lt;box&gt;&lt;size&gt;</span>0.2 6 1<span class="nt">&lt;/size&gt;&lt;/box&gt;&lt;/geometry&gt;</span>
+          <span class="nt">&lt;material&gt;&lt;ambient&gt;</span>0.8 0.3 0.3 1<span class="nt">&lt;/ambient&gt;&lt;diffuse&gt;</span>0.9 0.4 0.4 1<span class="nt">&lt;/diffuse&gt;&lt;/material&gt;</span>
+        <span class="nt">&lt;/visual&gt;</span>
+      <span class="nt">&lt;/link&gt;</span>
+    <span class="nt">&lt;/model&gt;</span>
+
+    <span class="nt">&lt;model</span> <span class="na">name=</span><span class="s">"box_obstacle"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;static&gt;</span>true<span class="nt">&lt;/static&gt;</span>
+      <span class="nt">&lt;pose&gt;</span>1.5 1.0 0.25 0 0 0<span class="nt">&lt;/pose&gt;</span>
+      <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"link"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;collision</span> <span class="na">name=</span><span class="s">"collision"</span><span class="nt">&gt;&lt;geometry&gt;&lt;box&gt;&lt;size&gt;</span>0.5 0.5 0.5<span class="nt">&lt;/size&gt;&lt;/box&gt;&lt;/geometry&gt;&lt;/collision&gt;</span>
+        <span class="nt">&lt;visual</span> <span class="na">name=</span><span class="s">"visual"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;geometry&gt;&lt;box&gt;&lt;size&gt;</span>0.5 0.5 0.5<span class="nt">&lt;/size&gt;&lt;/box&gt;&lt;/geometry&gt;</span>
+          <span class="nt">&lt;material&gt;&lt;ambient&gt;</span>0.3 0.3 0.8 1<span class="nt">&lt;/ambient&gt;&lt;diffuse&gt;</span>0.4 0.4 0.9 1<span class="nt">&lt;/diffuse&gt;&lt;/material&gt;</span>
+        <span class="nt">&lt;/visual&gt;</span>
+      <span class="nt">&lt;/link&gt;</span>
+    <span class="nt">&lt;/model&gt;</span>
+
+  <span class="nt">&lt;/world&gt;</span>
+<span class="nt">&lt;/sdf&gt;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>世界名是 <code class="language-plaintext highlighter-rouge">default</code></strong>（<code class="language-plaintext highlighter-rouge">&lt;world name="default"&gt;</code>）。
+后面 <code class="language-plaintext highlighter-rouge">create -world default</code> 和桥接里的 <code class="language-plaintext highlighter-rouge">/world/default/...</code> 都要跟它一致。
+想让障碍物多寡不同，直接复制 <code class="language-plaintext highlighter-rouge">&lt;model&gt;</code> 块改 <code class="language-plaintext highlighter-rouge">pose</code> 就行。</p>
+</blockquote>
+
+<h3 id="52-单独先试一下世界能不能起">5.2 单独先试一下世界能不能起</h3>
+
+<p><strong>这一步别跳过</strong>——世界起不来，后面全是白费。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/chapt7_ws
+colcon build <span class="nt">--symlink-install</span> <span class="o">&amp;&amp;</span> <span class="nb">source install</span>/setup.bash
+
+<span class="c"># 无头模式先试（不弹界面，最容易看出报错）</span>
+gz sim <span class="nt">-s</span> <span class="nt">-r</span> <span class="nt">-v3</span> <span class="nb">install</span>/fishbot_description/share/fishbot_description/world/fishbot.sdf
+
+<span class="c"># 另开一个终端</span>
+gz topic <span class="nt">-l</span> | <span class="nb">head</span> <span class="nt">-20</span>
+<span class="c"># 期望能看到 /clock、/world/default/... 这些话题</span>
+
+<span class="c"># 确认没问题后用 Ctrl+C 停掉，再开图形界面</span>
+gz sim <span class="nt">-r</span> <span class="nb">install</span>/fishbot_description/share/fishbot_description/world/fishbot.sdf
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ 如果界面里<strong>看不到地面</strong>，按 <code class="language-plaintext highlighter-rouge">Ctrl+C</code> 重来，加 <code class="language-plaintext highlighter-rouge">-v 4</code> 看详细日志。
+只要 <code class="language-plaintext highlighter-rouge">gz topic -l</code> 里有 <code class="language-plaintext highlighter-rouge">/clock</code> 且数值在涨，世界就是好的。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="第-6-步写仿真总启动文件">第 6 步：写仿真总启动文件</h2>
+
+<h3 id="61-launchgazebo_simlaunchpy">6.1 <code class="language-plaintext highlighter-rouge">launch/gazebo_sim.launch.py</code></h3>
+
+<p>这一个文件把”启动 Gazebo + 生成机器人 + 发状态 + 桥接话题 + 开 RViz”全串起来。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
+
+<span class="kn">from</span> <span class="n">ament_index_python.packages</span> <span class="kn">import</span> <span class="n">get_package_share_directory</span>
+<span class="kn">from</span> <span class="n">launch</span> <span class="kn">import</span> <span class="n">LaunchDescription</span>
+<span class="kn">from</span> <span class="n">launch.actions</span> <span class="kn">import</span> <span class="n">IncludeLaunchDescription</span><span class="p">,</span> <span class="n">RegisterEventHandler</span>
+<span class="kn">from</span> <span class="n">launch.event_handlers</span> <span class="kn">import</span> <span class="n">OnProcessExit</span>
+<span class="kn">from</span> <span class="n">launch.launch_description_sources</span> <span class="kn">import</span> <span class="n">PythonLaunchDescriptionSource</span>
+<span class="kn">from</span> <span class="n">launch.substitutions</span> <span class="kn">import</span> <span class="n">Command</span>
+<span class="kn">from</span> <span class="n">launch_ros.actions</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">launch_ros.parameter_descriptions</span> <span class="kn">import</span> <span class="n">ParameterValue</span>
+
+
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+    <span class="n">pkg_share</span> <span class="o">=</span> <span class="nf">get_package_share_directory</span><span class="p">(</span><span class="sh">'</span><span class="s">fishbot_description</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="n">xacro_file</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">pkg_share</span><span class="p">,</span> <span class="sh">'</span><span class="s">urdf</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">fishbot</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">fishbot.urdf.xacro</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">world_file</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">pkg_share</span><span class="p">,</span> <span class="sh">'</span><span class="s">world</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">fishbot.sdf</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">robot_description</span> <span class="o">=</span> <span class="nc">ParameterValue</span><span class="p">(</span><span class="nc">Command</span><span class="p">([</span><span class="sh">'</span><span class="s">xacro </span><span class="sh">'</span><span class="p">,</span> <span class="n">xacro_file</span><span class="p">]),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="n">model_name</span> <span class="o">=</span> <span class="sh">'</span><span class="s">fishbot</span><span class="sh">'</span>
+
+    <span class="c1"># ① 启动 Gazebo Harmonic
+</span>    <span class="c1">#    注意：gz_sim.launch.py 没有 world 参数，世界是通过 gz_args 传的
+</span>    <span class="n">gz_sim</span> <span class="o">=</span> <span class="nc">IncludeLaunchDescription</span><span class="p">(</span>
+        <span class="nc">PythonLaunchDescriptionSource</span><span class="p">(</span>
+            <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="nf">get_package_share_directory</span><span class="p">(</span><span class="sh">'</span><span class="s">ros_gz_sim</span><span class="sh">'</span><span class="p">),</span>
+                         <span class="sh">'</span><span class="s">launch</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">gz_sim.launch.py</span><span class="sh">'</span><span class="p">)),</span>
+        <span class="n">launch_arguments</span><span class="o">=</span><span class="p">{</span><span class="sh">'</span><span class="s">gz_args</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">-r </span><span class="sh">'</span> <span class="o">+</span> <span class="n">world_file</span><span class="p">}.</span><span class="nf">items</span><span class="p">())</span>
+
+    <span class="c1"># ② URDF -&gt; /robot_description
+</span>    <span class="n">robot_state_publisher</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">robot_state_publisher</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">robot_state_publisher</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span><span class="sh">'</span><span class="s">robot_description</span><span class="sh">'</span><span class="p">:</span> <span class="n">robot_description</span><span class="p">,</span>
+                     <span class="sh">'</span><span class="s">use_sim_time</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}],</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="c1"># ③ 从 /robot_description 把机器人生成到世界里
+</span>    <span class="n">spawn_entity</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">ros_gz_sim</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">create</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="sh">'</span><span class="s">-world</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">default</span><span class="sh">'</span><span class="p">,</span>
+                   <span class="sh">'</span><span class="s">-topic</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">robot_description</span><span class="sh">'</span><span class="p">,</span>
+                   <span class="sh">'</span><span class="s">-name</span><span class="sh">'</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span>
+                   <span class="sh">'</span><span class="s">-z</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">0.3</span><span class="sh">'</span><span class="p">],</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="c1"># ④ 桥接：gz 话题 &lt;-&gt; ROS 话题
+</span>    <span class="c1">#    方向符： [ = gz→ROS    ] = ROS→gz    @ = 双向
+</span>    <span class="n">bridge</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">ros_gz_bridge</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">parameter_bridge</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="o">=</span><span class="p">[</span>
+            <span class="c1"># 仿真时钟（Gazebo 出，ROS 收）
+</span>            <span class="sh">'</span><span class="s">/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock</span><span class="sh">'</span><span class="p">,</span>
+
+            <span class="c1"># 差速驱动：速度指令 ROS→gz，里程计和 TF 是 gz→ROS
+</span>            <span class="sa">f</span><span class="sh">'</span><span class="s">/model/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s">/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist</span><span class="sh">'</span><span class="p">,</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">/model/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s">/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry</span><span class="sh">'</span><span class="p">,</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">/model/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s">/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V</span><span class="sh">'</span><span class="p">,</span>
+
+            <span class="c1"># 传感器
+</span>            <span class="sh">'</span><span class="s">/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan</span><span class="sh">'</span><span class="p">,</span>
+            <span class="sh">'</span><span class="s">/imu@sensor_msgs/msg/Imu[gz.msgs.IMU</span><span class="sh">'</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">remappings</span><span class="o">=</span><span class="p">[</span>
+            <span class="c1"># 把 gz 那套名字映射成 ROS 里通用的名字
+</span>            <span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">/model/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s">/cmd_vel</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">/cmd_vel</span><span class="sh">'</span><span class="p">),</span>
+            <span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">/model/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s">/odometry</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">/odom</span><span class="sh">'</span><span class="p">),</span>
+            <span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">/model/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s">/tf</span><span class="sh">'</span><span class="p">,</span>       <span class="sh">'</span><span class="s">/tf</span><span class="sh">'</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span><span class="sh">'</span><span class="s">use_sim_time</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}],</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="c1"># ⑤ ★ 给 odom 起个别名，把 `odom` 接到 `fishbot/odom` 上
+</span>    <span class="c1">#
+</span>    <span class="c1">#   为什么需要：
+</span>    <span class="c1">#     Harmonic 的 DiffDrive 插件把 odom 帧写死成 "&lt;模型名&gt;/odom"，
+</span>    <span class="c1">#     没有参数能改（只有 child_frame_id 能改）。
+</span>    <span class="c1">#     但 slam_toolbox（第 9 步）默认 odom_frame = "odom"，
+</span>    <span class="c1">#     它找不到 odom 帧就永远等不到变换 ——
+</span>    <span class="c1">#     结果是【每一帧 /scan 都被丢掉、/map 一帧都不发】。
+</span>    <span class="c1">#     表面看 slam_toolbox 正常启动、/map 话题也在，就是没有地图。
+</span>    <span class="c1">#
+</span>    <span class="c1">#   加这个恒等变换后 TF 链变成：
+</span>    <span class="c1">#     map → odom → fishbot/odom → base_footprint → base_link → laser_link
+</span>    <span class="n">odom_alias</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">tf2_ros</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">static_transform_publisher</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">odom_alias</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="sh">'</span><span class="s">--frame-id</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">odom</span><span class="sh">'</span><span class="p">,</span>
+                   <span class="sh">'</span><span class="s">--child-frame-id</span><span class="sh">'</span><span class="p">,</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s">/odom</span><span class="sh">'</span><span class="p">],</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span><span class="sh">'</span><span class="s">use_sim_time</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}],</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="c1"># ⑥ RViz
+</span>    <span class="n">rviz</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">rviz2</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">rviz2</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span><span class="sh">'</span><span class="s">use_sim_time</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}],</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nc">LaunchDescription</span><span class="p">([</span>
+        <span class="n">gz_sim</span><span class="p">,</span>
+        <span class="n">robot_state_publisher</span><span class="p">,</span>
+        <span class="n">spawn_entity</span><span class="p">,</span>
+        <span class="n">bridge</span><span class="p">,</span>
+        <span class="n">odom_alias</span><span class="p">,</span>
+        <span class="n">rviz</span><span class="p">,</span>
+    <span class="p">])</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>为什么 gz 话题要 remap</strong></p>
+
+  <p>DiffDrive 插件天然发的是 <code class="language-plaintext highlighter-rouge">/model/fishbot/odometry</code>、<code class="language-plaintext highlighter-rouge">/model/fishbot/tf</code>，
+但 ROS 生态（RViz、SLAM、Nav2）<strong>只认 <code class="language-plaintext highlighter-rouge">/odom</code> 和 <code class="language-plaintext highlighter-rouge">/tf</code></strong>。
+不做 remap 的典型症状：<code class="language-plaintext highlighter-rouge">ros2 topic list</code> 里明明有数据，RViz 里就是一个坐标系都没有。</p>
+
+  <p>⚠️ <strong><code class="language-plaintext highlighter-rouge">/model/fishbot/tf</code> 的 gz 类型是 <code class="language-plaintext highlighter-rouge">gz.msgs.Pose_V</code></strong>（不是 <code class="language-plaintext highlighter-rouge">TFMessage</code>），
+这是最容易抄错的一个。</p>
+</blockquote>
+
+<h3 id="62-关于相机">6.2 关于相机</h3>
+
+<p>深度相机<strong>故意没写进桥接</strong>，因为它会一次性产出图像 / 深度图 / 点云 / 内参好几个话题，
+后缀名随配置变。第一次做先把雷达和 IMU 跑通，相机等需要时再补：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 先看 gz 侧到底出了哪些话题</span>
+gz topic <span class="nt">-l</span> | <span class="nb">grep </span>camera
+
+<span class="c"># 确认名字后再往 bridge 的 arguments 里加，例如：</span>
+<span class="c">#   '/camera@sensor_msgs/msg/Image[gz.msgs.Image',</span>
+<span class="c">#   '/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',</span>
+</code></pre></div></div>
+
+<p>图像也可以用专门的桥（比 <code class="language-plaintext highlighter-rouge">parameter_bridge</code> 更合适）：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run ros_gz_image image_bridge /camera
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="第-7-步跑起来">第 7 步：跑起来</h2>
+
+<h3 id="71-方式-a分终端手动起第一次强烈推荐">7.1 方式 A：分终端手动起（<strong>第一次强烈推荐</strong>）</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 终端 0：环境 ──</span>
+<span class="nb">cd</span> ~/chapt7_ws
+colcon build <span class="nt">--symlink-install</span>
+<span class="nb">source install</span>/setup.bash
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 终端 1：Gazebo ──</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash <span class="o">&amp;&amp;</span> <span class="nb">source</span> ~/chapt7_ws/install/setup.bash
+gz sim <span class="nt">-r</span> ~/chapt7_ws/install/fishbot_description/share/fishbot_description/world/fishbot.sdf
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 终端 2：状态发布 ──</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash <span class="o">&amp;&amp;</span> <span class="nb">source</span> ~/chapt7_ws/install/setup.bash
+ros2 run robot_state_publisher robot_state_publisher <span class="nt">--ros-args</span> <span class="se">\</span>
+  <span class="nt">-p</span> robot_description:<span class="o">=</span><span class="s2">"</span><span class="si">$(</span>xacro ~/chapt7_ws/install/fishbot_description/share/fishbot_description/urdf/fishbot/fishbot.urdf.xacro<span class="si">)</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">-p</span> use_sim_time:<span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 终端 3：把机器人放进仿真 ──</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash <span class="o">&amp;&amp;</span> <span class="nb">source</span> ~/chapt7_ws/install/setup.bash
+ros2 run ros_gz_sim create <span class="nt">-world</span> default <span class="nt">-topic</span> robot_description <span class="nt">-name</span> fishbot <span class="nt">-z</span> 0.3
+<span class="c"># 期望输出：[INFO] [ros_gz_sim]: Entity creation successful.</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 终端 4：桥接 ──</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash <span class="o">&amp;&amp;</span> <span class="nb">source</span> ~/chapt7_ws/install/setup.bash
+ros2 run ros_gz_bridge parameter_bridge <span class="se">\</span>
+  /clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock <span class="se">\</span>
+  /model/fishbot/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist <span class="se">\</span>
+  /model/fishbot/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry <span class="se">\</span>
+  /model/fishbot/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V <span class="se">\</span>
+  /scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan <span class="se">\</span>
+  /imu@sensor_msgs/msg/Imu[gz.msgs.IMU <span class="se">\</span>
+  <span class="nt">--ros-args</span> <span class="se">\</span>
+  <span class="nt">-r</span> /model/fishbot/cmd_vel:<span class="o">=</span>/cmd_vel <span class="se">\</span>
+  <span class="nt">-r</span> /model/fishbot/odometry:<span class="o">=</span>/odom <span class="se">\</span>
+  <span class="nt">-r</span> /model/fishbot/tf:<span class="o">=</span>/tf <span class="se">\</span>
+  <span class="nt">-p</span> use_sim_time:<span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 终端 5：键盘控制 ──</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash <span class="o">&amp;&amp;</span> <span class="nb">source</span> ~/chapt7_ws/install/setup.bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+</code></pre></div></div>
+
+<h3 id="72-方式-b一条命令">7.2 方式 B：一条命令</h3>
+
+<p>分终端确认没问题之后，就可以用第 6 步那个 launch：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/chapt7_ws <span class="o">&amp;&amp;</span> <span class="nb">source install</span>/setup.bash
+ros2 launch fishbot_description gazebo_sim.launch.py
+</code></pre></div></div>
+
+<h3 id="73-逐层排查这是本手册最重要的部分">7.3 逐层排查（<strong>这是本手册最重要的部分</strong>）</h3>
+
+<p><strong>故障现象几乎全落在这四层里，按顺序查，别跳：</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 第 1 层：gz 侧有没有话题？（仿真器自己有没有在动）──</span>
+gz topic <span class="nt">-l</span> | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'clock|fishbot|scan|imu'</span>
+
+<span class="c"># 期望（模型名 fishbot）：</span>
+<span class="c">#   /clock</span>
+<span class="c">#   /model/fishbot/cmd_vel</span>
+<span class="c">#   /model/fishbot/enable</span>
+<span class="c">#   /model/fishbot/odometry</span>
+<span class="c">#   /model/fishbot/tf</span>
+<span class="c">#   /scan</span>
+<span class="c">#   /imu</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 第 2 层：gz 侧有没有数据？（时间在不在走、传感器出不出数）──</span>
+gz topic <span class="nt">-e</span> <span class="nt">-t</span> /clock <span class="nt">-n</span> 1
+gz topic <span class="nt">-e</span> <span class="nt">-t</span> /scan <span class="nt">-n</span> 1
+gz topic <span class="nt">-e</span> <span class="nt">-t</span> /imu  <span class="nt">-n</span> 1
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 第 3 层：桥接起了没？ROS 侧能不能看到？──</span>
+ros2 topic list | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'cmd_vel|odom|tf|scan|imu'</span>
+ros2 topic hz /scan        <span class="c"># 期望约 10 Hz</span>
+ros2 topic hz /odom        <span class="c"># 期望约 30 Hz</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 第 4 层：TF 通不通？（导航的前提）──</span>
+ros2 run tf2_ros tf2_echo fishbot/odom base_footprint <span class="nt">--ros-args</span> <span class="nt">-p</span> use_sim_time:<span class="o">=</span><span class="nb">true
+</span>ros2 run tf2_ros tf2_echo base_footprint base_link
+</code></pre></div></div>
+
+<p><strong>对照结论：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>现象</th>
+      <th>定位</th>
+      <th>怎么办</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>第 1 层就没有 <code class="language-plaintext highlighter-rouge">/model/fishbot/*</code></td>
+      <td>模型没生成成功，或插件没生效</td>
+      <td>看终端 3 有没有 <code class="language-plaintext highlighter-rouge">Entity creation successful</code>；没有就检查 xacro 能否展开</td>
+    </tr>
+    <tr>
+      <td>第 1 层没有 <code class="language-plaintext highlighter-rouge">/scan</code>、<code class="language-plaintext highlighter-rouge">/imu</code></td>
+      <td>传感器没挂上</td>
+      <td>检查世界文件里有没有 <code class="language-plaintext highlighter-rouge">Sensors</code> / <code class="language-plaintext highlighter-rouge">Imu</code> 插件（第 5 步）</td>
+    </tr>
+    <tr>
+      <td>第 1 层有、第 3 层没有</td>
+      <td><strong>问题在桥</strong></td>
+      <td>检查话题名、消息类型、方向符</td>
+    </tr>
+    <tr>
+      <td>桥起来了但 <code class="language-plaintext highlighter-rouge">ros2 topic hz</code> 没数</td>
+      <td><strong>方向写反了</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">/cmd_vel</code> 用 <code class="language-plaintext highlighter-rouge">]</code>，其他用 <code class="language-plaintext highlighter-rouge">[</code>；写反不报错</td>
+    </tr>
+    <tr>
+      <td>有 <code class="language-plaintext highlighter-rouge">/odom</code> 但 RViz 里没坐标系</td>
+      <td>TF 没 remap 到 <code class="language-plaintext highlighter-rouge">/tf</code></td>
+      <td>检查 <code class="language-plaintext highlighter-rouge">-r /model/fishbot/tf:=/tf</code></td>
+    </tr>
+    <tr>
+      <td>键盘控制没反应</td>
+      <td><code class="language-plaintext highlighter-rouge">cmd_vel</code> 没到 gz</td>
+      <td>检查 <code class="language-plaintext highlighter-rouge">-r ...cmd_vel:=/cmd_vel</code> 和方向符 <code class="language-plaintext highlighter-rouge">]</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ros2 topic hz</code> 时间戳乱跳</td>
+      <td>忘了 <code class="language-plaintext highlighter-rouge">use_sim_time</code></td>
+      <td>所有节点都加 <code class="language-plaintext highlighter-rouge">-p use_sim_time:=true</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="74-在-rviz-里看着它走">7.4 在 RViz 里看着它走</h3>
+
+<p>RViz 里做三件事：</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">Fixed Frame</code> 改成 <strong><code class="language-plaintext highlighter-rouge">fishbot/odom</code></strong>（⚠️ 不是 <code class="language-plaintext highlighter-rouge">odom</code>，见下面第 7.4 节的说明）</li>
+  <li><code class="language-plaintext highlighter-rouge">Add</code> → <code class="language-plaintext highlighter-rouge">By topic</code> → <strong><code class="language-plaintext highlighter-rouge">/scan</code></strong> → <code class="language-plaintext highlighter-rouge">LaserScan</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Add</code> → <code class="language-plaintext highlighter-rouge">By topic</code> → <strong><code class="language-plaintext highlighter-rouge">/odom</code></strong> → <code class="language-plaintext highlighter-rouge">Odometry</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Add</code> → <strong><code class="language-plaintext highlighter-rouge">RobotModel</code></strong>（<code class="language-plaintext highlighter-rouge">Description Topic</code> 选 <code class="language-plaintext highlighter-rouge">/robot_description</code>）</li>
+</ol>
+
+<p>然后键盘控制它走一圈，应该能看到：扫描点跟着动、轨迹线画出来、轮子转。</p>
+
+<blockquote>
+  <p>💡 <strong>机器人陷进地面 / 飞天 / 抖动</strong></p>
+
+  <p>基本上都是<strong>几何和惯量的问题</strong>：collision 尺寸和 visual 不一致、
+质量写成 0、轮子没着地。先把模型丢到 <code class="language-plaintext highlighter-rouge">gz sim</code> 里静止看 5 秒——
+正常的机器人应该稳稳停住不动。
+—</p>
+</blockquote>
+
+<h2 id="第-8-步接-ros2_control可选进阶">第 8 步：接 ros2_control（可选进阶）</h2>
+
+<blockquote>
+  <p>⚠️ <strong>本步依赖 <code class="language-plaintext highlighter-rouge">ros-jazzy-gz-ros2-control</code>，本机已安装，但尚未实测。</strong>
+插件名和文件名来自<a href="https://control.ros.org/jazzy/doc/gz_ros2_control/doc/index.html">官方 Jazzy 文档</a>。</p>
+
+  <p><strong>建议</strong>：先把第 7 步跑通、玩顺了再回来做这一步。
+ros2_control 是”换一套驱动方式”，不是跑仿真的必需品。</p>
+</blockquote>
+
+<p><strong>这一步要解决什么</strong>：第 7 步用的 <code class="language-plaintext highlighter-rouge">gz-sim-diff-drive-system</code> 把
+“读轮速 + 算里程计”两件事捆在一起，换到真机上就得重写。
+ros2_control 把它们拆开：<strong>控制器（算）和硬件接口（读）分离</strong>，控制器可以原封不动搬到真机。</p>
+
+<h3 id="81-装包">8.1 装包</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-ros2-control ros-jazzy-ros2-controllers ros-jazzy-gz-ros2-control
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+
+<span class="c"># 验证</span>
+ros2 pkg prefix gz_ros2_control
+ros2 control list_controller_types | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'diff_drive|joint_state'</span>
+</code></pre></div></div>
+
+<h3 id="82-新建-urdffishbotfishbotros2_controlxacro">8.2 新建 <code class="language-plaintext highlighter-rouge">urdf/fishbot/fishbot.ros2_control.xacro</code></h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xacro=</span><span class="s">"http://www.ros.org/wiki/xacro"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;xacro:macro</span> <span class="na">name=</span><span class="s">"fishbot_ros2_control"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;ros2_control</span> <span class="na">name=</span><span class="s">"FishBotGazeboSystem"</span> <span class="na">type=</span><span class="s">"system"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;hardware&gt;</span>
+                <span class="c">&lt;!-- ⚠️ Harmonic 写 GazeboSimSystem，不是 Classic 的 GazeboSystem --&gt;</span>
+                <span class="nt">&lt;plugin&gt;</span>gz_ros2_control/GazeboSimSystem<span class="nt">&lt;/plugin&gt;</span>
+            <span class="nt">&lt;/hardware&gt;</span>
+
+            <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"left_wheel_joint"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;command_interface</span> <span class="na">name=</span><span class="s">"velocity"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">"min"</span><span class="nt">&gt;</span>-1<span class="nt">&lt;/param&gt;</span>
+                    <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">"max"</span><span class="nt">&gt;</span>1<span class="nt">&lt;/param&gt;</span>
+                <span class="nt">&lt;/command_interface&gt;</span>
+                <span class="nt">&lt;state_interface</span> <span class="na">name=</span><span class="s">"position"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;state_interface</span> <span class="na">name=</span><span class="s">"velocity"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;/joint&gt;</span>
+
+            <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"right_wheel_joint"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;command_interface</span> <span class="na">name=</span><span class="s">"velocity"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">"min"</span><span class="nt">&gt;</span>-1<span class="nt">&lt;/param&gt;</span>
+                    <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">"max"</span><span class="nt">&gt;</span>1<span class="nt">&lt;/param&gt;</span>
+                <span class="nt">&lt;/command_interface&gt;</span>
+                <span class="nt">&lt;state_interface</span> <span class="na">name=</span><span class="s">"position"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;state_interface</span> <span class="na">name=</span><span class="s">"velocity"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;/joint&gt;</span>
+        <span class="nt">&lt;/ros2_control&gt;</span>
+
+        <span class="c">&lt;!-- 加载 gz_ros2_control 本体，并告诉它控制器配置在哪 --&gt;</span>
+        <span class="nt">&lt;gazebo&gt;</span>
+            <span class="nt">&lt;plugin</span> <span class="na">filename=</span><span class="s">"libgz_ros2_control-system.so"</span>
+                    <span class="na">name=</span><span class="s">"gz_ros2_control::GazeboSimROS2ControlPlugin"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;parameters&gt;</span>$(find fishbot_description)/config/fishbot_ros2_controller.yaml<span class="nt">&lt;/parameters&gt;</span>
+            <span class="nt">&lt;/plugin&gt;</span>
+        <span class="nt">&lt;/gazebo&gt;</span>
+    <span class="nt">&lt;/xacro:macro&gt;</span>
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>这里有个”二选一”</strong>：<code class="language-plaintext highlighter-rouge">gz-sim-diff-drive-system</code> 和 ros2_control
+<strong>不能同时启用</strong>，它们会抢同一批关节。
+所以在总装文件里要<strong>注释掉</strong> <code class="language-plaintext highlighter-rouge">&lt;xacro:gazebo_control_plugin/&gt;</code>。</p>
+</blockquote>
+
+<h3 id="83-改总装文件-fishboturdfxacro">8.3 改总装文件 <code class="language-plaintext highlighter-rouge">fishbot.urdf.xacro</code></h3>
+
+<p>把这两处改掉（其余不动）：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- ① 引入 ros2_control 文件 --&gt;</span>
+<span class="nt">&lt;xacro:include</span> <span class="na">filename=</span><span class="s">"fishbot.ros2_control.xacro"</span><span class="nt">/&gt;</span>
+
+<span class="c">&lt;!-- ② 注释掉差速插件，换成 ros2_control --&gt;</span>
+<span class="c">&lt;!-- &lt;xacro:gazebo_control_plugin/&gt; --&gt;</span>
+<span class="nt">&lt;xacro:fishbot_ros2_control/&gt;</span>
+</code></pre></div></div>
+
+<h3 id="84-新建-configfishbot_ros2_controlleryaml">8.4 新建 <code class="language-plaintext highlighter-rouge">config/fishbot_ros2_controller.yaml</code></h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">controller_manager</span><span class="pi">:</span>
+  <span class="na">ros__parameters</span><span class="pi">:</span>
+    <span class="na">update_rate</span><span class="pi">:</span> <span class="m">100</span>          <span class="c1"># Hz</span>
+    <span class="na">use_sim_time</span><span class="pi">:</span> <span class="kc">true</span>        <span class="c1"># 必须，否则 TF 时间戳对不上</span>
+
+    <span class="na">fishbot_joint_state_broadcaster</span><span class="pi">:</span>
+      <span class="na">type</span><span class="pi">:</span> <span class="s">joint_state_broadcaster/JointStateBroadcaster</span>
+
+    <span class="na">fishbot_diff_drive_controller</span><span class="pi">:</span>
+      <span class="na">type</span><span class="pi">:</span> <span class="s">diff_drive_controller/DiffDriveController</span>
+
+<span class="na">fishbot_joint_state_broadcaster</span><span class="pi">:</span>
+  <span class="na">ros__parameters</span><span class="pi">:</span>
+    <span class="na">use_sim_time</span><span class="pi">:</span> <span class="kc">true</span>
+
+<span class="na">fishbot_diff_drive_controller</span><span class="pi">:</span>
+  <span class="na">ros__parameters</span><span class="pi">:</span>
+    <span class="na">left_wheel_names</span><span class="pi">:</span>  <span class="pi">[</span><span class="s2">"</span><span class="s">left_wheel_joint"</span><span class="pi">]</span>
+    <span class="na">right_wheel_names</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">right_wheel_joint"</span><span class="pi">]</span>
+    <span class="na">wheel_separation</span><span class="pi">:</span> <span class="m">0.20</span>        <span class="c1"># 和插件里的值保持一致</span>
+    <span class="na">wheel_radius</span><span class="pi">:</span> <span class="m">0.032</span>
+    <span class="na">wheel_separation_multiplier</span><span class="pi">:</span> <span class="m">1.0</span>
+    <span class="na">left_wheel_radius_multiplier</span><span class="pi">:</span> <span class="m">1.0</span>
+    <span class="na">right_wheel_radius_multiplier</span><span class="pi">:</span> <span class="m">1.0</span>
+    <span class="na">publish_rate</span><span class="pi">:</span> <span class="m">50.0</span>
+    <span class="na">odom_frame_id</span><span class="pi">:</span> <span class="s">odom</span>
+    <span class="na">base_frame_id</span><span class="pi">:</span> <span class="s">base_footprint</span>
+    <span class="na">pose_covariance_diagonal</span><span class="pi">:</span>  <span class="pi">[</span><span class="nv">0.001</span><span class="pi">,</span> <span class="nv">0.001</span><span class="pi">,</span> <span class="nv">0.0</span><span class="pi">,</span> <span class="nv">0.0</span><span class="pi">,</span> <span class="nv">0.0</span><span class="pi">,</span> <span class="nv">0.01</span><span class="pi">]</span>
+    <span class="na">twist_covariance_diagonal</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">0.001</span><span class="pi">,</span> <span class="nv">0.0</span><span class="pi">,</span> <span class="nv">0.0</span><span class="pi">,</span> <span class="nv">0.0</span><span class="pi">,</span> <span class="nv">0.0</span><span class="pi">,</span> <span class="nv">0.01</span><span class="pi">]</span>
+    <span class="na">open_loop</span><span class="pi">:</span> <span class="kc">true</span>
+    <span class="na">enable_odom_tf</span><span class="pi">:</span> <span class="kc">true</span>
+    <span class="na">cmd_vel_timeout</span><span class="pi">:</span> <span class="m">0.5</span>
+    <span class="na">use_stamped_vel</span><span class="pi">:</span> <span class="kc">false</span>
+    <span class="na">use_sim_time</span><span class="pi">:</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<h3 id="85-改-launch不要桥-cmd_vel--odom--tf">8.5 改 launch：不要桥 cmd_vel / odom / tf</h3>
+
+<p><strong>用 ros2_control 后，<code class="language-plaintext highlighter-rouge">/cmd_vel</code>、<code class="language-plaintext highlighter-rouge">/odom</code>、<code class="language-plaintext highlighter-rouge">/tf</code> 由控制器直接发 ROS 话题了</strong>，
+不再需要从 gz 桥过来。桥接参数里删掉那三行，只留：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">arguments</span><span class="o">=</span><span class="p">[</span>
+        <span class="sh">'</span><span class="s">/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">/imu@sensor_msgs/msg/Imu[gz.msgs.IMU</span><span class="sh">'</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="c1"># remappings 里的 cmd_vel/odom/tf 三条也一并删掉
+</span></code></pre></div></div>
+
+<p><strong>同时加上两个 spawner</strong>（在 <code class="language-plaintext highlighter-rouge">spawn_entity</code> 之后链式触发）：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1"># 从 controller_manager 加载并激活控制器
+</span>    <span class="c1"># spawner 会自己等控制器管理器就绪，不用手写 sleep
+</span>    <span class="n">load_joint_state_broadcaster</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">controller_manager</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">spawner</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="sh">'</span><span class="s">fishbot_joint_state_broadcaster</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">--controller-manager-timeout</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">30</span><span class="sh">'</span><span class="p">],</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="n">load_diff_drive_controller</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">controller_manager</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">spawner</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="sh">'</span><span class="s">fishbot_diff_drive_controller</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">--controller-manager-timeout</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">30</span><span class="sh">'</span><span class="p">],</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nc">LaunchDescription</span><span class="p">([</span>
+        <span class="n">gz_sim</span><span class="p">,</span>
+        <span class="n">robot_state_publisher</span><span class="p">,</span>
+        <span class="n">spawn_entity</span><span class="p">,</span>
+        <span class="n">bridge</span><span class="p">,</span>
+        <span class="n">rviz</span><span class="p">,</span>
+        <span class="c1"># 等机器人生成完 → 再加载第一个控制器
+</span>        <span class="nc">RegisterEventHandler</span><span class="p">(</span>
+            <span class="n">event_handler</span><span class="o">=</span><span class="nc">OnProcessExit</span><span class="p">(</span>
+                <span class="n">target_action</span><span class="o">=</span><span class="n">spawn_entity</span><span class="p">,</span>
+                <span class="n">on_exit</span><span class="o">=</span><span class="p">[</span><span class="n">load_joint_state_broadcaster</span><span class="p">])),</span>
+        <span class="c1"># 等第一个控制器加载完 → 再加载第二个
+</span>        <span class="nc">RegisterEventHandler</span><span class="p">(</span>
+            <span class="n">event_handler</span><span class="o">=</span><span class="nc">OnProcessExit</span><span class="p">(</span>
+                <span class="n">target_action</span><span class="o">=</span><span class="n">load_joint_state_broadcaster</span><span class="p">,</span>
+                <span class="n">on_exit</span><span class="o">=</span><span class="p">[</span><span class="n">load_diff_drive_controller</span><span class="p">])),</span>
+    <span class="p">])</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>为什么要这样链式触发</strong>
+launch 里的 Action 默认<strong>并行</strong>。控制器需要在机器人已生成、控制器管理器已起来之后才能激活，
+否则会互相抢服务接口导致启动异常。<code class="language-plaintext highlighter-rouge">RegisterEventHandler</code> + <code class="language-plaintext highlighter-rouge">OnProcessExit</code> 就是官方的串行化手段。</p>
+</blockquote>
+
+<h3 id="86-编译验证">8.6 编译验证</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/chapt7_ws <span class="o">&amp;&amp;</span> colcon build <span class="nt">--symlink-install</span> <span class="o">&amp;&amp;</span> <span class="nb">source install</span>/setup.bash
+ros2 launch fishbot_description gazebo_sim.launch.py
+</code></pre></div></div>
+
+<p><strong>另开终端检查：</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 control list_hardware_components      <span class="c"># 期望看到 FishBotGazeboSystem，state=active</span>
+ros2 control list_hardware_interfaces      <span class="c"># 命令接口应该是 [available][claimed]</span>
+ros2 control list_controllers              <span class="c"># 两个控制器都是 active</span>
+ros2 topic list | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'cmd_vel|odom|joint_states'</span>
+</code></pre></div></div>
+
+<p><strong>期望的日志（Gazebo 侧）：</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[gz_ros2_control]: Loading parameter files .../config/fishbot_ros2_controller.yaml
+[gz_ros2_control]: connected to service!! robot_state_publisher
+[resource_manager]: Successful
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ 报 <code class="language-plaintext highlighter-rouge">Could not find shared library</code> 就是插件名抄错了——
+大概率是还写着 Classic 的 <code class="language-plaintext highlighter-rouge">libgazebo_ros2_control.so</code> 或 <code class="language-plaintext highlighter-rouge">gazebo_ros2_control/GazeboSystem</code>。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="第-9-步slam-建图">第 9 步：SLAM 建图</h2>
+
+<blockquote>
+  <p>✅ <strong>本步已在本机实测通过</strong>（slam_toolbox 2.8.5）。
+实测结果：机器人走一圈后地图 122×119 格（6.1m × 6.0m），242 个障碍格。</p>
+
+  <p>⚠️ <strong>但有一个前提：必须先做第 7 步的 <code class="language-plaintext highlighter-rouge">odom</code> 别名。</strong>
+没有那个静态变换的话，slam_toolbox 会【正常启动、<code class="language-plaintext highlighter-rouge">/map</code> 话题也在、
+但一帧地图都发不出来】——它找不到 <code class="language-plaintext highlighter-rouge">odom</code> 帧，把每一帧 <code class="language-plaintext highlighter-rouge">/scan</code> 都丢了。</p>
+</blockquote>
+
+<h3 id="91-装包">9.1 装包</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-slam-toolbox
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+</code></pre></div></div>
+
+<h3 id="92-三个终端开跑">9.2 三个终端开跑</h3>
+
+<p><strong>前提：第 7 步的仿真已经在跑，并且 <code class="language-plaintext highlighter-rouge">/scan</code> 和 TF 都通了。</strong>先自查：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic hz /scan                        <span class="c"># 期望约 10 Hz</span>
+<span class="c"># ★ 必须加 use_sim_time，否则报 "frame does not exist"（它默认用墙上时钟！</span>
+<span class="c">#   实测踩过：不加这句会以为 TF 断了）</span>
+ros2 run tf2_ros tf2_echo fishbot/odom base_footprint <span class="nt">--ros-args</span> <span class="nt">-p</span> use_sim_time:<span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>这两条不通就别开 SLAM</strong>，否则 slam_toolbox 只会一直刷”数据过期”，
+你会以为是 SLAM 的问题，其实是上游断了。</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 终端 A：仿真（已开着就跳过）──</span>
+ros2 launch fishbot_description gazebo_sim.launch.py
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 终端 B：在线建图 ──</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash <span class="o">&amp;&amp;</span> <span class="nb">source</span> ~/chapt7_ws/install/setup.bash
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:<span class="o">=</span>True
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 终端 C：键盘控制，把场地走一圈 ──</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash <span class="o">&amp;&amp;</span> <span class="nb">source</span> ~/chapt7_ws/install/setup.bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+</code></pre></div></div>
+
+<h3 id="93-rviz-里看地图">9.3 RViz 里看地图</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rviz2
+</code></pre></div></div>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">Fixed Frame</code> 改成 <strong><code class="language-plaintext highlighter-rouge">map</code></strong>（slam_toolbox 起来后它才会存在）</li>
+  <li><code class="language-plaintext highlighter-rouge">Add</code> → <code class="language-plaintext highlighter-rouge">By topic</code> → <strong><code class="language-plaintext highlighter-rouge">/map</code></strong> → <code class="language-plaintext highlighter-rouge">Map</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Add</code> → <code class="language-plaintext highlighter-rouge">By topic</code> → <strong><code class="language-plaintext highlighter-rouge">/scan</code></strong> → <code class="language-plaintext highlighter-rouge">LaserScan</code>（确认扫描和地图对齐）</li>
+</ol>
+
+<p>地图会随着机器人走动一点点”长出来”。<strong>走慢一点、多转几个圈</strong>，回环闭合后地图会自动修正。</p>
+
+<p><strong>实测</strong>：前进+转向走 14 秒，地图从 117×77 长到 122×119 格，242 个障碍格。</p>
+
+<h4 id="-地图一直出不来的话按这个顺序查">★ 地图一直出不来的话，按这个顺序查</h4>
+
+<p><strong>这是本节最容易卡住的地方</strong>，症状还有迷惑性：
+slam_toolbox <strong>启动完全正常、<code class="language-plaintext highlighter-rouge">/map</code> 话题也存在</strong>，但就是没有地图。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ① 最直接的证据：地图到底发了没有</span>
+ros2 topic <span class="nb">echo</span> /map <span class="nt">--once</span> | <span class="nb">head</span> <span class="nt">-8</span>
+<span class="c">#   什么都不打印 = 一帧都没发出来</span>
+
+<span class="c"># ② 看 slam_toolbox 自己在抱怨什么（看 launch 的输出）</span>
+<span class="c">#   如果一直刷这个：</span>
+<span class="c">#     Message Filter dropping message: frame 'laser_link' ...</span>
+<span class="c">#     for reason 'discarding message because the queue is full'</span>
+<span class="c">#   → 它在等一个【永远等不到】的变换，往下看</span>
+</code></pre></div></div>
+
+<p><strong>头号原因：TF 里没有 <code class="language-plaintext highlighter-rouge">odom</code> 帧。</strong></p>
+
+<p>slam_toolbox 默认 <code class="language-plaintext highlighter-rouge">odom_frame = odom</code>，而 Harmonic 的差速插件发的是
+<code class="language-plaintext highlighter-rouge">fishbot/odom</code>（带模型名前缀）。<strong>帧名对不上 → 每帧扫描全丢 → 地图空白。</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 确认 slam_toolbox 找的是哪个帧</span>
+ros2 param get /slam_toolbox odom_frame     <span class="c"># 默认 odom</span>
+ros2 param get /slam_toolbox base_frame     <span class="c"># 默认 base_footprint</span>
+
+<span class="c"># 确认 TF 里到底有没有 odom（★ 记得加 use_sim_time！）</span>
+ros2 run tf2_ros tf2_echo odom base_footprint <span class="nt">--ros-args</span> <span class="nt">-p</span> use_sim_time:<span class="o">=</span><span class="nb">true</span>
+<span class="c">#   "Invalid frame ID odom ... frame does not exist" → 就是这个原因</span>
+</code></pre></div></div>
+
+<p><strong>修法</strong>：第 7 步 launch 里那个 <code class="language-plaintext highlighter-rouge">odom_alias</code> 静态变换就是干这个的。
+跳过了第 7 步直接来做第 9 步的话，回去补上。</p>
+
+<blockquote>
+  <p>💡 <strong>为什么是加别名，而不是改 slam_toolbox 的配置</strong>
+因为 Harmonic 的 DiffDrive 插件<strong>根本没有 odom 帧名的参数</strong>
+（只有 <code class="language-plaintext highlighter-rouge">child_frame_id</code> 能改），写死成 <code class="language-plaintext highlighter-rouge">&lt;模型名&gt;/odom</code>。
+加一个恒等静态变换 <code class="language-plaintext highlighter-rouge">odom → fishbot/odom</code> 最省事，
+而且顺带让 RViz 的 Fixed Frame 可以直接填 <code class="language-plaintext highlighter-rouge">odom</code>。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>地图画歪了 / 糊了，查这三条</strong></p>
+  <ol>
+    <li><strong>里程计</strong>：<code class="language-plaintext highlighter-rouge">odom → base_footprint</code> 准不准（轮距轮半径填错，地图必歪）</li>
+    <li><strong>时间戳</strong>：所有跟仿真有关的节点都要 <code class="language-plaintext highlighter-rouge">use_sim_time:=True</code></li>
+    <li><strong>雷达安装位姿</strong>：<code class="language-plaintext highlighter-rouge">laser_link</code> 的高度/朝向和模型不符，扫描匹配会一直错位</li>
+  </ol>
+</blockquote>
+
+<hr />
+
+<h2 id="第-10-步保存地图">第 10 步：保存地图</h2>
+
+<h3 id="101-建导航功能包">10.1 建导航功能包</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/chapt7_ws/src
+ros2 pkg create fishbot_navigation2 <span class="nt">--build-type</span> ament_cmake <span class="nt">--license</span> Apache-2.0 <span class="se">\</span>
+    <span class="nt">--dependencies</span> nav2_bringup
+<span class="nb">cd </span>fishbot_navigation2
+<span class="nb">mkdir</span> <span class="nt">-p</span> maps param launch
+</code></pre></div></div>
+
+<h3 id="102-保存地图">10.2 保存地图</h3>
+
+<p><strong>SLAM 还在跑的时候</strong>，另开终端：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> /opt/ros/jazzy/setup.bash <span class="o">&amp;&amp;</span> <span class="nb">source</span> ~/chapt7_ws/install/setup.bash
+
+<span class="c"># 先确认 /map 真的有数据</span>
+ros2 topic <span class="nb">echo</span> /map <span class="nt">--once</span> | <span class="nb">head</span> <span class="nt">-5</span>
+
+<span class="nb">cd</span> ~/chapt7_ws/src/fishbot_navigation2/maps
+ros2 run nav2_map_server map_saver_cli <span class="nt">-f</span> room
+</code></pre></div></div>
+
+<p>成功的话会看到：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[map_saver]: Map saved successfully
+</code></pre></div></div>
+
+<p>产物是<strong>一对文件</strong>：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>文件</th>
+      <th>内容</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">room.pgm</code></td>
+      <td>灰度图，像素值 = 占据概率（白=空旷、黑=障碍、灰=未知）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">room.yaml</code></td>
+      <td>描述文件：分辨率、原点、阈值</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>⚠️ <strong><code class="language-plaintext highlighter-rouge">room.yaml</code> 里的 <code class="language-plaintext highlighter-rouge">resolution</code> 和 <code class="language-plaintext highlighter-rouge">origin</code> 不要手改。</strong>
+改了以后地图和真实世界的比例/位置就对不上，表现为机器人”自信地走错位置”。
+想修图就改 <code class="language-plaintext highlighter-rouge">.pgm</code>（用图片编辑器画黑块补墙更直观）。</p>
+</blockquote>
+
+<h3 id="103-填-cmakeliststxt">10.3 填 <code class="language-plaintext highlighter-rouge">CMakeLists.txt</code></h3>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.8<span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span>fishbot_navigation2<span class="p">)</span>
+
+<span class="nb">find_package</span><span class="p">(</span>ament_cmake REQUIRED<span class="p">)</span>
+
+<span class="nb">install</span><span class="p">(</span>DIRECTORY maps param launch
+        DESTINATION share/<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="p">)</span>
+
+<span class="nf">ament_package</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/chapt7_ws <span class="o">&amp;&amp;</span> colcon build <span class="nt">--symlink-install</span> <span class="o">&amp;&amp;</span> <span class="nb">source install</span>/setup.bash
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="第-11-步nav2-导航">第 11 步：Nav2 导航</h2>
+
+<blockquote>
+  <p>⚠️ <strong>本步依赖 Nav2，本机已安装，但尚未实测。</strong>参数是 Nav2 的标准结构，具体数值需要按你的机器人调。</p>
+</blockquote>
+
+<h3 id="111-装包">11.1 装包</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-navigation2 ros-jazzy-nav2-bringup
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+
+<span class="c"># 确认官方示例参数在哪（路径随版本可能变，用这条查）</span>
+<span class="nb">ls</span> /opt/ros/jazzy/share/nav2_bringup/params/
+</code></pre></div></div>
+
+<h3 id="112-拿一份官方参数来改">11.2 拿一份官方参数来改</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/chapt7_ws/src/fishbot_navigation2
+<span class="nb">cp</span> /opt/ros/jazzy/share/nav2_bringup/params/nav2_params.yaml param/
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>不要从零写这个文件</strong>——Nav2 有上百个参数，从官方默认改是最省事的。
+只需要改”跟你的机器人有关”的那几处。</p>
+</blockquote>
+
+<h3 id="113-必须改的四类参数">11.3 必须改的四类参数</h3>
+
+<p>打开 <code class="language-plaintext highlighter-rouge">param/nav2_params.yaml</code>，找这几处（笔记 §13.2 那三类）：</p>
+
+<p><strong>① 机器人尺寸与坐标系</strong>（<code class="language-plaintext highlighter-rouge">controller_server</code> / <code class="language-plaintext highlighter-rouge">local_costmap</code> / <code class="language-plaintext highlighter-rouge">global_costmap</code>）</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">local_costmap</span><span class="pi">:</span>
+  <span class="na">local_costmap</span><span class="pi">:</span>
+    <span class="na">ros__parameters</span><span class="pi">:</span>
+      <span class="na">robot_base_frame</span><span class="pi">:</span> <span class="s">base_footprint</span>    <span class="c1"># ⚠️ 默认是 base_link，必须改</span>
+      <span class="na">robot_radius</span><span class="pi">:</span> <span class="m">0.12</span>                  <span class="c1"># 和建模半径一致</span>
+      <span class="na">use_sim_time</span><span class="pi">:</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<p><strong>② 全局代价地图的坐标系</strong></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">global_costmap</span><span class="pi">:</span>
+  <span class="na">global_costmap</span><span class="pi">:</span>
+    <span class="na">ros__parameters</span><span class="pi">:</span>
+      <span class="na">robot_base_frame</span><span class="pi">:</span> <span class="s">base_footprint</span>    <span class="c1"># ⚠️ 同上</span>
+      <span class="na">use_sim_time</span><span class="pi">:</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<p><strong>③ 全局规划器</strong></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">planner_server</span><span class="pi">:</span>
+  <span class="na">ros__parameters</span><span class="pi">:</span>
+    <span class="na">expected_planner_frequency</span><span class="pi">:</span> <span class="m">20.0</span>
+    <span class="na">use_sim_time</span><span class="pi">:</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<p><strong>④ 所有节点都要 <code class="language-plaintext highlighter-rouge">use_sim_time: true</code></strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 改完检查一遍：仿真下只要漏一个 true，就会出现"数据过期"的怪问题</span>
+<span class="nb">grep</span> <span class="nt">-c</span> <span class="s1">'use_sim_time: true'</span> param/nav2_params.yaml
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong><code class="language-plaintext highlighter-rouge">robot_base_frame</code> 是最常错的一条。</strong>
+官方默认写 <code class="language-plaintext highlighter-rouge">base_link</code>，而你的模型导航根是 <code class="language-plaintext highlighter-rouge">base_footprint</code>，
+不改的话规划器会报”找不到坐标系”。</p>
+</blockquote>
+
+<h3 id="114-launchnavigation2launchpy">11.4 <code class="language-plaintext highlighter-rouge">launch/navigation2.launch.py</code></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
+
+<span class="kn">from</span> <span class="n">ament_index_python.packages</span> <span class="kn">import</span> <span class="n">get_package_share_directory</span>
+<span class="kn">from</span> <span class="n">launch</span> <span class="kn">import</span> <span class="n">LaunchDescription</span>
+<span class="kn">from</span> <span class="n">launch.actions</span> <span class="kn">import</span> <span class="n">IncludeLaunchDescription</span>
+<span class="kn">from</span> <span class="n">launch.launch_description_sources</span> <span class="kn">import</span> <span class="n">PythonLaunchDescriptionSource</span>
+
+
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+    <span class="n">pkg_share</span> <span class="o">=</span> <span class="nf">get_package_share_directory</span><span class="p">(</span><span class="sh">'</span><span class="s">fishbot_navigation2</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">nav2_bringup_share</span> <span class="o">=</span> <span class="nf">get_package_share_directory</span><span class="p">(</span><span class="sh">'</span><span class="s">nav2_bringup</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nc">LaunchDescription</span><span class="p">([</span>
+        <span class="nc">IncludeLaunchDescription</span><span class="p">(</span>
+            <span class="nc">PythonLaunchDescriptionSource</span><span class="p">(</span>
+                <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">nav2_bringup_share</span><span class="p">,</span> <span class="sh">'</span><span class="s">launch</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">bringup_launch.py</span><span class="sh">'</span><span class="p">)),</span>
+            <span class="n">launch_arguments</span><span class="o">=</span><span class="p">{</span>
+                <span class="sh">'</span><span class="s">map</span><span class="sh">'</span><span class="p">:</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">pkg_share</span><span class="p">,</span> <span class="sh">'</span><span class="s">maps</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">room.yaml</span><span class="sh">'</span><span class="p">),</span>
+                <span class="sh">'</span><span class="s">params_file</span><span class="sh">'</span><span class="p">:</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">pkg_share</span><span class="p">,</span> <span class="sh">'</span><span class="s">param</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">nav2_params.yaml</span><span class="sh">'</span><span class="p">),</span>
+                <span class="sh">'</span><span class="s">use_sim_time</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">true</span><span class="sh">'</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">slam</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">False</span><span class="sh">'</span><span class="p">,</span>          <span class="c1"># 用已保存的地图定位，不再实时建图
+</span>            <span class="p">}.</span><span class="nf">items</span><span class="p">()),</span>
+    <span class="p">])</span>
+</code></pre></div></div>
+
+<h3 id="115-启动顺序顺序错了必报错">11.5 启动顺序（<strong>顺序错了必报错</strong>）</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── ① 先仿真：提供 /scan、/odom、TF、/cmd_vel ──</span>
+ros2 launch fishbot_description gazebo_sim.launch.py
+
+<span class="c"># 自查：/scan 和 TF 都通了再往下</span>
+ros2 topic hz /scan
+ros2 run tf2_ros tf2_echo fishbot/odom base_footprint <span class="nt">--ros-args</span> <span class="nt">-p</span> use_sim_time:<span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── ② 再导航：加载地图 + 参数，起 Nav2 全套节点 ──</span>
+<span class="nb">source</span> ~/chapt7_ws/install/setup.bash
+ros2 launch fishbot_navigation2 navigation2.launch.py
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── ③ 最后 RViz ──</span>
+rviz2
+</code></pre></div></div>
+
+<h3 id="116-rviz-设置--给初始位姿">11.6 RViz 设置 + 给初始位姿</h3>
+
+<p>RViz 里：</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">Fixed Frame</code> → <strong><code class="language-plaintext highlighter-rouge">map</code></strong></li>
+  <li><code class="language-plaintext highlighter-rouge">Add</code> → <code class="language-plaintext highlighter-rouge">By topic</code> → <code class="language-plaintext highlighter-rouge">/map</code> → <code class="language-plaintext highlighter-rouge">Map</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Add</code> → <code class="language-plaintext highlighter-rouge">By topic</code> → <code class="language-plaintext highlighter-rouge">/scan</code> → <code class="language-plaintext highlighter-rouge">LaserScan</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Add</code> → <code class="language-plaintext highlighter-rouge">By topic</code> → <code class="language-plaintext highlighter-rouge">/local_costmap/costmap</code>、<code class="language-plaintext highlighter-rouge">/global_costmap/costmap</code> → <code class="language-plaintext highlighter-rouge">Map</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Add</code> → <strong><code class="language-plaintext highlighter-rouge">Path</code></strong> → 选 <code class="language-plaintext highlighter-rouge">/plan</code>（全局路径）</li>
+  <li>工具栏点 <strong><code class="language-plaintext highlighter-rouge">2D Pose Estimate</code></strong> → 在地图上机器人所在的真实位置<strong>按住拖一下</strong>，给个初始朝向</li>
+</ol>
+
+<blockquote>
+  <p>⚠️ <strong>不给初始位姿，Nav2 会一直报 TF 错误。</strong>
+因为 <code class="language-plaintext highlighter-rouge">map → odom</code> 这一段的变换是 Nav2 靠”激光和地图匹配”算出来的，
+你得先告诉它”我大概在哪”。</p>
+
+  <p>给完之后用这条确认：</p>
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run tf2_ros tf2_echo map base_footprint
+</code></pre></div>  </div>
+</blockquote>
+
+<h3 id="117-发个目标点试试">11.7 发个目标点试试</h3>
+
+<p>RViz 工具栏点 <strong><code class="language-plaintext highlighter-rouge">Nav2 Goal</code></strong>（或 <code class="language-plaintext highlighter-rouge">2D Goal Pose</code>），在地图上点一个目标位置并拖出朝向。</p>
+
+<p>机器人应该：规划出一条路径 → 沿着走 → 避开障碍 → 到达目标。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic <span class="nb">echo</span> /cmd_vel        <span class="c"># 看导航输出的速度指令</span>
+ros2 run tf2_ros tf2_echo map base_footprint   <span class="c"># 看机器人在地图里的位姿</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="第-12-步用代码发导航目标">第 12 步：用代码发导航目标</h2>
+
+<blockquote>
+  <p>⚠️ <strong>本步依赖 <code class="language-plaintext highlighter-rouge">nav2_simple_commander</code>，本机已安装，但尚未实测。</strong></p>
+</blockquote>
+
+<h3 id="121-装包">12.1 装包</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-nav2-simple-commander
+</code></pre></div></div>
+
+<h3 id="122-建一个-python-节点">12.2 建一个 Python 节点</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/chapt7_ws/src
+ros2 pkg create fishbot_nav_client <span class="nt">--build-type</span> ament_python <span class="se">\</span>
+    <span class="nt">--dependencies</span> rclpy nav2_simple_commander <span class="nt">--license</span> Apache-2.0
+<span class="nb">mkdir</span> <span class="nt">-p</span> fishbot_nav_client/fishbot_nav_client
+</code></pre></div></div>
+
+<p><strong><code class="language-plaintext highlighter-rouge">fishbot_nav_client/fishbot_nav_client/nav_to_pose.py</code></strong>：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">PoseStamped</span>
+<span class="kn">from</span> <span class="n">nav2_simple_commander.robot_navigator</span> <span class="kn">import</span> <span class="n">BasicNavigator</span><span class="p">,</span> <span class="n">TaskResult</span>
+
+
+<span class="k">def</span> <span class="nf">make_pose</span><span class="p">(</span><span class="n">navigator</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yaw_w</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">造一个 map 坐标系下的目标点</span><span class="sh">"""</span>
+    <span class="n">pose</span> <span class="o">=</span> <span class="nc">PoseStamped</span><span class="p">()</span>
+    <span class="n">pose</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="sh">'</span><span class="s">map</span><span class="sh">'</span>
+    <span class="n">pose</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="n">navigator</span><span class="p">.</span><span class="nf">get_clock</span><span class="p">().</span><span class="nf">now</span><span class="p">().</span><span class="nf">to_msg</span><span class="p">()</span>
+    <span class="n">pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="n">pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">orientation</span><span class="p">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">yaw_w</span>
+    <span class="k">return</span> <span class="n">pose</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="n">navigator</span> <span class="o">=</span> <span class="nc">BasicNavigator</span><span class="p">()</span>
+
+    <span class="c1"># ① 给初始位姿（等价于 RViz 里的 2D Pose Estimate）
+</span>    <span class="n">initial</span> <span class="o">=</span> <span class="nf">make_pose</span><span class="p">(</span><span class="n">navigator</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">navigator</span><span class="p">.</span><span class="nf">setInitialPose</span><span class="p">(</span><span class="n">initial</span><span class="p">)</span>
+
+    <span class="c1"># ② 等 Nav2 完全就绪（这一步不能省，否则第一个目标会失败）
+</span>    <span class="n">navigator</span><span class="p">.</span><span class="nf">waitUntilNav2Active</span><span class="p">()</span>
+
+    <span class="c1"># ③ 单点导航
+</span>    <span class="n">goal</span> <span class="o">=</span> <span class="nf">make_pose</span><span class="p">(</span><span class="n">navigator</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">navigator</span><span class="p">.</span><span class="nf">goToPose</span><span class="p">(</span><span class="n">goal</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">navigator</span><span class="p">.</span><span class="nf">isTaskComplete</span><span class="p">():</span>
+        <span class="n">feedback</span> <span class="o">=</span> <span class="n">navigator</span><span class="p">.</span><span class="nf">getFeedback</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">feedback</span><span class="p">:</span>
+            <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">剩余距离 </span><span class="si">{</span><span class="n">feedback</span><span class="p">.</span><span class="n">distance_remaining</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> m</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">navigator</span><span class="p">.</span><span class="nf">getResult</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">TaskResult</span><span class="p">.</span><span class="n">SUCCEEDED</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">到达目标点</span><span class="sh">'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="n">TaskResult</span><span class="p">.</span><span class="n">CANCELED</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">被取消</span><span class="sh">'</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">导航失败</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="c1"># ④ 路点巡航（巡检的基础）
+</span>    <span class="n">waypoints</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nf">make_pose</span><span class="p">(</span><span class="n">navigator</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span>  <span class="mf">0.5</span><span class="p">),</span>
+        <span class="nf">make_pose</span><span class="p">(</span><span class="n">navigator</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">),</span>
+        <span class="nf">make_pose</span><span class="p">(</span><span class="n">navigator</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>  <span class="mf">0.0</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">navigator</span><span class="p">.</span><span class="nf">followWaypoints</span><span class="p">(</span><span class="n">waypoints</span><span class="p">)</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">navigator</span><span class="p">.</span><span class="nf">isTaskComplete</span><span class="p">():</span>
+        <span class="k">pass</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">路点巡航结束</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="n">navigator</span><span class="p">.</span><span class="nf">lifecycleShutdown</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="123-注册入口点">12.3 注册入口点</h3>
+
+<p><strong><code class="language-plaintext highlighter-rouge">fishbot_nav_client/setup.py</code></strong> 里的 <code class="language-plaintext highlighter-rouge">console_scripts</code> 加上：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+        <span class="sh">'</span><span class="s">console_scripts</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span>
+            <span class="sh">'</span><span class="s">nav_to_pose = fishbot_nav_client.nav_to_pose:main</span><span class="sh">'</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+</code></pre></div></div>
+
+<h3 id="124-跑">12.4 跑</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/chapt7_ws
+colcon build <span class="nt">--symlink-install</span>
+<span class="nb">source install</span>/setup.bash
+
+<span class="c"># 前提：仿真 + Nav2 都已在跑，并且给过初始位姿</span>
+ros2 run fishbot_nav_client nav_to_pose
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <code class="language-plaintext highlighter-rouge">nav_to_pose.py</code> 里用到的 <code class="language-plaintext highlighter-rouge">feedback.distance_remaining</code> 就是观察”导航进度”最直观的字段。
+想做成巡检任务，把路点从代码里挪到 YAML 配置文件读进来即可——
+换一条线路不用改程序，只改配置。这正是第七章 §15 的思路。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="附录-a报错对照表">附录 A：报错对照表</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>报错 / 现象</th>
+      <th>原因</th>
+      <th>解决</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gazebo：未找到命令</code></td>
+      <td>Gazebo Classic 已 EOL，24.04 无此包</td>
+      <td>用 <code class="language-plaintext highlighter-rouge">gz sim</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gz sim</code> 吐帮助文本、<code class="language-plaintext highlighter-rouge">gz --commands</code> 没有 <code class="language-plaintext highlighter-rouge">sim</code></td>
+      <td>这个终端没 source ROS</td>
+      <td><code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Package 'fishbot_description' not found</code></td>
+      <td>没编译，或没 source install</td>
+      <td><code class="language-plaintext highlighter-rouge">colcon build &amp;&amp; source install/setup.bash</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">xacro: Invalid parameter "xyz"</code></td>
+      <td>宏写成了 <code class="language-plaintext highlighter-rouge">parame</code> 而不是 <code class="language-plaintext highlighter-rouge">params</code></td>
+      <td>改 <code class="language-plaintext highlighter-rouge">params</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">child link [imu_link] of joint not found</code></td>
+      <td>link 名和 joint 的 child 不一致</td>
+      <td>统一命名</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">file not found</code>（launch 里）</td>
+      <td><code class="language-plaintext highlighter-rouge">CMakeLists.txt</code> 没 <code class="language-plaintext highlighter-rouge">install(DIRECTORY ...)</code></td>
+      <td>补上，重新 build</td>
+    </tr>
+    <tr>
+      <td>终端 3 没有 <code class="language-plaintext highlighter-rouge">Entity creation successful</code></td>
+      <td>模型生成失败</td>
+      <td>先 <code class="language-plaintext highlighter-rouge">xacro</code> 展开 + <code class="language-plaintext highlighter-rouge">check_urdf</code></td>
+    </tr>
+    <tr>
+      <td>机器人穿过地面 / 抖动 / 飞天</td>
+      <td>缺 collision 或 inertial，或轮子没着地</td>
+      <td>补 collision + inertial，检查关节 origin</td>
+    </tr>
+    <tr>
+      <td>模型进仿真了，ROS 里没话题</td>
+      <td>没起桥</td>
+      <td>起 <code class="language-plaintext highlighter-rouge">parameter_bridge</code></td>
+    </tr>
+    <tr>
+      <td>桥起了但数据不动</td>
+      <td><strong>方向符写反</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">[</code> = gz→ROS，<code class="language-plaintext highlighter-rouge">]</code> = ROS→gz</td>
+    </tr>
+    <tr>
+      <td>RViz 有话题没坐标系</td>
+      <td>TF 没 remap 到 <code class="language-plaintext highlighter-rouge">/tf</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-r /model/fishbot/tf:=/tf</code></td>
+    </tr>
+    <tr>
+      <td>没有 <code class="language-plaintext highlighter-rouge">/scan</code>、<code class="language-plaintext highlighter-rouge">/imu</code></td>
+      <td>世界文件没挂 <code class="language-plaintext highlighter-rouge">Sensors</code> / <code class="language-plaintext highlighter-rouge">Imu</code> 插件</td>
+      <td>补插件</td>
+    </tr>
+    <tr>
+      <td>里程计差一倍</td>
+      <td>用了 <code class="language-plaintext highlighter-rouge">wheel_diameter</code></td>
+      <td>改成 <code class="language-plaintext highlighter-rouge">wheel_radius</code>（半径）</td>
+    </tr>
+    <tr>
+      <td>数据被判为”过期”</td>
+      <td>没设 <code class="language-plaintext highlighter-rouge">use_sim_time</code></td>
+      <td>所有节点加 <code class="language-plaintext highlighter-rouge">use_sim_time:=true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gz_ros2_control</code> 找不到 shared library</td>
+      <td>抄了 Classic 的插件名</td>
+      <td><code class="language-plaintext highlighter-rouge">gz_ros2_control/GazeboSimSystem</code></td>
+    </tr>
+    <tr>
+      <td>Nav2 一直报 TF 错误</td>
+      <td>没给初始位姿</td>
+      <td>RViz <code class="language-plaintext highlighter-rouge">2D Pose Estimate</code></td>
+    </tr>
+    <tr>
+      <td>规划器报坐标系找不到</td>
+      <td><code class="language-plaintext highlighter-rouge">robot_base_frame</code> 还是 <code class="language-plaintext highlighter-rouge">base_link</code></td>
+      <td>改成 <code class="language-plaintext highlighter-rouge">base_footprint</code></td>
+    </tr>
+    <tr>
+      <td>窄道过不去 / 撞墙</td>
+      <td><code class="language-plaintext highlighter-rouge">robot_radius</code> 和模型不符</td>
+      <td>填建模半径（本项目 0.12）</td>
+    </tr>
+    <tr>
+      <td>机器人地图上”走错位置”</td>
+      <td><code class="language-plaintext highlighter-rouge">.yaml</code> 的 <code class="language-plaintext highlighter-rouge">resolution</code>/<code class="language-plaintext highlighter-rouge">origin</code> 被手改</td>
+      <td>用 <code class="language-plaintext highlighter-rouge">map_saver_cli</code> 重新生成</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gz sim</code> 一启动就崩，报 <code class="language-plaintext highlighter-rouge">X Error</code> / <code class="language-plaintext highlighter-rouge">GLX</code></td>
+      <td>没有可用的图形渲染（远程 SSH / 虚拟机没开 3D 加速）</td>
+      <td>先用 <code class="language-plaintext highlighter-rouge">-s</code> 无头跑；注意 <code class="language-plaintext highlighter-rouge">Sensors</code> 插件必须有渲染才能出雷达/相机数据</td>
+    </tr>
+    <tr>
+      <td><strong><code class="language-plaintext highlighter-rouge">ros2 node list</code> / <code class="language-plaintext highlighter-rouge">topic list</code> 是空的，但程序明明在跑</strong></td>
+      <td><strong><code class="language-plaintext highlighter-rouge">/dev/shm</code> 里堆了陈旧的 fastrtps 共享内存段</strong>，见附录 C</td>
+      <td><code class="language-plaintext highlighter-rouge">bash ros-clean.sh</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">[RTPS_TRANSPORT_SHM Error] Failed init_port fastrtps_port7002: open_and_lock_file failed</code></td>
+      <td>同上</td>
+      <td>同上</td>
+    </tr>
+    <tr>
+      <td>两个 <code class="language-plaintext highlighter-rouge">gz sim</code> 同时在跑，<code class="language-plaintext highlighter-rouge">/scan</code> 掉到 3 Hz、TF 报 <code class="language-plaintext highlighter-rouge">TF_OLD_DATA</code></td>
+      <td>两份仿真抢同一个话题，时间戳打架</td>
+      <td>只开一份；先杀干净再启</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="附录-b一键自查脚本">附录 B：一键自查脚本</h2>
+
+<p>卡住的时候，把这段存成 <code class="language-plaintext highlighter-rouge">check.sh</code>，<strong>在仿真已经跑起来的情况下</strong>执行：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
+<span class="c"># 仿真链路逐层自查</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash <span class="o">&gt;</span>/dev/null 2&gt;&amp;1
+
+<span class="nb">echo</span> <span class="s2">"===== 1. gz 侧话题（仿真器自己有没有在动）====="</span>
+gz topic <span class="nt">-l</span> 2&gt;/dev/null | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'clock|fishbot|scan|imu'</span> | <span class="nb">sort</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"  ❌ 一个都没有"</span>
+
+<span class="nb">echo
+echo</span> <span class="s2">"===== 2. gz 侧数据（时间在不在走）====="</span>
+<span class="nb">timeout </span>5 gz topic <span class="nt">-e</span> <span class="nt">-t</span> /clock <span class="nt">-n</span> 1 2&gt;/dev/null | <span class="nb">head</span> <span class="nt">-3</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"  ❌ /clock 读不到"</span>
+
+<span class="nb">echo
+echo</span> <span class="s2">"===== 3. ROS 侧话题（桥起来了没）====="</span>
+ros2 topic list 2&gt;/dev/null | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'cmd_vel|odom|tf|scan|imu'</span> | <span class="nb">sort</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"  ❌ 桥没起"</span>
+
+<span class="nb">echo
+echo</span> <span class="s2">"===== 4. 数据频率 ====="</span>
+<span class="k">for </span>t <span class="k">in</span> /scan /odom /imu<span class="p">;</span> <span class="k">do
+  </span><span class="nb">printf</span> <span class="s1">'  %-8s '</span> <span class="s2">"</span><span class="nv">$t</span><span class="s2">"</span>
+  <span class="nb">timeout </span>5 ros2 topic hz <span class="s2">"</span><span class="nv">$t</span><span class="s2">"</span> 2&gt;/dev/null | <span class="nb">grep</span> <span class="nt">-m1</span> <span class="s1">'average rate'</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"无数据"</span>
+<span class="k">done
+
+</span><span class="nb">echo
+echo</span> <span class="s2">"===== 5. TF 链 ====="</span>
+<span class="nb">timeout </span>5 ros2 run tf2_ros tf2_echo fishbot/odom base_footprint <span class="nt">--ros-args</span> <span class="nt">-p</span> use_sim_time:<span class="o">=</span><span class="nb">true </span>2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">-m1</span> <span class="nt">-A1</span> <span class="s1">'Translation'</span> <span class="se">\</span>
+  <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"  ❌ odom → base_footprint 不通"</span>
+<span class="nb">timeout </span>5 ros2 run tf2_ros tf2_echo base_footprint base_link 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">-m1</span> <span class="nt">-A1</span> <span class="s1">'Translation'</span> <span class="se">\</span>
+  <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"  ❌ base_footprint → base_link 不通"</span>
+
+<span class="nb">echo
+echo</span> <span class="s2">"===== 6. 仿真时间 ====="</span>
+ros2 param get /robot_state_publisher use_sim_time 2&gt;/dev/null <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"  ⚠️ 查不到，确认节点名"</span>
+</code></pre></div></div>
+
+<p><strong>判读方法</strong>：哪一层开始报 ❌，问题就在那里——
+第 1 层是模型/世界，第 3 层是桥接，第 4~5 层是桥接参数或 <code class="language-plaintext highlighter-rouge">use_sim_time</code>。</p>
+
+<hr />
+
+<h2 id="附这份手册和笔记正文的分工">附：这份手册和笔记正文的分工</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>讲什么</th>
+      <th>什么时候看</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">第七章</a></td>
+      <td><strong>为什么</strong>：概念、原理、坑的来龙去脉、新旧体系差异</td>
+      <td>想搞懂原理时</td>
+    </tr>
+    <tr>
+      <td><strong>本手册</strong></td>
+      <td><strong>怎么做</strong>：建包、写文件、敲命令、排查</td>
+      <td>动手时对着做</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>遇到报错，先查本手册的<strong>附录 A</strong>；想理解错误背后的机制，再去第七章对应小节。</p>
+
+<hr />
+
+<h2 id="附录-cros2-node-list-是空的共享内存坑">附录 C：<code class="language-plaintext highlighter-rouge">ros2 node list</code> 是空的（共享内存坑）</h2>
+
+<h3 id="症状">症状</h3>
+
+<p>程序明明在跑（turtlesim 打印了 “Spawning turtle”，仿真窗口也开着），
+但另一个终端里：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 node list      <span class="c"># 什么都不输出</span>
+ros2 topic list     <span class="c"># 只有 /parameter_events /rosout</span>
+</code></pre></div></div>
+
+<p>终端里还刷这种错：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[RTPS_TRANSPORT_SHM Error] Failed init_port fastrtps_port7002:
+    open_and_lock_file failed -&gt; Function open_port_internal
+</code></pre></div></div>
+
+<h3 id="原因">原因</h3>
+
+<p>Fast DDS 用 <code class="language-plaintext highlighter-rouge">/dev/shm/fastrtps_*</code> 这些<strong>共享内存段</strong>做本机进程间通信。
+进程被<strong>强杀</strong>（<code class="language-plaintext highlighter-rouge">kill -9</code> / <code class="language-plaintext highlighter-rouge">pkill -9</code> / 任务管理器结束进程）时，
+共享内存段<strong>不会被清理</strong>，就一直堆在 <code class="language-plaintext highlighter-rouge">/dev/shm</code> 里。</p>
+
+<p>攒多了之后，新进程建不出段、也协商不出可用传输，
+<strong>DDS 发现就断了</strong> —— 表现就是”节点在跑，但谁也看不见谁”。</p>
+
+<blockquote>
+  <p>⚠️ <strong>这就是为什么不要随便 <code class="language-plaintext highlighter-rouge">kill -9</code>。</strong>
+<code class="language-plaintext highlighter-rouge">Ctrl+C</code>（SIGINT）和 <code class="language-plaintext highlighter-rouge">kill</code>（SIGTERM）会给进程执行清理代码的机会，
+<code class="language-plaintext highlighter-rouge">kill -9</code>（SIGKILL）不给 —— 快是快，但会留垃圾。</p>
+</blockquote>
+
+<h3 id="确认">确认</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> /dev/shm/ | <span class="nb">grep</span> <span class="nt">-c</span> <span class="s1">'^fastrtps_'</span>     <span class="c"># 堆了几十个就中招了</span>
+</code></pre></div></div>
+
+<h3 id="解决">解决</h3>
+
+<p><strong>用现成的脚本</strong>（本手册配套，放在 <code class="language-plaintext highlighter-rouge">~/dsh工作区/ros-clean.sh</code>）：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash ~/dsh工作区/ros-clean.sh          <span class="c"># 安全模式：只删没被占用的</span>
+bash ~/dsh工作区/ros-clean.sh <span class="nt">--all</span>    <span class="c"># 彻底模式：先杀 ROS 进程再全清</span>
+</code></pre></div></div>
+
+<p><strong>或者手动</strong>（只删没被占用的，不会影响正在跑的程序）：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for </span>f <span class="k">in</span> /dev/shm/fastrtps_<span class="k">*</span><span class="p">;</span> <span class="k">do</span>
+    <span class="o">[</span> <span class="nt">-e</span> <span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span> <span class="o">]</span> <span class="o">||</span> <span class="k">continue
+    </span>fuser <span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span> <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">||</span> <span class="nb">rm</span> <span class="nt">-f</span> <span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span>
+<span class="k">done
+</span>pkill <span class="nt">-f</span> <span class="s2">"[r]os2-daemon"</span>      <span class="c"># 顺手重启 daemon，它缓存了旧的图信息</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <code class="language-plaintext highlighter-rouge">pkill -f "[r]os2-daemon"</code> 里的方括号是必须的：
+<code class="language-plaintext highlighter-rouge">pkill -f</code> 会匹配<strong>自己的命令行</strong>，写 <code class="language-plaintext highlighter-rouge">ros2-daemon</code> 的话它会把自己也杀掉。
+写成 <code class="language-plaintext highlighter-rouge">[r]os2-daemon</code> 后，自己的 cmdline 里是字面量 <code class="language-plaintext highlighter-rouge">[r]os2-daemon</code>，
+正则匹配不到，就安全了。</p>
+</blockquote>
+
+<h3 id="预防">预防</h3>
+
+<ol>
+  <li><strong>停程序用 <code class="language-plaintext highlighter-rouge">Ctrl+C</code></strong>，不要直接关终端窗口、不要 <code class="language-plaintext highlighter-rouge">kill -9</code></li>
+  <li>实在要强杀，杀完跑一次 <code class="language-plaintext highlighter-rouge">bash ~/dsh工作区/ros-clean.sh</code></li>
+  <li>
+    <p>万一手头没脚本，最快的绕过办法是<strong>关掉共享内存传输</strong>：</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">FASTDDS_BUILTIN_TRANSPORTS</span><span class="o">=</span>UDPv4     <span class="c"># 只用 UDP，发现立刻正常</span>
+</code></pre></div>    </div>
+
+    <p>缺点是本机通信性能差一点（UDP 比共享内存慢），
+临时救急用，别写进 <code class="language-plaintext highlighter-rouge">~/.bashrc</code>。</p>
+  </li>
+</ol>
+</div>
+    
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/"><span>← 上一章</span><strong>仿真与导航</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/ROS2-bash/%E9%99%84%E5%BD%95-%E5%8B%98%E8%AF%AF%E4%B8%8E%E9%80%9F%E6%9F%A5/"><span>下一章 →</span><strong>附录：勘误与速查</strong></a>
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

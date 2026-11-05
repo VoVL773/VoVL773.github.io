@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    ROS2 实战：海龟案例与通信练习 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS2 基础教程</div>
+    <p class="tutorial-course-subtitle">ROS2基础 · ROS2实战 · 巡游小车实战</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2基础</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/README/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程导读</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/01-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>创建工作空间</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>多线程示例</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>话题通信</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>服务和参数</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>TF 坐标变换</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>可视化与数据工具</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>仿真与导航</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07B-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%93%8D%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>仿真与导航实操手册</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E9%99%84%E5%BD%95-%E5%8B%98%E8%AF%AF%E4%B8%8E%E9%80%9F%E6%9F%A5/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>附录：勘误与速查</span>
+          </a>
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/ROS2-bash/ROS2%E5%AE%9E%E6%88%98%E9%83%A8%E5%88%86%E8%AF%A6%E7%BB%86%E8%AE%B0%E5%BD%95/" aria-current="page">
+            <span class="tutorial-chapter-number">10</span>
+            <span>ROS2 实战：海龟案例与通信练习</span>
+          </a>
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">巡游小车实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E5%B7%A1%E6%B8%B8%E5%B0%8F%E8%BD%A6%E4%BB%BF%E7%9C%9F-%E4%BB%8E%E9%9B%B6%E5%A4%8D%E5%88%BB%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">11</span>
+            <span>巡游小车实战：从零复刻</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/ROS2-bash/README/">ROS2 基础教程</a><span>/</span>
+      <span>ROS2实战</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS2 基础教程 · 第 10 章</div>
+      <h1>ROS2 实战：海龟案例与通信练习</h1>
+      <p>通过九个案例练习话题、服务、参数、Action 和数据录制。</p>
+    </header>
+    <div class="post-content tutorial-content"><h2 id="指令速查">指令速查</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">## ── 包与构建 ──────────────────────────────</span>
+ros2 pkg create &lt;包名&gt; <span class="nt">--build-type</span> ament_python <span class="nt">--dependencies</span> rclpy <span class="nt">--license</span> Apache-2.0
+colcon build <span class="nt">--symlink-install</span>      <span class="c"># 调试期推荐，改 Python 代码免重编译</span>
+<span class="nb">source install</span>/setup.bash           <span class="c"># 每个新终端都要执行</span>
+
+<span class="c">## ── 节点 ─────────────────────────────────</span>
+ros2 node list
+ros2 node info /节点名
+ros2 run &lt;包名&gt; &lt;可执行名&gt;
+ros2 launch &lt;包名&gt; &lt;xxx.launch.py&gt;
+
+<span class="c">## ── 话题 ─────────────────────────────────</span>
+ros2 topic list <span class="nt">-t</span>                  <span class="c"># -t 显示消息类型（用于反推 import）</span>
+ros2 topic info /话题名 <span class="nt">--verbose</span>    <span class="c"># --verbose 看 QoS，排查"收不到消息"</span>
+ros2 topic <span class="nb">echo</span> /话题名
+ros2 topic hz /话题名               <span class="c"># 实际发布频率</span>
+ros2 topic pub /话题名 类型 <span class="s2">"{...}"</span>  <span class="c"># 默认 1Hz 持续发布，--once 只发一次</span>
+
+<span class="c">## ── 服务 ─────────────────────────────────</span>
+ros2 service list <span class="nt">-t</span>
+ros2 service call /服务名 类型 <span class="s2">"{...}"</span>
+ros2 interface show &lt;包名&gt;/srv/&lt;名字&gt;   <span class="c"># msg 则换成 msg</span>
+
+<span class="c">## ── 参数 ─────────────────────────────────</span>
+ros2 param list
+ros2 param get /节点名 参数名
+ros2 param <span class="nb">set</span> /节点名 参数名 值
+ros2 param describe /节点名 参数名
+ros2 param dump /节点名 <span class="o">&gt;</span> params.yaml
+ros2 run &lt;包名&gt; &lt;可执行名&gt; <span class="nt">--ros-args</span> <span class="nt">--params-file</span> params.yaml
+ros2 run &lt;包名&gt; &lt;可执行名&gt; <span class="nt">--ros-args</span> <span class="nt">-p</span> 参数名:<span class="o">=</span>值    <span class="c"># 注意是 :=</span>
+
+<span class="c">## ── TF 坐标变换 ───────────────────────────</span>
+ros2 run tf2_ros static_transform_publisher <span class="nt">--x</span> 0.1 <span class="nt">--z</span> 0.2 <span class="se">\</span>
+  <span class="nt">--frame-id</span> base_link <span class="nt">--child-frame-id</span> base_laser   <span class="c"># 发布静态变换（注意 --）</span>
+ros2 run tf2_ros tf2_echo base_link base_laser       <span class="c"># 查询两坐标系关系</span>
+ros2 topic <span class="nb">echo</span> /tf_static                           <span class="c"># 静态变换原始消息</span>
+ros2 topic info /tf_static <span class="nt">--verbose</span>                 <span class="c"># 看 Durability: TRANSIENT_LOCAL</span>
+ros2 run tf2_tools view_frames                       <span class="c"># 生成坐标系树 PDF（落在当前目录）</span>
+ros2 run tf2_tools view_frames <span class="nt">-o</span> ~/tf图/frames       <span class="c"># 指定输出（不带扩展名）</span>
+dot <span class="nt">-Tpng</span> frames.gv <span class="nt">-o</span> frames.png                    <span class="c"># .gv 转其它格式</span>
+
+<span class="c">## ── 可视化 ───────────────────────────────</span>
+rviz2                               <span class="c"># 三维可视化（首次启动报 Fixed Frame 错是正常的）</span>
+rviz2 <span class="nt">-d</span> ~/tf_demo.rviz             <span class="c"># 加载指定的配置文件</span>
+rqt                                 <span class="c"># plugins → service → service call</span>
+rqt_graph                           <span class="c"># 看节点与话题的连接关系，排查通信问题神器</span>
+
+<span class="c">## ── 仿真 / URDF 模型 ──────────────────────</span>
+ros2 pkg create &lt;包名&gt; <span class="nt">--build-type</span> ament_cmake <span class="nt">--license</span> Apache-2.0   <span class="c"># 模型包用 cmake</span>
+xacro 模型.xacro <span class="o">&gt;</span> /tmp/model.urdf        <span class="c"># 先展开：URDF 工具不认 xacro</span>
+check_urdf /tmp/model.urdf                <span class="c"># 校验结构（失败常见于名字对不上/父子成环）</span>
+urdf_to_graphviz /tmp/model.urdf 输出名    <span class="c"># 生成 .gv + .pdf（输出名是位置参数）</span>
+ros2 launch &lt;包名&gt; display_robot.launch.py
+ros2 launch &lt;包名&gt; display_robot.launch.py <span class="nt">--show-args</span>   <span class="c"># 只列参数，不启动</span>
+ros2 topic <span class="nb">echo</span> /robot_description <span class="nt">--once</span>                <span class="c"># 确认模型参数发出来了</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-joint-state-publisher-gui</span>  <span class="c"># 滑块手调关节</span>
+
+<span class="c">## ── Gazebo Harmonic 仿真（Jazzy）──────────</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-ros-gz</span>      <span class="c"># 仿真器 + ROS 桥（gz sim 就在里面）</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash             <span class="c"># ★ 必须，否则 gz 里没有 sim 子命令</span>
+gz sim <span class="nt">--version</span> <span class="o">&amp;&amp;</span> gz <span class="nt">--commands</span>            <span class="c"># 自检</span>
+gz sim <span class="nt">-r</span> 你的世界.sdf                        <span class="c"># 启动（-s 只起服务端，不开界面）</span>
+gz topic <span class="nt">-l</span>                                  <span class="c"># ① 先看 gz 侧有没有数据</span>
+gz topic <span class="nt">-e</span> <span class="nt">-t</span> /clock <span class="nt">-n</span> 1                   <span class="c"># 仿真时间在不在走</span>
+ros2 run ros_gz_sim create <span class="nt">-world</span> default <span class="nt">-file</span> 模型.urdf <span class="nt">-name</span> fishbot <span class="nt">-z</span> 0.1   <span class="c"># 生成机器人</span>
+ros2 run ros_gz_bridge parameter_bridge <span class="se">\</span>
+  /clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock <span class="se">\</span>
+  /model/fishbot/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist <span class="se">\</span>
+  /model/fishbot/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry <span class="se">\</span>
+  /model/fishbot/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
+<span class="c">##   [ = gz→ROS    ] = ROS→gz    @ = 双向   （写反不报错，只是数据不动）</span>
+ros2 topic list | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s2">"cmd_vel|odom|scan"</span>   <span class="c"># ② 再看桥过来没有</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-teleop-twist-keyboard</span> <span class="o">&amp;&amp;</span> ros2 run teleop_twist_keyboard teleop_twist_keyboard
+
+<span class="c">## ── ros2_control ─────────────────────────</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-ros2-control</span> ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-ros2-controllers</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-gz-ros2-control</span>   <span class="c"># Harmonic 用这个（不是 gazebo-ros2-control）</span>
+ros2 control list_hardware_interfaces         <span class="c"># 看接口 [available][unclaimed]</span>
+ros2 control list_hardware_components
+ros2 control list_controller_types
+ros2 control load_controller fishbot_joint_state_broadcaster <span class="nt">--set-state</span> active
+ros2 control list_controllers
+ros2 control set_controller_state &lt;控制器&gt; inactive   <span class="c"># 卸载前先失活</span>
+ros2 control unload_controller &lt;控制器&gt;
+
+<span class="c">## ── 建图（slam_toolbox）──────────────────</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-slam-toolbox</span>
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:<span class="o">=</span>True
+ros2 topic <span class="nb">echo</span> /map <span class="nt">--once</span>                   <span class="c"># 地图在不在发</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-nav2-map-server</span>
+ros2 run nav2_map_server map_saver_cli <span class="nt">-f</span> room   <span class="c"># 生成 room.pgm + room.yaml</span>
+
+<span class="c">## ── 导航（Nav2）──────────────────────────</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-navigation2</span> ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-nav2-bringup</span>
+ros2 launch fishbot_navigation2 navigation2.launch.py
+ros2 topic pub /initialpose geometry_msgs/msg/PoseWithCovarianceStamped <span class="se">\</span>
+  <span class="s2">"{header: {frame_id: map}, pose: {pose: {position: {x: 0.0, y: 0.0}, orientation: {w: 1.0}}}}"</span> <span class="nt">--once</span>
+ros2 action list | <span class="nb">grep</span> <span class="nt">-i</span> navigate           <span class="c"># /navigate_to_pose、/follow_waypoints</span>
+ros2 action send_goal /navigate_to_pose nav2_msgs/action/NavigateToPose <span class="se">\</span>
+  <span class="s2">"{pose: {header: {frame_id: map}, pose: {position: {x: 2.0, y: 2.0}, orientation: {w: 1.0}}}}"</span> <span class="nt">--feedback</span>
+ros2 run tf2_ros tf2_echo map base_footprint  <span class="c"># 查机器人在地图里的位姿</span>
+ros2 topic <span class="nb">echo</span> /cmd_vel                      <span class="c"># 看导航输出的速度指令</span>
+
+<span class="c">## ── 排查 ─────────────────────────────────</span>
+ros2 doctor                         <span class="c"># 环境体检</span>
+<span class="nb">echo</span> <span class="nv">$ROS_DOMAIN_ID</span>                 <span class="c"># 多机/多容器通信时，域 ID 必须一致</span>
+pgrep <span class="nt">-af</span> static_transform_publisher <span class="c"># 找残留的 tf 发布器</span>
+pkill <span class="nt">-f</span> static_transform_publisher  <span class="c"># 一次清干净（kill 外壳杀不掉子进程）</span>
+</code></pre></div></div>
+
+<h2 id="案例1publisher--海龟画圈">案例1.publisher – 海龟画圈</h2>
+
+<p>知识点汇总：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ros2 node list</code> —— 列出所有正在运行的节点</li>
+  <li><code class="language-plaintext highlighter-rouge">ros2 node info /turtlesim</code> —— 显示 <code class="language-plaintext highlighter-rouge">/turtlesim</code> 这个节点的信息（它订阅了什么、发布了什么、提供了哪些服务）</li>
+  <li><code class="language-plaintext highlighter-rouge">ros2 topic --help</code> —— 话题对应的命令</li>
+</ul>
+
+<blockquote>
+  <p>示例 <code class="language-plaintext highlighter-rouge">ros2 topic echo /turtle1/pose</code> 打印海龟节点 <strong>/turtlesim</strong> 的位置。
+输出依次是：x 轴坐标、y 轴坐标、朝向角 theta（与 x 轴的夹角，单位弧度）、线速度 linear_velocity、角速度 angular_velocity。</p>
+</blockquote>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ros2 topic info /turtle1/cmd_vel</code> —— 显示这个话题的消息类型，以及发布者和订阅者的数量</li>
+  <li><code class="language-plaintext highlighter-rouge">ros2 interface show</code> —— 查看对应接口的详细定义(只写接口即可不要在前面加上话题名)</li>
+  <li><code class="language-plaintext highlighter-rouge">ros2 topic pub 话题名 接口名 对应参数</code>
+    <blockquote>
+      <p>示例：<code class="language-plaintext highlighter-rouge">ros2 topic pub /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5, y: 0.0}, angular: {z: 0.0}}"</code></p>
+
+      <p>发布一个对应控制海龟速度的接口的话题，让海龟节点以指定速度运动</p>
+    </blockquote>
+  </li>
+</ul>
+
+<p>可以看到 控制海龟运动的是 /turtle1/cmd_vel话题的geometry_msg/msg/Twist接口 建立发布者传入指定的Twist字段即可控制海龟移动</p>
+
+<p>借用python库可以发布对应信息</p>
+
+<p>turtke_circle_publisher.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">Twist</span> <span class="c1">#从对应接口引用Twist类型
+</span>
+<span class="sh">"""</span><span class="s">
+案例 1:Publisher —— 让小海龟画圆
+</span><span class="sh">"""</span>
+
+<span class="k">class</span> <span class="nc">TurtleCircleNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="n">node_name</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s">节点(海龟画圈节点)启动</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">turtleCircle_publisher</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span><span class="n">Twist</span><span class="p">,</span> <span class="sh">'</span><span class="s">/turtle1/cmd_vel</span><span class="sh">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">#对turtle1_cmd_vel创建发布Twist类型的发布者，最多缓存10条消息 创建了这个发布者
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">timer_callback</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">timer_callback</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">twist</span> <span class="o">=</span> <span class="nc">Twist</span><span class="p">()</span>
+        <span class="n">twist</span><span class="p">.</span><span class="n">linear</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">4.0</span>
+        <span class="n">twist</span><span class="p">.</span><span class="n">angular</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">turtleCircle_publisher</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">twist</span><span class="p">)</span> <span class="c1">#实际发送控制指令 调用发布者发布
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">发布了话题</span><span class="si">{</span><span class="n">twist</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">TurtleCircleNode</span><span class="p">(</span><span class="sh">'</span><span class="s">TurtleCircleNode</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>自测回复</p>
+<ol>
+  <li>Twist 控制海龟用到 linear线速度 和 angular角速度</li>
+  <li>回调函数里修改要发布的速度即可</li>
+  <li>话题发布速度变慢 画圆不平滑了</li>
+</ol>
+
+<h2 id="案例2subscriber--监听小海龟的实时位姿">案例2.Subscriber —— 监听小海龟的实时位姿</h2>
+
+<p>我们发现 话题/turtle1/pose 负责记录海龟的位置信息 这样我们可以通过订阅该话题监听海龟的位置</p>
+
+<p>在运行案例1时 另起一个终端 输入 ros2 topic echo /turtle1/pose 每秒62次输出海龟的位置信息</p>
+
+<p>turtle_subscriber.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">turtlesim.msg</span> <span class="kn">import</span> <span class="n">Pose</span>
+
+<span class="sh">"""</span><span class="s">
+案例2: 监听海龟の状态
+</span><span class="sh">"""</span>
+
+<span class="k">class</span> <span class="nc">TurtleCircleNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="n">node_name</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s">节点(海龟状态监听)启动</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">latest_msg</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_subscription</span><span class="p">(</span><span class="n">Pose</span><span class="p">,</span><span class="sh">'</span><span class="s">/turtle1/pose</span><span class="sh">'</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">pose_callback</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">timer_callback</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">pose_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">latest_msg</span> <span class="o">=</span> <span class="n">msg</span>                      
+    <span class="k">def</span> <span class="nf">timer_callback</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">latest_msg</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>                 
+            <span class="k">return</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">latest_msg</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">位置: (</span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">y</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">) | </span><span class="sh">'</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">线速度: </span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">linear_velocity</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> | </span><span class="sh">'</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">角速度: </span><span class="si">{</span><span class="n">msg</span><span class="p">.</span><span class="n">angular_velocity</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="sh">'</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">TurtleCircleNode</span><span class="p">(</span><span class="sh">'</span><span class="s">TurtleCircleNode</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>自测回复：</p>
+<ol>
+  <li>字段解释：</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x: 9.497976303100586  <span class="c">#x轴位置   </span>
+y: 1.2041237354278564 <span class="c">#y轴位置</span>
+theta: <span class="nt">-1</span>.6480000019073486 <span class="c">#与主方向的偏移值</span>
+linear_velocity: 4.0  <span class="c">#线速度</span>
+angular_velocity: <span class="nt">-1</span>.0 <span class="c">#角速度</span>
+
+</code></pre></div></div>
+
+<ol>
+  <li>实例代码里使用定时器的回调函数实现 其他实现 每60次统计一次，记录上传时间time.time()</li>
+  <li>获取或发布的数据类型，话题，缓存最大值 而订阅者必需有一个回调函数</li>
+</ol>
+
+<h2 id="案例3综合练习--状态机控制小海龟画正方形">案例3.综合练习 —— 状态机控制小海龟画正方形</h2>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sh">"""</span><span class="s">
+案例3:综合练习 —— 状态机控制小海龟画正方形
+</span><span class="sh">"""</span>
+<span class="kn">import</span> <span class="n">math</span>
+
+<span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">Twist</span>
+
+<span class="c1"># ====== 参数配置（把"魔法数字"提到顶部，要改只改这里）======
+</span><span class="n">TIMER_PERIOD</span> <span class="o">=</span> <span class="mf">0.1</span>      <span class="c1"># 定时器周期（秒）
+</span><span class="n">GO_SPEED</span> <span class="o">=</span> <span class="mf">1.0</span>          <span class="c1"># 直行线速度 (m/s)
+</span><span class="n">GO_CYCLES</span> <span class="o">=</span> <span class="mi">20</span>          <span class="c1"># 直行持续周期数
+</span><span class="n">TURN_SPEED</span> <span class="o">=</span> <span class="mf">1.5708</span>     <span class="c1"># 转向角速度 (rad/s)，约 90°/s
+</span><span class="n">TURN_CYCLES</span> <span class="o">=</span> <span class="mi">10</span>        <span class="c1"># 转向持续周期数
+</span><span class="n">EDGES</span> <span class="o">=</span> <span class="mi">4</span>               <span class="c1"># 正方形四条边
+</span>
+
+<span class="k">class</span> <span class="nc">SquareDriver</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">"</span><span class="s">square_driver</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="c1"># 发布速度指令给海龟
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">publisher_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span><span class="n">Twist</span><span class="p">,</span> <span class="sh">"</span><span class="s">/turtle1/cmd_vel</span><span class="sh">"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># 状态变量
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">=</span> <span class="sh">"</span><span class="s">GO</span><span class="sh">"</span>    <span class="c1"># 当前状态：'GO' 或 'TURN'
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">cycles</span> <span class="o">=</span> <span class="mi">0</span>      <span class="c1"># 当前状态已持续的周期数
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">edge</span> <span class="o">=</span> <span class="mi">0</span>        <span class="c1"># 已完成的边数
+</span>
+        <span class="c1"># 定时器 10Hz
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">timer</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="n">TIMER_PERIOD</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">timer_callback</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">画正方形节点已启动!</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">timer_callback</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="nc">Twist</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">==</span> <span class="sh">"</span><span class="s">GO</span><span class="sh">"</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">.</span><span class="n">linear</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">GO_SPEED</span>
+        <span class="k">else</span><span class="p">:</span>                                   <span class="c1"># TURN
+</span>            <span class="n">msg</span><span class="p">.</span><span class="n">angular</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">TURN_SPEED</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">publisher_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">cycles</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># ---- 到达阈值就切状态 ----
+</span>        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">==</span> <span class="sh">"</span><span class="s">GO</span><span class="sh">"</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">cycles</span> <span class="o">&gt;=</span> <span class="n">GO_CYCLES</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">cycles</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">=</span> <span class="sh">"</span><span class="s">TURN</span><span class="sh">"</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">edge</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">第 </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">edge</span><span class="si">}</span><span class="s"> 条边画完, 开始转弯...</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">==</span> <span class="sh">"</span><span class="s">TURN</span><span class="sh">"</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">cycles</span> <span class="o">&gt;=</span> <span class="n">TURN_CYCLES</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">cycles</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">edge</span> <span class="o">&gt;=</span> <span class="n">EDGES</span><span class="p">:</span>
+                <span class="c1"># 四条边 + 四个 90° 转弯 = 闭合正方形
+</span>                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">正方形画完了! 停止运动.</span><span class="sh">"</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">publisher_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="nc">Twist</span><span class="p">())</span>     <span class="c1"># 发一条零速度
+</span>                <span class="n">self</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="nf">cancel</span><span class="p">()</span>                  <span class="c1"># 4 条边完成后取消定时器
+</span>                <span class="k">return</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">=</span> <span class="sh">"</span><span class="s">GO</span><span class="sh">"</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">SquareDriver</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>自测回复：</p>
+
+<ol>
+  <li>状态循环条件
+    <ul>
+      <li>GO-&gt;TURN  self.cycles &gt;= GO_CYCLES 够20个周期也就是20*0.1s = 2s</li>
+      <li>TURN -&gt; GO self.cycles &gt;= TRUN_CYCLES 够10个周期也就是 10*0.1=1s and edge &lt;4</li>
+    </ul>
+  </li>
+  <li>边长改为3m 就是直行多走1s GO_CYCLES = 30</li>
+  <li>多加一个停顿状态在旋转结束后停10个周期再直行</li>
+</ol>
+
+<h2 id="案例4service-客户端--调用-spawn-服务生成一只新海龟">案例4.Service 客户端 —— 调用 /spawn 服务生成一只新海龟</h2>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">random</span>
+
+<span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">turtlesim.srv</span> <span class="kn">import</span> <span class="n">Spawn</span>
+
+<span class="sh">"""</span><span class="s">
+案例4:Service 客户端 —— 调用 /spawn 服务生成一只新海龟
+流程：创建客户端 -&gt; 循环等待服务上线 -&gt; 构造 Spawn.Request -&gt;
+     call_async 异步调用(不阻塞) -&gt; add_done_callback 在回调里取响应
+</span><span class="sh">"""</span>
+
+
+<span class="k">class</span> <span class="nc">SpawnClientNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s">节点(生成新海龟客户端)启动</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 1. 创建客户端：参数为服务类型 Spawn 和服务名 /spawn
+</span>        <span class="c1">#    这一步不会立即建立连接，只是"准备好以后可以调用"
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_client</span><span class="p">(</span><span class="n">Spawn</span><span class="p">,</span> <span class="sh">'</span><span class="s">/spawn</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 2. 防御性等待：每秒检查一次服务端是否在线
+</span>        <span class="c1">#    用 while 而不是 if，保证先启动客户端、后启动 turtlesim 也能用
+</span>        <span class="k">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">'</span><span class="s">等待 /spawn 服务上线...</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 3. 构造请求对象并填字段（对应 Spawn.srv 的请求部分）
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">request</span> <span class="o">=</span> <span class="n">Spawn</span><span class="p">.</span><span class="nc">Request</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">uniform</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">uniform</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="sh">'</span><span class="s">turtle2</span><span class="sh">'</span>
+
+        <span class="c1"># 发起异步调用，立即返回一个 Future；响应到达时自动执行注册的回调
+</span>        <span class="n">future</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">call_async</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">future</span><span class="p">.</span><span class="nf">add_done_callback</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">response_callback</span><span class="p">)</span>
+
+    <span class="c1"># 4. 回调里取出响应（future.result() 失败时会抛异常，必须 try/except）
+</span>    <span class="k">def</span> <span class="nf">response_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="p">.</span><span class="nf">result</span><span class="p">()</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">成功! 服务返回的新海龟名字为: </span><span class="si">{</span><span class="n">response</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">服务调用失败: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">SpawnClientNode</span><span class="p">(</span><span class="sh">'</span><span class="s">spawn_client</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p>自测回复：</p>
+
+<ol>
+  <li>续的数据流 / 只管发不管结果 → Topic；一次性动作、需要”办成了没”的回执 → Service。</li>
+</ol>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: left">Topic（话题）</th>
+      <th style="text-align: left">Service（服务）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">模式</td>
+      <td style="text-align: left">发布/订阅，单向、持续</td>
+      <td style="text-align: left">客户端/服务端，一问一答</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">反馈</td>
+      <td style="text-align: left">没有，发出去就不管了</td>
+      <td style="text-align: left">有响应，能知道成功/失败</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">例子（真实机器人）</td>
+      <td style="text-align: left">底盘持续接收<code class="language-plaintext highlighter-rouge">/cmd_vel</code> 速度指令；雷达持续发布<code class="language-plaintext highlighter-rouge">/scan</code> 激光数据；摄像头持续发图像</td>
+      <td style="text-align: left">调用”清空地图”服务、”开始标定相机”服务、电梯机器人按楼层按钮；导航中”清空代价地图<code class="language-plaintext highlighter-rouge">/clear_costmap</code> “</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>同样是”动一下”，区分关键是 要不要确认结果 ：</p>
+
+<ul>
+  <li>让机器人 以 0.5m/s 一直往前走 → Topic。速度要 20Hz 持续发，撞到障碍停发即可，不需要每条指令都得到应答。</li>
+  <li>让机器人<strong>“把机械臂归零”或”生成一只新海龟”</strong> → Service。这是一个有明确起止的动作，调用方需要知道”到位了没有/新海龟叫什么名字”。
+    <ol>
+      <li>三步各在等什么、做什么
+三步 ：<code class="language-plaintext highlighter-rouge">wait_for_service</code> 等服务端出现；<code class="language-plaintext highlighter-rouge">call_async</code> 发请求并立刻拿到 Future（不阻塞）；<code class="language-plaintext highlighter-rouge">add_done_callback</code> 登记响应到达后的处理函数。</li>
+    </ol>
+  </li>
+</ul>
+
+<ol>
+  <li>代码如下</li>
+</ol>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">turtlesim.srv</span> <span class="kn">import</span> <span class="n">Spawn</span>
+
+<span class="sh">"""</span><span class="s">
+案例4：Service 客户端 —— 调用 /spawn 服务生成一只新海龟
+位置从命令行参数读入：
+    python3 turtle_spawn_client.py &lt;x&gt; &lt;y&gt; [theta] [name]
+例：
+    python3 turtle_spawn_client.py 2.0 3.0 0.0 turtle2
+</span><span class="sh">"""</span>
+
+
+<span class="k">class</span> <span class="nc">SpawnClientNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s">节点(生成新海龟客户端)启动</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 1. 创建客户端
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_client</span><span class="p">(</span><span class="n">Spawn</span><span class="p">,</span> <span class="sh">'</span><span class="s">/spawn</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 2. 循环等待服务端上线
+</span>        <span class="k">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">'</span><span class="s">等待 /spawn 服务上线...</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 3. 用命令行传入的参数构造请求
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">request</span> <span class="o">=</span> <span class="n">Spawn</span><span class="p">.</span><span class="nc">Request</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="c1"># 异步调用并登记回调，保存 future 供 main 判断是否完成
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">future</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">call_async</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">future</span><span class="p">.</span><span class="nf">add_done_callback</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">response_callback</span><span class="p">)</span>
+
+    <span class="c1"># 4. 回调里取出响应
+</span>    <span class="k">def</span> <span class="nf">response_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="p">.</span><span class="nf">result</span><span class="p">()</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">成功! 服务返回的新海龟名字为: </span><span class="si">{</span><span class="n">response</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">服务调用失败: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">解析命令行参数：x、y 必填，theta、name 有默认值</span><span class="sh">"""</span>
+    <span class="k">def</span> <span class="nf">usage</span><span class="p">():</span>
+        <span class="k">return</span> <span class="sh">'</span><span class="s">用法: python3 turtle_spawn_client.py &lt;x&gt; &lt;y&gt; [theta] [name]</span><span class="se">\n</span><span class="sh">'</span> \
+               <span class="sh">'</span><span class="s">例:   python3 turtle_spawn_client.py 2.0 3.0 0.0 turtle2</span><span class="sh">'</span>
+
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="nf">usage</span><span class="p">())</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="k">else</span> <span class="sh">'</span><span class="s">turtle2</span><span class="sh">'</span>
+    <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">错误: x、y、theta 必须是数字</span><span class="se">\n</span><span class="sh">'</span> <span class="o">+</span> <span class="nf">usage</span><span class="p">())</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">name</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="nf">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+
+    <span class="c1"># args=[]：告诉 rclpy 不要自己去解析命令行参数(位置参数由我们手动解析)
+</span>    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">SpawnClientNode</span><span class="p">(</span><span class="sh">'</span><span class="s">spawn_client</span><span class="sh">'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># 一次性任务：响应回来后就结束，而不是一直 spin
+</span>    <span class="k">while</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">node</span><span class="p">.</span><span class="n">future</span><span class="p">.</span><span class="nf">done</span><span class="p">():</span>
+        <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin_once</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+    <span class="n">node</span><span class="p">.</span><span class="nf">destroy_node</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<h2 id="案例5-service-server--接收目标坐标并导航海龟">案例5. Service Server —— 接收目标坐标并导航海龟</h2>
+
+<p>先规划一下： 首先我们需要一个节点发布位置 一个节点接收位置并控制海龟 这里我们可以通过一个接口规范一下数据格式</p>
+
+<p>创建一下接口 <code class="language-plaintext highlighter-rouge">ros2 pkg create nav_interface --build-type ament_cmake --license Apache-2.0</code></p>
+
+<p>在package.xml 里手写三行：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;buildtool_depend&gt;</span>rosidl_default_generators<span class="nt">&lt;/buildtool_depend&gt;</span>
+<span class="nt">&lt;exec_depend&gt;</span>rosidl_default_runtime<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="nt">&lt;member_of_group&gt;</span>rosidl_interface_packages<span class="nt">&lt;/member_of_group&gt;</span>
+</code></pre></div></div>
+
+<p>创建srv目录写入NavigateTo.srv</p>
+
+<pre><code class="language-srv">float32 x #目标地点和状态
+float32 y
+float32 theta
+---
+bool success #响应字段
+</code></pre>
+
+<p>之后colcon build &amp;&amp; source install/setup.bash</p>
+
+<p><code class="language-plaintext highlighter-rouge">ros2 interface show nav_interface/srv/NavigateTo</code></p>
+
+<p>看到输出srv内的内容即为创建完成</p>
+
+<p>现在就着手于客户端与服务端的书写由客户端发指令服务端控制海龟</p>
+
+<p>navigate_server.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span><span class="kn">import</span> <span class="n">math</span>
+<span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">Twist</span>
+<span class="kn">from</span> <span class="n">turtlesim.msg</span> <span class="kn">import</span> <span class="n">Pose</span>
+<span class="kn">from</span> <span class="n">nav_interface</span> <span class="kn">import</span> <span class="n">NavigateTo</span>
+
+<span class="c1">#辅助函数
+</span><span class="k">def</span> <span class="nf">clamp</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">low</span><span class="p">,</span><span class="n">high</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">限制速度</span><span class="sh">"""</span>
+    <span class="k">return</span> <span class="nf">max</span><span class="p">(</span><span class="n">low</span><span class="p">,</span><span class="nf">min</span><span class="p">(</span><span class="n">high</span><span class="p">,</span><span class="n">v</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">角度归一化到 [-π, π]，避免</span><span class="sh">"</span><span class="s">要转 350°</span><span class="sh">"</span><span class="s">这种绕远路</span><span class="sh">"""</span>
+    <span class="k">return</span> <span class="n">math</span><span class="p">.</span><span class="nf">atan2</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">math</span><span class="p">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+<span class="n">CANVAS</span> <span class="o">=</span> <span class="mf">11.09</span> <span class="c1">#小海龟窗口的尺寸 11.09m * 11.09m 画布尺寸：窗口 500x500，比例尺 45 px/m → (500-1)/45 ≈ 11.09
+</span>
+<span class="k">class</span> <span class="nc">NavigateServer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="n">ARRIVE_TOL</span> <span class="o">=</span> <span class="mf">0.10</span> <span class="c1">#位置到目标位置的偏差最大值(m)
+</span>    <span class="n">ANGLE_TOL</span> <span class="o">=</span> <span class="mf">0.02</span> <span class="c1">#朝向到位容差(rad)
+</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">"</span><span class="s">navigate_server</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">srv_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_service</span><span class="p">(</span><span class="n">NavigateTo</span><span class="p">,</span><span class="sh">"</span><span class="s">navigate_to</span><span class="sh">"</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">on_navigate</span><span class="p">)</span> <span class="c1">#接收服务端的NavigateTo信息
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">cmd_pub_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span><span class="n">Twist</span><span class="p">,</span><span class="sh">"</span><span class="s">/turtle1/cmd_vel</span><span class="sh">"</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c1">#发布速度
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">create_subscription</span><span class="p">(</span><span class="n">Pose</span><span class="p">,</span><span class="sh">"</span><span class="s">/turtle1/pose</span><span class="sh">"</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">on_pose</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c1">#接收海龟的位置信息
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">control_loop</span><span class="p">)</span> <span class="c1">#50HZ的闭环控制
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1">#当前位置
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">target_</span> <span class="o">=</span> <span class="bp">None</span> 
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">导航服务已经启动，服务名:/navigate_to</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_pose</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pose</span><span class="p">:</span> <span class="n">Pose</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="o">=</span> <span class="n">pose</span> <span class="c1">#更新位姿
+</span>
+    <span class="k">def</span> <span class="nf">on_navigate</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="n">request</span><span class="p">,</span><span class="n">response</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">request</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">CANVAS</span> <span class="ow">and</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">request</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">CANVAS</span><span class="p">):</span>
+            <span class="n">response</span><span class="p">.</span><span class="n">success</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warn</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">目标点(</span><span class="si">{</span><span class="n">request</span><span class="p">.</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">,</span><span class="si">{</span><span class="n">request</span><span class="p">.</span><span class="n">y</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">) 超出画布</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">target_</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">success</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">目标点 (</span><span class="si">{</span><span class="n">request</span><span class="p">.</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">request</span><span class="p">.</span><span class="n">y</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">),朝向 </span><span class="si">{</span><span class="n">math</span><span class="p">.</span><span class="nf">degrees</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">theta</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="s">° 已接收</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+    <span class="k">def</span> <span class="nf">control_loop</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="c1">#没有收到指令不控制
+</span>        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">target_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">ttheta</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">target_</span> <span class="c1">#目标点的参数
+</span>        <span class="n">dx</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">x</span> <span class="c1">#计算距离
+</span>        <span class="n">dy</span> <span class="o">=</span> <span class="n">ty</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">y</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="nf">hypot</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="nc">Twist</span><span class="p">()</span>
+
+        <span class="c1">#朝向目标点 前进
+</span>        <span class="k">if</span> <span class="n">distance</span> <span class="o">&gt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">ARRIVE_TOL</span><span class="p">:</span>
+            <span class="n">angle_error</span> <span class="o">=</span> <span class="nf">norm</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="nf">atan2</span><span class="p">(</span><span class="n">dy</span><span class="p">,</span><span class="n">dx</span><span class="p">)</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">theta</span><span class="p">)</span>
+            <span class="c1">#比例控制，限制最大角速度为3.0rad/s
+</span>            <span class="n">msg</span><span class="p">.</span><span class="n">angular</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="nf">clamp</span><span class="p">(</span><span class="mf">6.0</span> <span class="o">*</span> <span class="n">angle_error</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
+            <span class="c1">#确定朝向是否对准
+</span>            <span class="k">if</span> <span class="nf">abs</span><span class="p">(</span><span class="n">angle_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>
+                <span class="n">msg</span><span class="p">.</span><span class="n">linear</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">distance</span><span class="p">,</span><span class="mf">2.0</span><span class="p">)</span> <span class="c1">#前进
+</span>            <span class="n">self</span><span class="p">.</span><span class="n">cmd_pub_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="c1">#检测并停止
+</span>        <span class="n">angle_error</span> <span class="o">=</span> <span class="nf">norm</span><span class="p">(</span><span class="n">ttheta</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nf">abs</span><span class="p">(</span><span class="n">angle_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">ANGLE_TOL</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">cmd_pub_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="nc">Twist</span><span class="p">())</span>       <span class="c1">#到达后发布停止指令 
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">已到达 (</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">y</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">),</span><span class="sh">"</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">朝向 </span><span class="si">{</span><span class="n">math</span><span class="p">.</span><span class="nf">degrees</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">theta</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="s">°</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">target_</span> <span class="o">=</span> <span class="bp">None</span>                   
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># 朝向未对准 → 原地旋转（不前进）
+</span>            <span class="n">msg</span> <span class="o">=</span> <span class="nc">Twist</span><span class="p">()</span>
+            <span class="n">msg</span><span class="p">.</span><span class="n">angular</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="nf">clamp</span><span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">angle_error</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">cmd_pub_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">return</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">NavigateServer</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">node</span><span class="p">.</span><span class="n">cmd_pub_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="nc">Twist</span><span class="p">())</span>
+        <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">node</span><span class="p">.</span><span class="nf">destroy_node</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p>navigate_client.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">#!/usr/bin/env python3
+</span><span class="sh">"""</span><span class="s">
+通过自定义服务发布目标地点，让海龟前往 —— 客户端
+
+用法：
+    ros2 run turtle_navigate navigate_client                # 默认目标 (8, 8, 90°)
+    ros2 run turtle_navigate navigate_client 2 9 0          # x y theta(弧度)
+    ros2 run turtle_navigate navigate_client 5.5 5.5 3.14
+
+</span><span class="sh">"""</span>
+<span class="kn">import</span> <span class="n">math</span>
+<span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">turtlesim.msg</span> <span class="kn">import</span> <span class="n">Pose</span>
+<span class="kn">from</span> <span class="n">status_interface.srv</span> <span class="kn">import</span> <span class="n">NavigateTo</span>
+
+
+<span class="k">class</span> <span class="nc">NavigateClient</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+
+    <span class="n">ARRIVE_TOL</span> <span class="o">=</span> <span class="mf">0.10</span>      <span class="c1"># 位置容差，和服务端保持一致
+</span>    <span class="n">ANGLE_TOL</span> <span class="o">=</span> <span class="mf">0.05</span>       <span class="c1"># 朝向容差 (rad)
+</span>    <span class="n">STOP_TOL</span> <span class="o">=</span> <span class="mf">0.05</span>        <span class="c1"># 判定"停稳"的速度阈值
+</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">"</span><span class="s">navigate_client</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">cli_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_client</span><span class="p">(</span><span class="n">NavigateTo</span><span class="p">,</span> <span class="sh">"</span><span class="s">navigate_to</span><span class="sh">"</span><span class="p">)</span> <span class="c1">#服务类型 服务名均与服务端一致
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">create_subscription</span><span class="p">(</span><span class="n">Pose</span><span class="p">,</span> <span class="sh">"</span><span class="s">/turtle1/pose</span><span class="sh">"</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">on_pose</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">#订阅者
+</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">goal_</span> <span class="o">=</span> <span class="bp">None</span>          <span class="c1"># (x, y, theta)
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">accepted_</span> <span class="o">=</span> <span class="bp">False</span>     <span class="c1"># 服务是否已接收
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">arrived_</span> <span class="o">=</span> <span class="bp">False</span>      <span class="c1"># 是否已到达
+</span>
+    <span class="c1"># ---------------- 回调 ----------------
+</span>    <span class="k">def</span> <span class="nf">on_pose</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pose</span><span class="p">:</span> <span class="n">Pose</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="o">=</span> <span class="n">pose</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">goal_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">arrived_</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># ★ 只有"位置到位 + 朝向到位 + 已经停稳"才算真的到了。
+</span>        <span class="c1">#   只看位置会判早：服务端还要转朝向，中途路过目标附近就误判了。
+</span>        <span class="n">pos_err</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="nf">hypot</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">goal_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pose</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">goal_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">pose</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">ang_err</span> <span class="o">=</span> <span class="nf">abs</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="nf">atan2</span><span class="p">(</span>
+            <span class="n">math</span><span class="p">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">goal_</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">pose</span><span class="p">.</span><span class="n">theta</span><span class="p">),</span>
+            <span class="n">math</span><span class="p">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">goal_</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">pose</span><span class="p">.</span><span class="n">theta</span><span class="p">)))</span>
+        <span class="n">stopped</span> <span class="o">=</span> <span class="p">(</span><span class="nf">abs</span><span class="p">(</span><span class="n">pose</span><span class="p">.</span><span class="n">linear_velocity</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">STOP_TOL</span>
+                   <span class="ow">and</span> <span class="nf">abs</span><span class="p">(</span><span class="n">pose</span><span class="p">.</span><span class="n">angular_velocity</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">STOP_TOL</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pos_err</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">ARRIVE_TOL</span> <span class="ow">and</span> <span class="n">ang_err</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">ANGLE_TOL</span> <span class="ow">and</span> <span class="n">stopped</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">arrived_</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">已到达 (</span><span class="si">{</span><span class="n">pose</span><span class="p">.</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">pose</span><span class="p">.</span><span class="n">y</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">)，</span><span class="sh">"</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">朝向 </span><span class="si">{</span><span class="n">math</span><span class="p">.</span><span class="nf">degrees</span><span class="p">(</span><span class="n">pose</span><span class="p">.</span><span class="n">theta</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="s">°，</span><span class="sh">"</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">位置误差 </span><span class="si">{</span><span class="n">pos_err</span> <span class="o">*</span> <span class="mi">100</span><span class="si">:</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="s"> cm，</span><span class="sh">"</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">朝向误差 </span><span class="si">{</span><span class="n">math</span><span class="p">.</span><span class="nf">degrees</span><span class="p">(</span><span class="n">ang_err</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">°</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_response</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">服务返回时自动调用（不阻塞）</span><span class="sh">"""</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="p">.</span><span class="nf">result</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">accepted_</span> <span class="o">=</span> <span class="nf">bool</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">success</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">accepted_</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s"> 服务端已接收目标，海龟开始移动</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warn</span><span class="p">(</span><span class="sh">"</span><span class="s">服务端拒绝了目标（超出画布？）</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="c1"># ---------------- 发目标 ----------------
+</span>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">wait_timeout</span><span class="o">=</span><span class="mf">60.0</span><span class="p">):</span>
+        <span class="c1"># 等服务器上线
+</span>        <span class="k">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">cli_</span><span class="p">.</span><span class="nf">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">等待服务时被打断</span><span class="sh">"</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">False</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">等待导航服务 /navigate_to ...</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">goal_</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">NavigateTo</span><span class="p">.</span><span class="nc">Request</span><span class="p">()</span>
+        <span class="n">request</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">request</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">request</span><span class="p">.</span><span class="n">theta</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">发送目标: (</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">theta</span><span class="si">}</span><span class="s"> rad)</span><span class="sh">"</span><span class="p">)</span>
+        <span class="c1"># ★ 异步发送 + 回调处理结果
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">cli_</span><span class="p">.</span><span class="nf">call_async</span><span class="p">(</span><span class="n">request</span><span class="p">).</span><span class="nf">add_done_callback</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_response</span><span class="p">)</span>
+
+        <span class="c1"># 等它到达（客户端自己盯位姿，不是等服务）
+</span>        <span class="kn">import</span> <span class="n">time</span>
+        <span class="n">deadline</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="nf">monotonic</span><span class="p">()</span> <span class="o">+</span> <span class="n">wait_timeout</span>
+        <span class="k">while</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">arrived_</span> <span class="ow">and</span> <span class="n">time</span><span class="p">.</span><span class="nf">monotonic</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin_once</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">arrived_</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warn</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">等了 </span><span class="si">{</span><span class="n">wait_timeout</span><span class="si">:</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="s"> 秒还没到，放弃等待</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">arrived_</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">NavigateClient</span><span class="p">()</span>
+    <span class="c1"># 默认目标：右上方，朝上
+</span>    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="n">math</span><span class="p">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nf">float</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nf">float</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">node</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">node</span><span class="p">.</span><span class="nf">destroy_node</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<h2 id="案例6-键盘控制海龟">案例6. 键盘控制海龟</h2>
+
+<p>teleop_keyboard.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span><span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">import</span> <span class="n">select</span>
+<span class="kn">import</span> <span class="n">termios</span>
+<span class="kn">import</span> <span class="n">tty</span>
+<span class="kn">import</span> <span class="n">threading</span>
+<span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">Twist</span>
+
+<span class="n">BINDINGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">w</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mf">2.0</span><span class="p">,</span>  <span class="mf">0.0</span><span class="p">),</span>
+    <span class="sh">'</span><span class="s">s</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+    <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span>  <span class="mf">2.0</span><span class="p">),</span>
+    <span class="sh">'</span><span class="s">d</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">),</span>
+    <span class="sh">'</span><span class="s"> </span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span>  <span class="mf">0.0</span><span class="p">),</span>   <span class="c1"># 空格 = 停
+</span><span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">KeyboardTeleop</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">"</span><span class="s">teleop_keyboard</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">pub_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span><span class="n">Twist</span><span class="p">,</span> <span class="sh">"</span><span class="s">/turtle1/cmd_vel</span><span class="sh">"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">twist_</span> <span class="o">=</span> <span class="nc">Twist</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">on_timer</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">kb_thread_</span> <span class="o">=</span> <span class="n">threading</span><span class="p">.</span><span class="nc">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">keyboard_loop</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">kb_thread_</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">W/S 前后,A/D 左右,空格停,Q 退出（无需回车）</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_timer</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">pub_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">twist_</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_key</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">非阻塞读一个键，没有就返回 None</span><span class="sh">"""</span>
+        <span class="n">tty</span><span class="p">.</span><span class="nf">setcbreak</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdin</span><span class="p">.</span><span class="nf">fileno</span><span class="p">())</span>   <span class="c1"># 非规范模式，逐键
+</span>        <span class="k">if</span> <span class="n">select</span><span class="p">.</span><span class="nf">select</span><span class="p">([</span><span class="n">sys</span><span class="p">.</span><span class="n">stdin</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="mf">0.1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">sys</span><span class="p">.</span><span class="n">stdin</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">keyboard_loop</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">termios</span><span class="p">.</span><span class="nf">tcgetattr</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdin</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_key</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">.</span><span class="nf">lower</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="sh">'</span><span class="s">q</span><span class="sh">'</span><span class="p">:</span>
+                    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">BINDINGS</span><span class="p">:</span>
+                    <span class="n">lin</span><span class="p">,</span> <span class="n">ang</span> <span class="o">=</span> <span class="n">BINDINGS</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">twist_</span><span class="p">.</span><span class="n">linear</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">lin</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">twist_</span><span class="p">.</span><span class="n">angular</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">ang</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">termios</span><span class="p">.</span><span class="nf">tcsetattr</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdin</span><span class="p">,</span> <span class="n">termios</span><span class="p">.</span><span class="n">TCSADRAIN</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">KeyboardTeleop</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">node</span><span class="p">.</span><span class="nf">destroy_node</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>自测回复：</p>
+<ol>
+  <li>主线程 spin+定时器（只读 twist），子线程 input（只写 twist），共享 self.twist_</li>
+  <li>input 阻塞主线程→必须子线程；daemon 防退出挂住；子线程只改值→线程安全+持续发布+职责分离</li>
+  <li>空格归零 self.twist_，定时器 20ms 内发出 → 乌龟立刻停；非阻塞键盘才能”真急停”</li>
+</ol>
+
+<h2 id="案例7-参数化节点--launch-文件">案例7. 参数化节点 + Launch 文件</h2>
+
+<p>现在我们发现启动终端1运行节点1 启动终端2运行节点2 启动终端3运行节点3…. 过于繁琐有没有一键启动的方法呢？ 还真有</p>
+
+<p>首先我们以案例1和案例2为基础学习参数化节点与launch文件编写</p>
+
+<p>turtle_circle_publisher.py 更改部分</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s">节点(海龟画圈节点)启动</span><span class="sh">'</span><span class="p">)</span>
+        <span class="c1"># 参数：launch 文件 / 命令行可以覆盖，不给就用默认值
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">linear_speed</span><span class="sh">'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>   <span class="c1"># 线速度，0 只会原地转
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">angular_speed</span><span class="sh">'</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># 角速度，决定圆的方向大小
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">period</span><span class="sh">'</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>        <span class="c1"># 发布周期(秒)
+</span>
+        <span class="n">linear</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">linear_speed</span><span class="sh">'</span><span class="p">).</span><span class="n">value</span>
+        <span class="n">angular</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">angular_speed</span><span class="sh">'</span><span class="p">).</span><span class="n">value</span>
+        <span class="n">period</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">period</span><span class="sh">'</span><span class="p">).</span><span class="n">value</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">参数: linear=</span><span class="si">{</span><span class="n">linear</span><span class="si">}</span><span class="s">, angular=</span><span class="si">{</span><span class="n">angular</span><span class="si">}</span><span class="s">, period=</span><span class="si">{</span><span class="n">period</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">turtleCircle_publisher</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span><span class="n">Twist</span><span class="p">,</span> <span class="sh">'</span><span class="s">/turtle1/cmd_vel</span><span class="sh">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">timer_callback</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">timer_callback</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">twist</span> <span class="o">=</span> <span class="nc">Twist</span><span class="p">()</span>
+
+        <span class="n">twist</span><span class="p">.</span><span class="n">linear</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">linear_speed</span><span class="sh">'</span><span class="p">).</span><span class="n">value</span>
+        <span class="n">twist</span><span class="p">.</span><span class="n">angular</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">angular_speed</span><span class="sh">'</span><span class="p">).</span><span class="n">value</span>
+        
+        <span class="n">self</span><span class="p">.</span><span class="n">turtleCircle_publisher</span><span class="p">.</span><span class="nf">pubilc</span><span class="p">(</span><span class="n">twist</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>上面就是参数化节点的主要修改内容</p>
+
+<p>下面是launch文件的编写</p>
+
+<p>turtle_sim.launch.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">launch</span> <span class="kn">import</span> <span class="n">LaunchDescription</span>
+<span class="kn">from</span> <span class="n">launch.actions</span> <span class="kn">import</span> <span class="n">DeclareLaunchArgument</span>
+<span class="kn">from</span> <span class="n">launch.substitutions</span> <span class="kn">import</span> <span class="n">LaunchConfiguration</span>
+<span class="kn">from</span> <span class="n">launch_ros.actions</span> <span class="kn">import</span> <span class="n">Node</span>
+
+<span class="sh">"""</span><span class="s">
+一键启动：海龟窗口 + 画圆 + 监听状态
+
+用法：
+    ros2 launch status_publisher turtle_sim.launch.py
+    ros2 launch status_publisher turtle_sim.launch.py linear_speed:=2.0 angular_speed:=-3.0
+</span><span class="sh">"""</span>
+
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+    <span class="c1"># ① 声明可以从命令行覆盖的参数（有默认值）
+</span>    <span class="n">linear_arg</span> <span class="o">=</span> <span class="nc">DeclareLaunchArgument</span><span class="p">(</span><span class="sh">'</span><span class="s">linear_speed</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">1.5</span><span class="sh">'</span><span class="p">,</span><span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">海龟线速度</span><span class="sh">'</span><span class="p">)</span> <span class="c1">#参数名 ，值 ，描述
+</span>    <span class="n">angular_arg</span> <span class="o">=</span> <span class="nc">DeclareLaunchArgument</span><span class="p">(</span><span class="sh">'</span><span class="s">angular_speed</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">-2.0</span><span class="sh">'</span><span class="p">,</span><span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">海龟角速度，负数顺时针</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="c1"># ② 三个节点
+</span>    <span class="n">turtlesim_node</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">turtlesim</span><span class="sh">'</span><span class="p">,</span> <span class="c1">#包名
+</span>        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">turtlesim_node</span><span class="sh">'</span><span class="p">,</span> <span class="c1">#可执行文件名
+</span>        <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">sim</span><span class="sh">'</span><span class="p">,</span>   <span class="c1">#自己起的节点名
+</span>        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">,</span> <span class="c1">#日志输出的目标位置
+</span>    <span class="p">)</span>
+
+    <span class="n">circle_node</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">status_publisher</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">turtle_circle_publisher</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">turtle_circle</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span>
+            <span class="sh">'</span><span class="s">linear_speed</span><span class="sh">'</span><span class="p">:</span> <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">linear_speed</span><span class="sh">'</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">angular_speed</span><span class="sh">'</span><span class="p">:</span> <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">angular_speed</span><span class="sh">'</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">period</span><span class="sh">'</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="p">}],</span> <span class="c1">#参数列表
+</span>    <span class="p">)</span>
+
+    <span class="n">listener_node</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">status_publisher</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">turtle_subscriber</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">turtle_listener</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="nc">LaunchDescription</span><span class="p">([</span>
+        <span class="n">linear_arg</span><span class="p">,</span>
+        <span class="n">angular_arg</span><span class="p">,</span>
+        <span class="n">turtlesim_node</span><span class="p">,</span>
+        <span class="n">circle_node</span><span class="p">,</span>
+        <span class="n">listener_node</span><span class="p">,</span>
+    <span class="p">])</span>
+
+</code></pre></div></div>
+
+<h2 id="案例-8-action-通信--带进度反馈可取消的导航任务">案例 8. Action 通信 —— 带进度反馈、可取消的导航任务</h2>
+
+<p>navigate_action_server.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3  
+</span><span class="sh">"""</span><span class="s">
+是一个 ROS 2 Action 服务端：它接收客户端发来的导航坐标
+让 turtlesim 海龟朝目标移动，并在执行中持续发布进度反馈。
+目标可以被取消，结束时会返回成功状态和估算的行驶距离。
+</span><span class="sh">"""</span>
+<span class="kn">import</span> <span class="n">math</span>
+<span class="kn">import</span> <span class="n">time</span>
+
+<span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.action</span> <span class="kn">import</span> <span class="n">ActionServer</span><span class="p">,</span> <span class="n">CancelResponse</span><span class="p">,</span> <span class="n">GoalResponse</span>
+<span class="kn">from</span> <span class="n">rclpy.callback_groups</span> <span class="kn">import</span> <span class="n">ReentrantCallbackGroup</span>
+<span class="kn">from</span> <span class="n">rclpy.executors</span> <span class="kn">import</span> <span class="n">MultiThreadedExecutor</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">Twist</span>
+<span class="kn">from</span> <span class="n">turtlesim.msg</span> <span class="kn">import</span> <span class="n">Pose</span>
+<span class="kn">from</span> <span class="n">status_interface.action</span> <span class="kn">import</span> <span class="n">Navigate</span>
+
+<span class="c1"># turtlesim 画布：窗口 500x500，比例尺 45 px/m → (500-1)/45 ≈ 11.09
+</span><span class="n">CANVAS</span> <span class="o">=</span> <span class="mf">11.0</span>
+
+<span class="k">def</span> <span class="nf">clamp</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nf">max</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="nf">min</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">norm_angle</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">角度归一化到 [-π, π]，避免</span><span class="sh">"</span><span class="s">要转 350°</span><span class="sh">"</span><span class="s">这种绕远路</span><span class="sh">"""</span>
+    <span class="k">return</span> <span class="n">math</span><span class="p">.</span><span class="nf">atan2</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">math</span><span class="p">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">NavigateActionServer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">"</span><span class="s">navigate_action_server</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="sh">"</span><span class="s">arrival_threshold</span><span class="sh">"</span><span class="p">,</span><span class="mf">0.05</span><span class="p">)</span> <span class="c1">#声明离目标0.05m就算到达
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">_cb_group</span> <span class="o">=</span> <span class="nc">ReentrantCallbackGroup</span><span class="p">()</span>
+        <span class="c1">#使用ReentrantCallbackGroup导航任务会在 execute_callback 中持续循环。如果这个循环独占了执行线程，位置订阅回调可能无法及时更新海龟位置，取消请求也可能得不到处理。因此代码使用 ReentrantCallbackGroup，并在 main 中使用 MultiThreadedExecutor。这样执行导航期间，位置回调和取消请求仍有机会运行
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">_action_server</span> <span class="o">=</span> <span class="nc">ActionServer</span><span class="p">(</span>
+            <span class="n">self</span><span class="p">,</span>
+            <span class="n">Navigate</span><span class="p">,</span>
+            <span class="sh">"</span><span class="s">navigate</span><span class="sh">"</span><span class="p">,</span>                   <span class="c1">#创建名为navigate的Action服务端 接受处理Navigate类型的消息 
+</span>            <span class="n">execute_callback</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">execute_callback</span><span class="p">,</span>  <span class="c1">#负责执行任务
+</span>            <span class="n">goal_callback</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">goal_callback</span><span class="p">,</span>          <span class="c1">#负责检查并接受或拒绝任务
+</span>            <span class="n">cancel_callback</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">cancel_callback</span><span class="p">,</span>       <span class="c1">#处理取消请求
+</span>            <span class="n">callback_group</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_cb_group</span><span class="p">,</span>                  <span class="c1">#把 ActionServer 的回调交给 self._cb_group 管理。前面创建的 _cb_group 是 ReentrantCallbackGroup，允许同一组中的回调在适当时并发执行
+</span>        <span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">cmd_pub_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span><span class="n">Twist</span><span class="p">,</span> <span class="sh">"</span><span class="s">/turtle1/cmd_vel</span><span class="sh">"</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c1">#速度发布者 向/turtle1/cmd_vel 发送移动指令
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">create_subscription</span><span class="p">(</span><span class="n">Pose</span><span class="p">,</span><span class="sh">"</span><span class="s">/turtle1/pose</span><span class="sh">"</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">on_pose</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">callback_group</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_cb_group</span><span class="p">)</span> <span class="c1">#订阅/turtle1/pose 获取当前位姿
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1">#当前位姿
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">导航 Action服务端启动成功，action名：/navigate</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">goal_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="n">goal_request</span><span class="p">):</span>
+            <span class="sh">"""</span><span class="s">检测是否在画布内</span><span class="sh">"""</span>
+            <span class="k">if</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">goal_request</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">CANVAS</span> <span class="ow">and</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">goal_request</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">CANVAS</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">收到目标(</span><span class="si">{</span><span class="n">goal_request</span><span class="p">.</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">,</span><span class="si">{</span><span class="n">goal_request</span><span class="p">.</span><span class="n">y</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">)超出画布</span><span class="sh">"</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">GoalResponse</span><span class="p">.</span><span class="n">ACCEPT</span> <span class="c1">#返回GoalResponse.ACCEPT让客户端知道被拒绝了
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warn</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">目标 (</span><span class="si">{</span><span class="n">goal_request</span><span class="p">.</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">goal_request</span><span class="p">.</span><span class="n">y</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">) 超出画布 0~</span><span class="si">{</span><span class="n">CANVAS</span><span class="si">:</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="s">，拒绝</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">GoalResponse</span><span class="p">.</span><span class="n">REJECT</span>
+        
+        <span class="k">def</span> <span class="nf">cancel_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">goal_handle</span><span class="p">):</span> <span class="c1">#收到客户端的取消请求后，服务端允许取消。不过，真正停止海龟是在执行循环检查到取消请求时完成的在execute_callback()里
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">收到取消请求</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">CancelResponse</span><span class="p">.</span><span class="n">ACCEPT</span>
+
+        <span class="k">def</span> <span class="nf">on_pose</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pose</span><span class="p">:</span> <span class="n">Pose</span><span class="p">):</span> <span class="c1">#更新位置参数
+</span>            <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="o">=</span> <span class="n">pose</span>
+        
+        <span class="k">def</span> <span class="nf">execute_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="n">goal_handle</span><span class="p">):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="p">.</span><span class="n">request</span> <span class="c1">#客户端的目标请求
+</span>            <span class="n">threshold</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_parameter</span><span class="p">(</span><span class="sh">"</span><span class="s">arrival_threshold</span><span class="sh">"</span><span class="p">).</span><span class="n">value</span> <span class="c1">#到目标的距离
+</span>
+            <span class="n">feedback</span> <span class="o">=</span> <span class="n">Navigate</span><span class="p">.</span><span class="nc">Feedback</span><span class="p">()</span> <span class="c1">#反馈信息 报告导航过程中的实时状态
+</span>            <span class="n">result</span> <span class="o">=</span> <span class="n">Navigate</span><span class="p">.</span><span class="nc">Result</span><span class="p">()</span> <span class="c1">#最终结果 保存任务结束时的结果
+</span>            
+            <span class="n">wait_start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="nf">monotonic</span><span class="p">()</span> <span class="c1">#记录开始时间
+</span>            <span class="k">while</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">time</span><span class="p">.</span><span class="nf">monotonic</span><span class="p">()</span> <span class="o">-</span> <span class="n">wait_start</span> <span class="o">&gt;</span> <span class="mf">2.0</span><span class="p">:</span>
+                    <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">2s 内没有收到位姿，任务终止</span><span class="sh">"</span><span class="p">)</span>
+                    <span class="n">goal_handle</span><span class="p">.</span><span class="nf">abort</span><span class="p">()</span>   <span class="c1">#将任务标记中止  
+</span>                    <span class="n">result</span><span class="p">.</span><span class="n">success</span> <span class="o">=</span> <span class="bp">False</span> 
+                    <span class="n">result</span><span class="p">.</span><span class="n">traveled_distance</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1">#走过的距离为0
+</span>                    <span class="k">return</span> <span class="n">result</span>                    
+                <span class="n">time</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+            <span class="sh">"""</span><span class="s">
+            对于任务句柄而言
+            goal_handle.request 任务请求
+            goal_handle.is_cancel_requested 是否被取消
+            goal_handle.publish_feedback 发送反馈
+            goal_handle.success() 标记成功
+            goal_handle.canedled() 标记取消
+            goal_handle.abort() 标记中止
+            </span><span class="sh">"""</span>
+            <span class="n">last_x</span><span class="p">,</span> <span class="n">last_y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">y</span> <span class="c1">#标记最新位置
+</span>            <span class="n">traveled</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1">#初始化已走距离
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">开始导航-&gt;(</span><span class="si">{</span><span class="n">target</span><span class="p">.</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">,</span><span class="si">{</span><span class="n">target</span><span class="p">.</span><span class="n">y</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">),到达阈值</span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">m</span><span class="sh">"</span><span class="p">)</span>
+
+            <span class="c1">#主循环 10HZ
+</span>            <span class="k">while</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+                <span class="n">pose</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="c1">#获得当前位姿
+</span>                <span class="n">dx</span> <span class="o">=</span> <span class="n">target</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">pose</span><span class="p">.</span><span class="n">x</span>
+                <span class="n">dy</span> <span class="o">=</span> <span class="n">target</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">pose</span><span class="p">.</span><span class="n">y</span>
+                <span class="n">distance</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="nf">hypot</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span> <span class="c1">#获取斜边值 得到距离
+</span>                <span class="n">heading_error</span> <span class="o">=</span> <span class="nf">norm_angle</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="nf">atan2</span><span class="p">(</span><span class="n">dy</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span> <span class="o">-</span> <span class="n">pose</span><span class="p">.</span><span class="n">theta</span><span class="p">)</span> <span class="c1">#角度差
+</span>
+                <span class="c1">#检查是否被取消
+</span>                <span class="k">if</span> <span class="n">goal_handle</span><span class="p">.</span><span class="n">is_cancel_requested</span><span class="p">:</span>
+                    <span class="n">self</span><span class="p">.</span><span class="nf">stop_turtle</span><span class="p">()</span>
+                    <span class="n">goal_handle</span><span class="p">.</span><span class="nf">canceled</span><span class="p">()</span>
+                    <span class="n">result</span><span class="p">.</span><span class="n">success</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="n">result</span><span class="p">.</span><span class="n">traveled_distance</span> <span class="o">=</span> <span class="n">traveled</span>
+                    <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">导航被取消，已走 </span><span class="si">{</span><span class="n">traveled</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> m</span><span class="sh">"</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">result</span>
+                <span class="c1">#到达判定
+</span>                <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">:</span>
+                    <span class="n">self</span><span class="p">.</span><span class="nf">stop_turtle</span><span class="p">()</span>
+                    <span class="n">goal_handle</span><span class="p">.</span><span class="nf">succeed</span><span class="p">()</span>
+                    <span class="n">result</span><span class="p">.</span><span class="n">success</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="n">result</span><span class="p">.</span><span class="n">traveled_distance</span> <span class="o">=</span> <span class="n">traveled</span>
+                    <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">导航成功，总路程 </span><span class="si">{</span><span class="n">traveled</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> m</span><span class="sh">"</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">result</span>
+                <span class="c1">#运动控制先转向后前进
+</span>                <span class="n">twist</span> <span class="o">=</span> <span class="nc">Twist</span><span class="p">()</span>
+                <span class="n">twist</span><span class="p">.</span><span class="n">angular</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="nf">clamp</span><span class="p">(</span><span class="mf">6.0</span> <span class="o">*</span> <span class="n">heading_error</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nf">abs</span><span class="p">(</span><span class="n">heading_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>      <span class="c1">#当弧度偏差小于0.2时再走直线
+</span>                    <span class="n">twist</span><span class="p">.</span><span class="n">linear</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">distance</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span> 
+                <span class="n">self</span><span class="p">.</span><span class="n">cmd_pub_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">twist</span><span class="p">)</span>
+                <span class="c1">#发布反馈
+</span>                <span class="n">feedback</span><span class="p">.</span><span class="n">remaining_distance</span> <span class="o">=</span> <span class="n">distance</span> <span class="c1">#剩余距离
+</span>                <span class="n">feedback</span><span class="p">.</span><span class="n">heading_error</span> <span class="o">=</span> <span class="n">heading_error</span> <span class="c1">#朝向偏差
+</span>                <span class="n">goal_handle</span><span class="p">.</span><span class="nf">publish_feedback</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span> <span class="c1">#发送feedback给客户端
+</span>                <span class="c1">#累积路程
+</span>                <span class="n">traveled</span> <span class="o">+=</span> <span class="n">math</span><span class="p">.</span><span class="nf">hypot</span><span class="p">(</span><span class="n">pose</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">last_x</span><span class="p">,</span> <span class="n">pose</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">last_y</span><span class="p">)</span> 
+                <span class="n">last_x</span><span class="p">,</span> <span class="n">last_y</span> <span class="o">=</span> <span class="n">pose</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">pose</span><span class="p">.</span><span class="n">y</span>
+
+                <span class="n">time</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+            <span class="n">goal_handle</span><span class="p">.</span><span class="nf">abort</span><span class="p">()</span>
+            <span class="n">result</span><span class="p">.</span><span class="n">success</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">result</span><span class="p">.</span><span class="n">traveled_distance</span> <span class="o">=</span> <span class="n">traveled</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">stop_turtle</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">工具函数，发布零速度让海龟立刻停下</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">cmd_pub_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="nc">Twist</span><span class="p">())</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">NavigateActionServer</span><span class="p">()</span>
+    <span class="c1">#创建多线程执行器
+</span>    <span class="n">executor</span> <span class="o">=</span> <span class="nc">MultiThreadedExecutor</span><span class="p">()</span>
+    <span class="n">executor</span><span class="p">.</span><span class="nf">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="c1">#将node加入多线程执行器
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">executor</span><span class="p">.</span><span class="nf">spin</span><span class="p">()</span>
+    <span class="k">except</span> <span class="nb">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">finally</span><span class="p">:</span> <span class="c1">#让海龟停下并销毁节点
+</span>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">node</span><span class="p">.</span><span class="nf">stop_turtle</span><span class="p">()</span>
+        <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">node</span><span class="p">.</span><span class="nf">destroy_node</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>navigate_action_client.py</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span><span class="sh">"""</span><span class="s">
+使用方法(三个终端)：
+ros2 run turtlesim turtlesim_node
+ros2 run turtle_navigate_action navigate_action_server
+ros2 run turtle_navigate_action navigate_action_client 8 8 【可选：cancel 2(运行2秒后退出)】
+</span><span class="sh">"""</span>
+
+<span class="kn">import</span> <span class="n">sys</span> <span class="c1">#读取命令行参数
+</span><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.action</span> <span class="kn">import</span> <span class="n">ActionClient</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">action_msgs.msg</span> <span class="kn">import</span> <span class="n">GoalStatus</span> <span class="c1">#导入Action的状态枚举用于判断任务的最终状态 1.成功 2.被取消 3.失败/中止
+</span><span class="kn">from</span> <span class="n">status_interface.action</span> <span class="kn">import</span> <span class="n">Navgate</span> <span class="c1">#导入自定义的Action Navgate是CS共同使用的动作定义 位置在status_interface/action目录下的 Navigate.action 文件
+</span>
+<span class="k">class</span> <span class="nc">NavigateActionClient</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">"</span><span class="s">navigate_action_client</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_action_client</span> <span class="o">=</span> <span class="nc">ActionClient</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="n">Navigate</span><span class="p">,</span><span class="sh">"</span><span class="s">navigate</span><span class="sh">"</span><span class="p">)</span> <span class="c1">#创建一个ActionClient连接名为"navigate"的action 发送Navigate类型的目标
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">_goal_handle</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1">#保存当前action的目标句柄  目标句柄不是目标本身(而是任务凭证)用于操作和跟踪这次的导航任务
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">_cancel_timer</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1">#保存定时器，用于在一段时间后取消任务
+</span>
+    <span class="k">def</span> <span class="nf">send_goal</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">canel_after</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">发送导航目标</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_action_client</span><span class="p">.</span><span class="nf">wait_for_server</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span> <span class="c1">#等待服务端上线 最多5s
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">等了5s也没有看到 /navigate 服务端，退出</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="n">goal</span> <span class="o">=</span> <span class="n">Navigate</span><span class="p">.</span><span class="nc">Goal</span><span class="p">()</span>
+        <span class="n">goal</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">goal</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c1">#发送异步目标
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">发送导航目标:(</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">,</span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">send_future</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_action_client</span><span class="p">.</span><span class="nf">send_goal_async</span><span class="p">(</span><span class="n">goal</span><span class="p">,</span> <span class="n">feedback_callback</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">feedback_callback</span><span class="p">)</span> <span class="c1">#一旦发出之后，服务端开始处理任务，之后每次反馈都返回feedback_callback 返回当前的信息
+</span>        <span class="n">send_future</span><span class="p">.</span><span class="nf">add_done_callback</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">goal_response_callback</span><span class="p">)</span> <span class="c1">#发送目标并收到服务端接受/拒绝的结果完成后调用:goal_respose_callback
+</span>        
+        <span class="c1">#可选：cancel_after 秒后自动取消
+</span>        <span class="k">if</span> <span class="n">cancel_after</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_cancel_timer</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="n">cancel_after</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">cancel_goal</span><span class="p">)</span> <span class="c1">#等待cancel_after秒后调用停止函数
+</span>        <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="c1">#处理服务端给予的同意/拒绝请求
+</span>    <span class="k">def</span> <span class="nf">goal_response_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="n">future</span><span class="p">):</span>
+        <span class="n">goal_handle</span> <span class="o">=</span> <span class="n">future</span><span class="p">.</span><span class="nf">result</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">goal_handle</span><span class="p">.</span><span class="n">accepted</span><span class="p">:</span> <span class="c1">#判读从服务端返回的结果是不是接受
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warn</span><span class="p">(</span><span class="sh">"</span><span class="s">目标被服务端拒绝</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+            <span class="k">return</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_goal_handle</span> <span class="o">=</span> <span class="n">goal_handle</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">目标被接受，开始执行</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="n">result_future</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="p">.</span><span class="nf">get_result_async</span><span class="p">()</span>  <span class="c1">#获取任务最终结果的异步future也就是当任务结束时拿到回调
+</span>        <span class="n">result_future</span><span class="p">.</span><span class="nf">add_done_callback</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">get_result_callback</span><span class="p">)</span>  <span class="c1">#绑定结果回调函数
+</span>    
+    <span class="c1"># ---------------- ③ 反馈：每 0.1s 一次 ----------------
+</span>    <span class="k">def</span> <span class="nf">feedback_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">feedback_msg</span><span class="p">):</span>
+        <span class="c1"># 注意两层：feedback_msg 是包装，真正的数据在 .feedback
+</span>        <span class="n">f</span> <span class="o">=</span> <span class="n">feedback_msg</span><span class="p">.</span><span class="n">feedback</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="sh">"</span><span class="s">剩余 </span><span class="si">{</span><span class="n">f</span><span class="p">.</span><span class="n">remaining_distance</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> m, </span><span class="sh">"</span>
+            <span class="sa">f</span><span class="sh">"</span><span class="s">朝向偏差 </span><span class="si">{</span><span class="n">f</span><span class="p">.</span><span class="n">heading_error</span><span class="si">:</span><span class="o">+</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> rad</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="c1"># ---------------- ④ 最终结果 ----------------
+</span>    <span class="k">def</span> <span class="nf">get_result_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="p">.</span><span class="nf">result</span><span class="p">()</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">status</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">result</span>
+
+        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">GoalStatus</span><span class="p">.</span><span class="n">STATUS_SUCCEEDED</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">导航成功完成，总路程 </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">traveled_distance</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> m</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="n">GoalStatus</span><span class="p">.</span><span class="n">STATUS_CANCELED</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">导航未完成（被取消），已走 </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">traveled_distance</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> m</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">导航未完成（中止/失败，状态码 </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s">），</span><span class="sh">"</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">已走 </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">traveled_distance</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> m</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+    <span class="c1"># ---------------- 定时取消 ----------------
+</span>    <span class="k">def</span> <span class="nf">cancel_goal</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="c1"># 定时器是重复触发的，取消一次就够
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">_cancel_timer</span><span class="p">.</span><span class="nf">cancel</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_cancel_timer</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_goal_handle</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">主动取消导航目标！</span><span class="sh">"</span><span class="p">)</span>
+        <span class="c1"># 服务端 execute 循环里 is_cancel_requested 变 True，自行收尾
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">_goal_handle</span><span class="p">.</span><span class="nf">cancel_goal_async</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">
+        返回 (x, y, cancel_after)
+            client              → (8, 8, None)
+            client 8 8          → (8, 8, None)
+            client 10 10 cancel 3 → (10, 10, 3.0)
+        </span><span class="sh">"""</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cancel_after</span> <span class="o">=</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nf">float</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="sh">"</span><span class="s">cancel</span><span class="sh">"</span><span class="p">:</span>
+            <span class="n">cancel_after</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cancel_after</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">NavigateActionClient</span><span class="p">()</span>
+
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cancel_after</span> <span class="o">=</span> <span class="nf">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span> <span class="c1">#从命令行读取参数
+</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="p">.</span><span class="nf">send_goal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cancel_after</span><span class="p">):</span>  
+        <span class="n">node</span><span class="p">.</span><span class="nf">destroy_node</span><span class="p">()</span> <span class="c1">#销毁节点
+</span>        <span class="k">if</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">node</span><span class="p">.</span><span class="nf">destroy_node</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="案例9-rosbag数据录制与回放">案例9. rosbag数据录制与回放</h2>
+
+<p>以启动上一个案例的导航节点为例</p>
+
+<p>ros2 bag record -o top –topics /turtle1/cmd_vel</p>
+
+<p>监听指定话题 存到指定目录</p>
+
+<p>产物如下</p>
+
+<pre><code class="language-txt">top
+    |——metadata.yaml
+    |——top_0.mcap
+</code></pre>
+
+</div>
+    
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/ROS2-bash/%E9%99%84%E5%BD%95-%E5%8B%98%E8%AF%AF%E4%B8%8E%E9%80%9F%E6%9F%A5/"><span>← 上一章</span><strong>附录：勘误与速查</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/ROS2-bash/%E5%B7%A1%E6%B8%B8%E5%B0%8F%E8%BD%A6%E4%BB%BF%E7%9C%9F-%E4%BB%8E%E9%9B%B6%E5%A4%8D%E5%88%BB%E6%89%8B%E5%86%8C/"><span>下一章 →</span><strong>巡游小车实战：从零复刻</strong></a>
+          
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

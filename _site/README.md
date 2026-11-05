@@ -46,7 +46,8 @@ Markdown 文件负责正文，YAML 配置站点信息、课程和分组。Jekyll
 ├── _problems/                  # 算法题解
 ├── _insights/                  # 算法见解
 ├── _tutorials/                 # 教程正文，一章一个 Markdown 文件
-│   └── machine-vision/         # ROS 2 机器视觉实战
+│   ├── machine-vision/         # ROS 2 机器视觉实战
+│   └── ROS2-bash/              # ROS2基础、ROS2实战、巡游小车实战
 ├── _layouts/                   # 首页、文章、项目、题解与教程模板
 ├── _includes/                  # 导航、页脚、评论等公共片段
 ├── assets/

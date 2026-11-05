@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    配置、启动与测试 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS 2 机器视觉实战</div>
+    <p class="tutorial-course-subtitle">从颜色检测到视觉服务</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">课程导读</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/00-overview/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程介绍与学习路线</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">基础与接口</div>
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/01-interfaces/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>接口包与消息定义</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/02-hsv-config/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>包骨架与 HSV 配置</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">纯 Python 视觉模块</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/03-color-detector/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>颜色检测与目标跟踪</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/04-visualization/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>检测结果可视化</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/05-gui/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>交互调参与控制面板</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/06-image-sources/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>合成图像与测试场景</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">接入 ROS 2</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/07-ros-server/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>ROS 2 视觉服务端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/08-ros-client/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>ROS 2 订阅客户端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/machine-vision/09-launch-testing/" aria-current="page">
+            <span class="tutorial-chapter-number">09</span>
+            <span>配置、启动与测试</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    <a class="tutorial-source" href="https://github.com/VoVL773/Machine_vision-_color_sorting_system" target="_blank" rel="noopener">项目源码 ↗</a>
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/machine-vision/00-overview/">ROS 2 机器视觉实战</a><span>/</span>
+      <span>接入 ROS 2</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS 2 机器视觉实战 · 第 9 章</div>
+      <h1>配置、启动与测试</h1>
+      <p>整理默认配置、launch 与测试，在新工作区中复现整个系统。</p>
+    </header>
+    <div class="post-content tutorial-content"><blockquote>
+  <p>前面已经可以分别运行服务端与客户端，这一章补齐默认配置、launch 和测试。
+完成后可以一条命令启动合成场景，并在新工作区复现整个项目。</p>
+</blockquote>
+
+<h2 id="一-创建并安装默认配置">一. 创建并安装默认配置</h2>
+
+<h3 id="1-confighsv_colorsjson">1. config/hsv_colors.json</h3>
+
+<p>在 <code class="language-plaintext highlighter-rouge">src/Mvc_sorting/</code> 下创建 <code class="language-plaintext highlighter-rouge">config/</code>，再创建 <code class="language-plaintext highlighter-rouge">hsv_colors.json</code>。
+结构与第二章的 <code class="language-plaintext highlighter-rouge">HSVConfig.to_dict()</code> 对应，下面是与仓库示例等价的紧凑写法：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"colors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"red"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"wrap_hue"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"lower"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"upper"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"green"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"wrap_hue"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"lower"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"upper"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"blue"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"wrap_hue"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"lower"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"upper"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">140</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"yellow"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"wrap_hue"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"lower"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"upper"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">38</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"min_area"</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"max_area"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"min_dimension"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"min_fill_ratio"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"morphology"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"kernel"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"iterations"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"blur_kernel"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>部分</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">version</code></td>
+      <td>配置格式版本，当前为 2</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">colors</code></td>
+      <td>每个颜色的启用开关、环绕开关、HSV 上下限</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">filter</code></td>
+      <td>面积、最小宽高、填充率过滤</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">morphology</code></td>
+      <td>形态学核、迭代次数和 HSV 模糊核</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>JSON 的布尔值是小写 <code class="language-plaintext highlighter-rouge">true/false</code>，不能写成 Python 的 <code class="language-plaintext highlighter-rouge">True/False</code>。
+<code class="language-plaintext highlighter-rouge">max_area=0</code> 表示不限制最大面积；<code class="language-plaintext highlighter-rouge">kernel=0/1</code> 在检测器中表示关闭形态学处理。
+旧版本黄色仍是旧默认范围时，加载逻辑会迁移到新的范围，自定义阈值保留。</p>
+
+<h3 id="2-安装示例不等于自动加载示例">2. 安装示例不等于自动加载示例</h3>
+
+<p><code class="language-plaintext highlighter-rouge">setup.py</code> 会把 JSON 安装进包的 share 目录，但服务端不会自动从该目录加载它。
+服务端默认读取 <code class="language-plaintext highlighter-rouge">~/.ros/color_sorting_hsv.json</code>；需要使用包内示例时，先复制到可写位置，再指定路径。
+显式指定的 <code class="language-plaintext highlighter-rouge">config_path</code> 必须已存在。</p>
+
+<h2 id="二-创建-color_sortinglaunchpy">二. 创建 color_sorting.launch.py</h2>
+
+<h3 id="1-导入-launch-相关模块">1. 导入 launch 相关模块</h3>
+
+<p>在 <code class="language-plaintext highlighter-rouge">src/Mvc_sorting/launch/</code> 下创建 <code class="language-plaintext highlighter-rouge">color_sorting.launch.py</code>，并在 <code class="language-plaintext highlighter-rouge">package.xml</code> 中追加：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;exec_depend&gt;</span>launch<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="nt">&lt;exec_depend&gt;</span>launch_ros<span class="nt">&lt;/exec_depend&gt;</span>
+</code></pre></div></div>
+
+<p>下面的函数片段依次放入同一个 <code class="language-plaintext highlighter-rouge">generate_launch_description()</code> 中，保留缩进。
+完整文件可对照 <a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/src/Mvc_sorting/launch/color_sorting.launch.py">launch 源码</a>。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">launch</span> <span class="kn">import</span> <span class="n">LaunchDescription</span>
+<span class="kn">from</span> <span class="n">launch.actions</span> <span class="kn">import</span> <span class="n">DeclareLaunchArgument</span>
+<span class="kn">from</span> <span class="n">launch.conditions</span> <span class="kn">import</span> <span class="n">IfCondition</span>
+<span class="kn">from</span> <span class="n">launch.substitutions</span> <span class="kn">import</span> <span class="n">LaunchConfiguration</span>
+<span class="kn">from</span> <span class="n">launch_ros.actions</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">launch_ros.parameter_descriptions</span> <span class="kn">import</span> <span class="n">ParameterValue</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>对象</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LaunchDescription</code></td>
+      <td>保存本次启动要执行的动作</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DeclareLaunchArgument</code></td>
+      <td>声明可从命令行覆盖的 launch 参数</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LaunchConfiguration</code></td>
+      <td>在启动时读取参数值</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Node</code></td>
+      <td>启动 ROS 节点进程</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ParameterValue</code></td>
+      <td>显式指定整数、浮点数和布尔参数类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IfCondition</code></td>
+      <td>按条件决定是否启动客户端</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="2-声明启动参数">2. 声明启动参数</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LaunchDescription</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Build the launch description.</span><span class="sh">"""</span>
+    <span class="n">arguments</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">input_type</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">camera</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">camera, video, topic or synthetic</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">camera_index</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">0</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">OpenCV camera index</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">camera_backend</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">auto</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">auto or v4l2 (Linux)</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">camera_fourcc</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">''</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Optional camera FOURCC, e.g. MJPG or YUYV; empty lets the driver choose</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">camera_autofocus</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">true</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Enable camera continuous autofocus when supported</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">camera_focus</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">-1</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Manual camera focus value; -1 keeps autofocus</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">camera_sharpness</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">-1</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Camera sharpness value; -1 leaves the driver default</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">frame_width</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">1280</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Requested camera/frame width</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">frame_height</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">720</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Requested camera/frame height</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">fps</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">30.0</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Capture timer rate and requested camera FPS</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">display_sharpen</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">0.35</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Display-only unsharp mask amount (0 disables)</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">min_hits</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">2</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Frames a blob must be seen before it is published</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">video_path</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">''</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Video file used when input_type:=video</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">image_topic</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">/camera/image_raw</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">ROS image topic used when input_type:=topic</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">targets_topic</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">/color_targets</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Published ColorTargetArray topic</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">config_path</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">''</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">HSV JSON file; empty uses ~/.ros/color_sorting_hsv.json</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">show_window</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">true</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Show the annotated OpenCV window</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">show_masks</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">true</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Show the per-colour mask preview window</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">show_trackbars</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">true</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Show the Chinese HSV Trackbar window</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">publish_debug_image</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">false</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Publish the annotated frame as sensor_msgs/Image</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">enable_tracking</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">true</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Keep stable IDs between frames</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">max_frames</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">0</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Stop after N frames (0 = unlimited)</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nc">DeclareLaunchArgument</span><span class="p">(</span>
+            <span class="sh">'</span><span class="s">with_client</span><span class="sh">'</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="sh">'</span><span class="s">false</span><span class="sh">'</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Also start the console target monitor</span><span class="sh">'</span><span class="p">),</span>
+    <span class="p">]</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">DeclareLaunchArgument</code> 的默认值以字符串表达，调用时使用 <code class="language-plaintext highlighter-rouge">参数名:=值</code> 覆盖。
+这里默认启动相机，教学验收用 <code class="language-plaintext highlighter-rouge">input_type:=synthetic</code>。
+<code class="language-plaintext highlighter-rouge">with_client</code> 只控制是否启动控制台客户端，<code class="language-plaintext highlighter-rouge">show_window</code> 控制服务端 GUI，二者相互独立。</p>
+
+<p>不是每个服务端参数都被这个 launch 文件暴露。例如 <code class="language-plaintext highlighter-rouge">max_targets</code>、<code class="language-plaintext highlighter-rouge">auto_save</code>、<code class="language-plaintext highlighter-rouge">loop_video</code>
+需要扩展 launch 参数转发，或直接用 <code class="language-plaintext highlighter-rouge">ros2 run ... --ros-args -p ...</code> 设置。</p>
+
+<h3 id="3-启动服务端并转发参数">3. 启动服务端并转发参数</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">server</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">Mvc_sorting</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">Mvc_sorting_server</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Mvc_sorting_server</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span>
+            <span class="sh">'</span><span class="s">input_type</span><span class="sh">'</span><span class="p">:</span> <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">input_type</span><span class="sh">'</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">camera_index</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_index</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">camera_backend</span><span class="sh">'</span><span class="p">:</span> <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_backend</span><span class="sh">'</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">camera_fourcc</span><span class="sh">'</span><span class="p">:</span> <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_fourcc</span><span class="sh">'</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">camera_autofocus</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_autofocus</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">camera_focus</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_focus</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">camera_sharpness</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">camera_sharpness</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">frame_width</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">frame_width</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">frame_height</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">frame_height</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">fps</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">fps</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">display_sharpen</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">display_sharpen</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">min_hits</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">min_hits</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">video_path</span><span class="sh">'</span><span class="p">:</span> <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">video_path</span><span class="sh">'</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">image_topic</span><span class="sh">'</span><span class="p">:</span> <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">image_topic</span><span class="sh">'</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">targets_topic</span><span class="sh">'</span><span class="p">:</span> <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">targets_topic</span><span class="sh">'</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">config_path</span><span class="sh">'</span><span class="p">:</span> <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">config_path</span><span class="sh">'</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">show_window</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">show_window</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">show_masks</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">show_masks</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">show_trackbars</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">show_trackbars</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">publish_debug_image</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">publish_debug_image</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">enable_tracking</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">enable_tracking</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
+            <span class="sh">'</span><span class="s">max_frames</span><span class="sh">'</span><span class="p">:</span> <span class="nc">ParameterValue</span><span class="p">(</span>
+                <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">max_frames</span><span class="sh">'</span><span class="p">),</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+        <span class="p">}],</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">package</code> 指向包名，<code class="language-plaintext highlighter-rouge">executable</code> 指向 <code class="language-plaintext highlighter-rouge">setup.py</code> 中注册的入口名，<code class="language-plaintext highlighter-rouge">name</code> 是运行时节点名。
+<code class="language-plaintext highlighter-rouge">parameters</code> 将 launch 参数转换并传入节点。
+例如 <code class="language-plaintext highlighter-rouge">ParameterValue(..., value_type=bool)</code> 确保 <code class="language-plaintext highlighter-rouge">show_window:=false</code> 按布尔值传递。</p>
+
+<h3 id="4-可选客户端与返回启动描述">4. 可选客户端与返回启动描述</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">client</span> <span class="o">=</span> <span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">Mvc_sorting</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">Mvc_sorting_client</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Mvc_sorting_client</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">condition</span><span class="o">=</span><span class="nc">IfCondition</span><span class="p">(</span><span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">with_client</span><span class="sh">'</span><span class="p">)),</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span>
+            <span class="sh">'</span><span class="s">targets_topic</span><span class="sh">'</span><span class="p">:</span> <span class="nc">LaunchConfiguration</span><span class="p">(</span><span class="sh">'</span><span class="s">targets_topic</span><span class="sh">'</span><span class="p">),</span>
+        <span class="p">}],</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="nc">LaunchDescription</span><span class="p">(</span><span class="n">arguments</span> <span class="o">+</span> <span class="p">[</span><span class="n">server</span><span class="p">,</span> <span class="n">client</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>只有 <code class="language-plaintext highlighter-rouge">with_client:=true</code> 才执行客户端启动动作。
+客户端与服务端使用同一个 <code class="language-plaintext highlighter-rouge">targets_topic</code>，避免改了服务端话题却忘记改订阅端。
+所有声明和节点动作最后都加入 <code class="language-plaintext highlighter-rouge">LaunchDescription</code>。</p>
+
+<p>注意：<code class="language-plaintext highlighter-rouge">max_frames</code> 只传给服务端。若同时启用客户端，服务端达到帧数退出后，
+客户端仍可能继续等待消息，launch 不会因此自动整体退出；需要 <code class="language-plaintext highlighter-rouge">Ctrl+C</code> 停止。
+有限帧退出验收时保持 <code class="language-plaintext highlighter-rouge">with_client:=false</code>。</p>
+
+<h2 id="三-同步-setuppy-与-packagexml">三. 同步 setup.py 与 package.xml</h2>
+
+<h3 id="1-安装文件与节点入口">1. 安装文件与节点入口</h3>
+
+<p>此时 config、launch、server 和 client 文件都已经存在，可以使用最终 <code class="language-plaintext highlighter-rouge">setup.py</code>：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">setuptools</span> <span class="kn">import</span> <span class="n">find_packages</span><span class="p">,</span> <span class="n">setup</span>
+
+<span class="n">package_name</span> <span class="o">=</span> <span class="sh">'</span><span class="s">Mvc_sorting</span><span class="sh">'</span>
+
+<span class="nf">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="n">package_name</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="sh">'</span><span class="s">0.1.0</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="nf">find_packages</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="sh">'</span><span class="s">test</span><span class="sh">'</span><span class="p">]),</span>
+    <span class="n">data_files</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="sh">'</span><span class="s">share/ament_index/resource_index/packages</span><span class="sh">'</span><span class="p">,</span>
+            <span class="p">[</span><span class="sh">'</span><span class="s">resource/</span><span class="sh">'</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">]),</span>
+        <span class="p">(</span><span class="sh">'</span><span class="s">share/</span><span class="sh">'</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">,</span> <span class="p">[</span><span class="sh">'</span><span class="s">package.xml</span><span class="sh">'</span><span class="p">]),</span>
+        <span class="p">(</span><span class="sh">'</span><span class="s">share/</span><span class="sh">'</span> <span class="o">+</span> <span class="n">package_name</span> <span class="o">+</span> <span class="sh">'</span><span class="s">/config</span><span class="sh">'</span><span class="p">,</span> <span class="p">[</span><span class="sh">'</span><span class="s">config/hsv_colors.json</span><span class="sh">'</span><span class="p">]),</span>
+        <span class="p">(</span><span class="sh">'</span><span class="s">share/</span><span class="sh">'</span> <span class="o">+</span> <span class="n">package_name</span> <span class="o">+</span> <span class="sh">'</span><span class="s">/launch</span><span class="sh">'</span><span class="p">,</span>
+            <span class="p">[</span><span class="sh">'</span><span class="s">launch/color_sorting.launch.py</span><span class="sh">'</span><span class="p">]),</span>
+    <span class="p">],</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="sh">'</span><span class="s">setuptools</span><span class="sh">'</span><span class="p">],</span>
+    <span class="n">zip_safe</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">maintainer</span><span class="o">=</span><span class="sh">'</span><span class="s">vovl773</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">maintainer_email</span><span class="o">=</span><span class="sh">'</span><span class="s">3152398081@qq.com</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">HSV colour blob detection and ROS 2 colour target publisher</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">license</span><span class="o">=</span><span class="sh">'</span><span class="s">Apache-2.0</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">extras_require</span><span class="o">=</span><span class="p">{</span>
+        <span class="sh">'</span><span class="s">test</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span>
+            <span class="sh">'</span><span class="s">pytest</span><span class="sh">'</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+        <span class="sh">'</span><span class="s">console_scripts</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span>
+            <span class="sh">'</span><span class="s">Mvc_sorting_server = Mvc_sorting.Mvc_sorting_server:main</span><span class="sh">'</span><span class="p">,</span>
+            <span class="sh">'</span><span class="s">Mvc_sorting_client = Mvc_sorting.Mvc_sorting_client:main</span><span class="sh">'</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>配置项</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">find_packages()</code></td>
+      <td>查找要安装的 Python 包，排除测试目录</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">resource/Mvc_sorting</code></td>
+      <td>向 ament 索引注册包</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">package.xml</code></td>
+      <td>安装包元信息</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">config</code>、<code class="language-plaintext highlighter-rouge">launch</code> 的 <code class="language-plaintext highlighter-rouge">data_files</code></td>
+      <td>让安装后的包仍能找到配置与启动文件</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">console_scripts</code></td>
+      <td>生成 <code class="language-plaintext highlighter-rouge">ros2 run</code> 使用的可执行入口</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">setup.cfg</code> 保持以下内容，确保入口安装在 ROS 2 查找的位置：</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[develop]</span><span class="w">
+</span><span class="py">script_dir</span><span class="p">=</span><span class="s">$base/lib/Mvc_sorting</span>
+<span class="nn">[install]</span><span class="w">
+</span><span class="py">install_scripts</span><span class="p">=</span><span class="s">$base/lib/Mvc_sorting</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">resource/Mvc_sorting</code> 是空的标记文件；包内的 <code class="language-plaintext highlighter-rouge">__init__.py</code> 也要保留。
+逐文件复刻时，只有文件存在后再注册对应的 <code class="language-plaintext highlighter-rouge">data_files</code>，否则构建阶段会找不到文件。</p>
+
+<h3 id="2-核对最终依赖">2. 核对最终依赖</h3>
+
+<p>可与 <a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/src/Mvc_sorting/package.xml">最终 package.xml</a> 对照：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>类型</th>
+      <th>依赖</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>节点和消息</td>
+      <td><code class="language-plaintext highlighter-rouge">rclpy</code>、<code class="language-plaintext highlighter-rouge">std_msgs</code>、<code class="language-plaintext highlighter-rouge">sensor_msgs</code>、<code class="language-plaintext highlighter-rouge">std_srvs</code>、<code class="language-plaintext highlighter-rouge">color_sorting_interfaces</code></td>
+    </tr>
+    <tr>
+      <td>图像处理</td>
+      <td><code class="language-plaintext highlighter-rouge">cv_bridge</code>、<code class="language-plaintext highlighter-rouge">python3-opencv</code>、<code class="language-plaintext highlighter-rouge">python3-numpy</code></td>
+    </tr>
+    <tr>
+      <td>启动</td>
+      <td><code class="language-plaintext highlighter-rouge">launch</code>、<code class="language-plaintext highlighter-rouge">launch_ros</code></td>
+    </tr>
+    <tr>
+      <td>测试</td>
+      <td><code class="language-plaintext highlighter-rouge">python3-pytest</code>、<code class="language-plaintext highlighter-rouge">ament_flake8</code>、<code class="language-plaintext highlighter-rouge">ament_pep257</code>、<code class="language-plaintext highlighter-rouge">ament_copyright</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>当前 launch 没有使用 <code class="language-plaintext highlighter-rouge">ament_index_python</code>，不需要为了启动文件额外添加它。</p>
+
+<h2 id="四-测试配置检测与-ros-lint">四. 测试：配置、检测与 ROS lint</h2>
+
+<h3 id="1-测试文件与运行范围">1. 测试文件与运行范围</h3>
+
+<p>完整测试可对照 <a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/tree/main/src/Mvc_sorting/test/">test 目录</a>。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>文件</th>
+      <th>检查内容</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">test_hsv_config.py</code></td>
+      <td>默认值、JSON 往返、非法配置、红色环绕、黄色旧配置迁移</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">test_color_detector.py</code></td>
+      <td>四色检测、噪点、面积/禁用过滤、跟踪 ID、命中确认等</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">test_flake8.py</code></td>
+      <td>Python 代码格式与静态检查</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">test_pep257.py</code></td>
+      <td>文档字符串规范</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">test_copyright.py</code></td>
+      <td>当前保留 <code class="language-plaintext highlighter-rouge">skip</code> 标记，默认跳过</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>测试文件不写进 <code class="language-plaintext highlighter-rouge">console_scripts</code>。pytest 通过 <code class="language-plaintext highlighter-rouge">test_*.py</code> 文件和 <code class="language-plaintext highlighter-rouge">test_*</code> 函数发现测试。
+下面选取关键测试讲解；复刻完整测试集时保留上述文件中的其余测试。</p>
+
+<h3 id="2-json-往返与非法阈值">2. JSON 往返与非法阈值</h3>
+
+<p>以下片段来自 <code class="language-plaintext highlighter-rouge">test_hsv_config.py</code>，文件顶部需导入：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">Mvc_sorting.hsv_config</span> <span class="kn">import</span> <span class="n">ColorThreshold</span><span class="p">,</span> <span class="n">HSVConfig</span>
+<span class="kn">import</span> <span class="n">pytest</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_json_round_trip</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">A saved configuration loads back with identical values.</span><span class="sh">"""</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">HSVConfig</span><span class="p">.</span><span class="nf">default</span><span class="p">()</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">min_area</span> <span class="o">=</span> <span class="mi">450</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">colors</span><span class="p">[</span><span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">].</span><span class="n">upper</span> <span class="o">=</span> <span class="p">(</span><span class="mi">145</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">240</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="sh">'</span><span class="s">hsv.json</span><span class="sh">'</span>
+
+    <span class="n">saved_path</span> <span class="o">=</span> <span class="n">config</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="n">loaded</span> <span class="o">=</span> <span class="n">HSVConfig</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="n">saved_path</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">loaded</span><span class="p">.</span><span class="n">min_area</span> <span class="o">==</span> <span class="mi">450</span>
+    <span class="k">assert</span> <span class="n">loaded</span><span class="p">.</span><span class="n">colors</span><span class="p">[</span><span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">].</span><span class="n">upper</span> <span class="o">==</span> <span class="p">(</span><span class="mi">145</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">240</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">loaded</span><span class="p">.</span><span class="nf">to_dict</span><span class="p">()</span> <span class="o">==</span> <span class="n">config</span><span class="p">.</span><span class="nf">to_dict</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_invalid_threshold_rejected</span><span class="p">():</span>
+    <span class="sh">"""</span><span class="s">Out-of-range HSV values raise a descriptive ValueError.</span><span class="sh">"""</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="p">.</span><span class="nf">raises</span><span class="p">(</span><span class="nb">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">):</span>
+        <span class="n">ColorThreshold</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span>
+            <span class="p">{</span><span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">]},</span> <span class="sh">'</span><span class="s">bad</span><span class="sh">'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="p">.</span><span class="nf">raises</span><span class="p">(</span><span class="nb">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="sh">'</span><span class="s">greater than upper</span><span class="sh">'</span><span class="p">):</span>
+        <span class="n">ColorThreshold</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span>
+            <span class="p">{</span><span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">]},</span> <span class="sh">'</span><span class="s">bad</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">tmp_path</code> 是 pytest 提供的临时目录，不会覆盖个人配置。
+往返测试先修改配置、保存再加载，最后比较序列化结果；
+<code class="language-plaintext highlighter-rouge">pytest.raises()</code> 要求非法输入确实抛出指定异常，而不是静默接受。</p>
+
+<h3 id="3-四色检测与两帧确认">3. 四色检测与两帧确认</h3>
+
+<p>以下片段来自 <code class="language-plaintext highlighter-rouge">test_color_detector.py</code>：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">cv2</span>
+<span class="kn">from</span> <span class="n">Mvc_sorting.color_detector</span> <span class="kn">import</span> <span class="n">ColorDetector</span>
+<span class="kn">from</span> <span class="n">Mvc_sorting.hsv_config</span> <span class="kn">import</span> <span class="n">HSVConfig</span>
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">blank_frame</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Return a dark 480x640 BGR frame.</span><span class="sh">"""</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="nf">full</span><span class="p">((</span><span class="mi">480</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="mi">35</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_detects_four_colours</span><span class="p">():</span>
+    <span class="sh">"""</span><span class="s">One circle per colour yields four detections with known centres.</span><span class="sh">"""</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="nf">blank_frame</span><span class="p">()</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">red</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+        <span class="sh">'</span><span class="s">green</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+        <span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+        <span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">550</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="n">colours</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">red</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+        <span class="sh">'</span><span class="s">green</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">centre</span> <span class="ow">in</span> <span class="n">expected</span><span class="p">.</span><span class="nf">items</span><span class="p">():</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">circle</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">centre</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">colours</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">cv2</span><span class="p">.</span><span class="n">FILLED</span><span class="p">)</span>
+
+    <span class="n">detector</span> <span class="o">=</span> <span class="nc">ColorDetector</span><span class="p">(</span><span class="n">HSVConfig</span><span class="p">.</span><span class="nf">default</span><span class="p">(),</span> <span class="n">enable_tracking</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">detections</span><span class="p">,</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">detector</span><span class="p">.</span><span class="nf">detect</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">detections</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+    <span class="k">assert</span> <span class="p">{</span><span class="n">item</span><span class="p">.</span><span class="n">color</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">}</span> <span class="o">==</span> <span class="nf">set</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
+        <span class="n">centre</span> <span class="o">=</span> <span class="n">expected</span><span class="p">[</span><span class="n">detection</span><span class="p">.</span><span class="n">color</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nf">abs</span><span class="p">(</span><span class="n">detection</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">centre</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1.5</span>
+        <span class="k">assert</span> <span class="nf">abs</span><span class="p">(</span><span class="n">detection</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">centre</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1.5</span>
+        <span class="k">assert</span> <span class="n">detection</span><span class="p">.</span><span class="n">area</span> <span class="o">&gt;</span> <span class="mi">2400</span>
+        <span class="k">assert</span> <span class="mi">55</span> <span class="o">&lt;=</span> <span class="n">detection</span><span class="p">.</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">61</span>
+        <span class="k">assert</span> <span class="mi">55</span> <span class="o">&lt;=</span> <span class="n">detection</span><span class="p">.</span><span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">61</span>
+    <span class="k">assert</span> <span class="nf">set</span><span class="p">(</span><span class="n">masks</span><span class="p">)</span> <span class="o">==</span> <span class="nf">set</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nf">all</span><span class="p">(</span><span class="nf">int</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="nf">countNonZero</span><span class="p">(</span><span class="n">mask</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">masks</span><span class="p">.</span><span class="nf">values</span><span class="p">())</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_min_hits_requires_two_frames</span><span class="p">():</span>
+    <span class="sh">"""</span><span class="s">min_hits suppresses a target until it has been seen twice.</span><span class="sh">"""</span>
+    <span class="n">detector</span> <span class="o">=</span> <span class="nc">ColorDetector</span><span class="p">(</span>
+        <span class="n">HSVConfig</span><span class="p">.</span><span class="nf">default</span><span class="p">(),</span> <span class="n">enable_tracking</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">min_hits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="nf">blank_frame</span><span class="p">()</span>
+    <span class="n">cv2</span><span class="p">.</span><span class="nf">circle</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">240</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">cv2</span><span class="p">.</span><span class="n">FILLED</span><span class="p">)</span>
+
+    <span class="n">first_detections</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">detector</span><span class="p">.</span><span class="nf">detect</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+    <span class="n">second_detections</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">detector</span><span class="p">.</span><span class="nf">detect</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">first_detections</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">second_detections</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">second_detections</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">color</span> <span class="o">==</span> <span class="sh">'</span><span class="s">red</span><span class="sh">'</span>
+</code></pre></div></div>
+
+<p>四色测试不仅比较数量，也检查颜色集合、质心误差、面积和外接矩形，避免“碰巧检测到四个”就通过。
+两帧确认测试用相同画面连续调用，验证新目标第一帧被抑制、第二帧达到命中条件。
+这属于纯算法测试，不验证 ROS 发现、QoS、真实相机和桌面交互，后面还需要端到端验收。</p>
+
+<h3 id="4-执行测试">4. 执行测试</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> <span class="s2">"</span><span class="nv">$WS</span><span class="s2">"</span>
+<span class="c"># 无需启动 ROS 节点的算法测试</span>
+<span class="nv">PYTHONPATH</span><span class="o">=</span>src/Mvc_sorting python3 <span class="nt">-m</span> pytest   src/Mvc_sorting/test/test_hsv_config.py   src/Mvc_sorting/test/test_color_detector.py <span class="nt">-v</span>
+
+<span class="c"># 完成构建并加载工作区后，运行 ROS 包测试</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+<span class="nb">source install</span>/setup.bash
+colcon <span class="nb">test</span> <span class="nt">--packages-select</span> color_sorting_interfaces Mvc_sorting
+colcon test-result <span class="nt">--verbose</span>
+</code></pre></div></div>
+
+<p>预期没有失败；copyright 测试按当前模板跳过，不能把跳过当作已完成版权检查。
+测试文件存在但没有被运行也不算通过，最终以 <code class="language-plaintext highlighter-rouge">colcon test-result</code> 报告为准。</p>
+
+<p>如果接口包的 <code class="language-plaintext highlighter-rouge">xmllint</code> 报 <code class="language-plaintext highlighter-rouge">Failed to locate the main schema resource</code>，检查能否访问
+<code class="language-plaintext highlighter-rouge">http://download.ros.org/schema/package_format3.xsd</code>。这类远程 schema 下载失败需要先解决网络或使用本地 schema，
+不能仅凭构建成功就认定 XML 检查通过。</p>
+
+<blockquote>
+  <p>自此，默认配置、launch 和测试部分结束。</p>
+</blockquote>
+
+<h2 id="检测成果">检测成果</h2>
+
+<h3 id="1-构建并检查安装资源">1. 构建并检查安装资源</h3>
+
+<p>前提是接口包已按第一章创建，两个源码包都在工作区的 <code class="language-plaintext highlighter-rouge">src/</code> 中。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> <span class="s2">"</span><span class="nv">$WS</span><span class="s2">"</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+colcon build <span class="nt">--packages-select</span> color_sorting_interfaces Mvc_sorting
+<span class="nb">source install</span>/setup.bash
+ros2 pkg executables Mvc_sorting
+ros2 launch Mvc_sorting color_sorting.launch.py <span class="nt">--show-args</span>
+
+<span class="nb">mkdir</span> <span class="nt">-p</span> <span class="s2">"</span><span class="nv">$WS</span><span class="s2">/config"</span>
+<span class="nb">cp</span> <span class="s2">"</span><span class="si">$(</span>ros2 pkg prefix Mvc_sorting<span class="si">)</span><span class="s2">/share/Mvc_sorting/config/hsv_colors.json"</span>   <span class="s2">"</span><span class="nv">$WS</span><span class="s2">/config/replication_hsv.json"</span>
+</code></pre></div></div>
+
+<p>应看到两个入口和 launch 参数列表，配置复制成功。
+这里使用工作区内的独立配置，不修改默认的个人配置文件。</p>
+
+<h3 id="2-一条命令启动服务端和客户端">2. 一条命令启动服务端和客户端</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 launch Mvc_sorting color_sorting.launch.py   input_type:<span class="o">=</span>synthetic show_window:<span class="o">=</span><span class="nb">false </span>with_client:<span class="o">=</span><span class="nb">true   </span>publish_debug_image:<span class="o">=</span><span class="nb">true </span>config_path:<span class="o">=</span><span class="s2">"</span><span class="nv">$WS</span><span class="s2">/config/replication_hsv.json"</span>
+</code></pre></div></div>
+
+<p>在另一个加载相同 ROS 和工作区环境的终端执行：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic info /color_targets
+ros2 topic info /color_sorting/debug_image
+ros2 service call /Mvc_sorting_server/save_config std_srvs/srv/Trigger
+ros2 service call /Mvc_sorting_server/load_config std_srvs/srv/Trigger
+</code></pre></div></div>
+
+<p>预期客户端稳定输出每色两个、共八个目标，两个话题都有发布者，配置服务返回成功。
+服务端默认两次命中确认，因此首次或重载配置后的第一帧可能为空。完成后 <code class="language-plaintext highlighter-rouge">Ctrl+C</code> 停止整个 launch。
+若在受限容器/沙箱中出现 <code class="language-plaintext highlighter-rouge">Error creating socket: Operation not permitted</code>，即使本地检测仍能运行，
+ROS 发现与消息通信也可能失败；应在允许 DDS 网络通信的环境中完成这一步验收。</p>
+
+<h3 id="3-有限帧自动退出与桌面验收">3. 有限帧自动退出与桌面验收</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 不启动常驻客户端，方便验证 launch 随服务端退出</span>
+ros2 launch Mvc_sorting color_sorting.launch.py   input_type:<span class="o">=</span>synthetic show_window:<span class="o">=</span><span class="nb">false </span>max_frames:<span class="o">=</span>120   config_path:<span class="o">=</span><span class="s2">"</span><span class="nv">$WS</span><span class="s2">/config/replication_hsv.json"</span>
+
+<span class="c"># 有桌面环境时再打开三个窗口</span>
+ros2 launch Mvc_sorting color_sorting.launch.py   input_type:<span class="o">=</span>synthetic show_window:<span class="o">=</span><span class="nb">true </span>show_trackbars:<span class="o">=</span><span class="nb">true </span>show_masks:<span class="o">=</span><span class="nb">true   </span>config_path:<span class="o">=</span><span class="s2">"</span><span class="nv">$WS</span><span class="s2">/config/replication_hsv.json"</span>
+</code></pre></div></div>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />两个包构建成功，消息、两个入口和安装资源可见。</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />配置/检测测试及 lint 无失败。</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />合成场景目标、调试图像和配置服务可用。</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />有限帧模式能退出，退出后没有遗留相机/窗口占用。</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />桌面环境中滑块实时生效，<code class="language-plaintext highlighter-rouge">s</code> 保存、<code class="language-plaintext highlighter-rouge">l</code> 加载，重启能加载保存配置。</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />用摄像头、视频或 ROS 图像话题补充一次真实输入验证。</li>
+</ul>
+
+<p>真实输入的命令见 <a href="/tutorials/machine-vision/07-ros-server/">服务端教程</a>，完整参数表见 <a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/README.md">项目 README</a>。</p>
+
+<hr />
+</div>
+    <div class="tutorial-edit"><a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/md/%E4%B9%9D.%E9%85%8D%E7%BD%AE%E3%80%81launch%E4%B8%8E%E6%B5%8B%E8%AF%95.md" target="_blank" rel="noopener">在 GitHub 查看原文 ↗</a></div>
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/machine-vision/08-ros-client/"><span>← 上一章</span><strong>ROS 2 订阅客户端</strong></a>
+          
+          
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

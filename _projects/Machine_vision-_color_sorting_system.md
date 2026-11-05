@@ -1,6 +1,7 @@
 ---
 title: "机器视觉颜色分拣系统（ROS 2 视觉目标输出）"
 tags: [Python,ROS2,Opencv]
+order: 3
 cover: "assets/images/demo/synthetic_preview.png"
 github: "https://github.com/VoVL773/Machine_vision-_color_sorting_system"
 ---

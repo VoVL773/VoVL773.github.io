@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    颜色检测与目标跟踪 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS 2 机器视觉实战</div>
+    <p class="tutorial-course-subtitle">从颜色检测到视觉服务</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">课程导读</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/00-overview/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程介绍与学习路线</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">基础与接口</div>
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/01-interfaces/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>接口包与消息定义</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/02-hsv-config/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>包骨架与 HSV 配置</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">纯 Python 视觉模块</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/machine-vision/03-color-detector/" aria-current="page">
+            <span class="tutorial-chapter-number">03</span>
+            <span>颜色检测与目标跟踪</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/04-visualization/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>检测结果可视化</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/05-gui/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>交互调参与控制面板</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/06-image-sources/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>合成图像与测试场景</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">接入 ROS 2</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/07-ros-server/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>ROS 2 视觉服务端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/08-ros-client/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>ROS 2 订阅客户端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/09-launch-testing/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>配置、启动与测试</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    <a class="tutorial-source" href="https://github.com/VoVL773/Machine_vision-_color_sorting_system" target="_blank" rel="noopener">项目源码 ↗</a>
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/machine-vision/00-overview/">ROS 2 机器视觉实战</a><span>/</span>
+      <span>纯 Python 视觉模块</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS 2 机器视觉实战 · 第 3 章</div>
+      <h1>颜色检测与目标跟踪</h1>
+      <p>从颜色掩码、形态学处理到轮廓筛选，输出可跟踪的目标列表。</p>
+    </header>
+    <div class="post-content tutorial-content"><blockquote>
+  <p>接着上一章的 HSV 配置层，先脱离 ROS 2，用纯 Python 跑通检测与跟踪。
+输入一帧图像，输出 <code class="language-plaintext highlighter-rouge">Detection</code> 列表和每种颜色对应的掩码。</p>
+</blockquote>
+
+<h2 id="一-添加-opencv-和-numpy-依赖">一. 添加 OpenCV 和 NumPy 依赖</h2>
+
+<p>这一章需要用到 OpenCV 和 NumPy，在 <code class="language-plaintext highlighter-rouge">package.xml</code> 中补充运行依赖：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;exec_depend&gt;</span>python3-opencv<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="nt">&lt;exec_depend&gt;</span>python3-numpy<span class="nt">&lt;/exec_depend&gt;</span>
+</code></pre></div></div>
+
+<p>与上一章一样，Python 相关依赖在 <code class="language-plaintext highlighter-rouge">package.xml</code> 中声明即可，不需要再写到 <code class="language-plaintext highlighter-rouge">ros2 pkg create --dependencies</code> 中。
+如果系统中还没有安装这两个库，执行：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>python3-opencv python3-numpy
+</code></pre></div></div>
+
+<p>在 <code class="language-plaintext highlighter-rouge">src/Mvc_sorting/Mvc_sorting/</code> 下创建 <code class="language-plaintext highlighter-rouge">color_detector.py</code>。下面按源码顺序逐步讲解；
+<code class="language-plaintext highlighter-rouge">ColorDetector</code> 的方法片段保留类内缩进，整理到文件时放在同一个类中。</p>
+
+<h2 id="二-逐步讲解-color_detectorpy检测与跟踪层">二. 逐步讲解 color_detector.py（检测与跟踪层）</h2>
+
+<h3 id="1-导入模块">1. 导入模块</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="n">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="n">math</span> <span class="kn">import</span> <span class="n">hypot</span>
+<span class="kn">from</span> <span class="n">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="n">cv2</span>
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="kn">from</span> <span class="n">.hsv_config</span> <span class="kn">import</span> <span class="n">HSVConfig</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>代码</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">from __future__ import annotations</code></td>
+      <td>延迟处理类型注解</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dataclass</code></td>
+      <td>为检测结果和轨迹状态自动生成初始化方法</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hypot</code></td>
+      <td>计算两个目标中心之间的欧几里得距离</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Dict</code>、<code class="language-plaintext highlighter-rouge">List</code>、<code class="language-plaintext highlighter-rouge">Tuple</code></td>
+      <td>字典、列表和元组的类型注解</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cv2</code></td>
+      <td>颜色转换、阈值分割、形态学处理和轮廓计算</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">numpy as np</code></td>
+      <td>创建和处理图像数组</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">from .hsv_config import HSVConfig</code></td>
+      <td>从同一个包中导入上一章的配置类</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>例如，两个目标的中心分别是 <code class="language-plaintext highlighter-rouge">(100, 100)</code> 和 <code class="language-plaintext highlighter-rouge">(103, 104)</code>，
+<code class="language-plaintext highlighter-rouge">hypot(103 - 100, 104 - 100)</code> 的结果为 <code class="language-plaintext highlighter-rouge">5.0</code>，表示相距 5 个像素。</p>
+
+<h3 id="2-detection-类保存单个目标的检测结果">2. Detection 类（保存单个目标的检测结果）</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Detection</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">One filtered colour blob in image coordinates.</span><span class="sh">"""</span>
+
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># noqa: A003
+</span>    <span class="n">color</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">y</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">area</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">bbox</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>  <span class="c1"># x, y, width, height
+</span></code></pre></div></div>
+
+<p>这里继续使用上一章介绍的 <code class="language-plaintext highlighter-rouge">@dataclass</code>，直接声明字段即可创建保存检测结果的对象。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>字段</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td>目标编号，检测后再由跟踪逻辑或逐帧编号逻辑分配</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">color</code></td>
+      <td>颜色名称，如 <code class="language-plaintext highlighter-rouge">red</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">x</code>、<code class="language-plaintext highlighter-rouge">y</code></td>
+      <td>质心的像素坐标，原点为图像左上角</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">area</code></td>
+      <td>轮廓面积，单位为像素²</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">bbox</code></td>
+      <td>外接矩形，格式为 <code class="language-plaintext highlighter-rouge">(左上角 x, 左上角 y, 宽, 高)</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注：<code class="language-plaintext highlighter-rouge"># noqa: A003</code> 用来告诉检查工具，允许这里使用与 Python 内置函数 <code class="language-plaintext highlighter-rouge">id</code> 同名的字段。</p>
+
+<h3 id="3-_track-类保存跟踪过程中的内部状态">3. _Track 类（保存跟踪过程中的内部状态）</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">_Track</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Internal state for one tracked blob.</span><span class="sh">"""</span>
+
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># noqa: A003
+</span>    <span class="n">color</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">y</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">area</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">last_seen</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">hits</span><span class="p">:</span> <span class="nb">int</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Detection</code> 保存当前帧的检测结果，<code class="language-plaintext highlighter-rouge">_Track</code> 保存跨帧匹配需要的历史状态。
+前面的下划线表示这个类主要供模块内部使用。</p>
+
+<p>除了编号、颜色、位置和面积，还增加了两个字段：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>字段</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">last_seen</code></td>
+      <td>最后一次匹配到该目标的帧号，用于清理过期轨迹</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hits</code></td>
+      <td>该轨迹累计命中的次数，新轨迹从 1 开始</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注意：当前实现中，短暂漏检不会把 <code class="language-plaintext highlighter-rouge">hits</code> 清零，所以它表示累计命中次数。</p>
+
+<h3 id="4-_odd_kernel统一处理核尺寸">4. _odd_kernel()：统一处理核尺寸</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_odd_kernel</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Return an odd morphology/blur kernel size, or 0 when disabled.</span><span class="sh">"""</span>
+    <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">size</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">size</span>
+</code></pre></div></div>
+
+<p>这个函数把配置中的核尺寸转换为检测器实际使用的尺寸：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">size &lt;= 1</code>：返回 <code class="language-plaintext highlighter-rouge">0</code>，表示关闭相应处理。</li>
+  <li><code class="language-plaintext highlighter-rouge">size</code> 为偶数：加 <code class="language-plaintext highlighter-rouge">1</code>，调整为奇数。</li>
+  <li>其他情况：直接使用原值。</li>
+</ul>
+
+<p>例如：<code class="language-plaintext highlighter-rouge">_odd_kernel(0)</code> 返回 <code class="language-plaintext highlighter-rouge">0</code>，<code class="language-plaintext highlighter-rouge">_odd_kernel(4)</code> 返回 <code class="language-plaintext highlighter-rouge">5</code>。
+高斯模糊要求这里传入的核尺寸为正奇数；形态学核也统一按本项目的规则取奇数，便于围绕中心像素处理。</p>
+
+<h3 id="5-colordetector-类管理检测与跟踪">5. ColorDetector 类（管理检测与跟踪）</h3>
+
+<h4 id="初始化">初始化</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ColorDetector</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Detect coloured blobs and optionally keep stable IDs between frames.</span><span class="sh">"""</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="n">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">HSVConfig</span><span class="p">,</span>
+        <span class="n">enable_tracking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="n">track_max_distance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">80.0</span><span class="p">,</span>
+        <span class="n">track_max_age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">min_hits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Create a detector for the given configuration.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">HSVConfig</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">TypeError</span><span class="p">(</span><span class="sh">'</span><span class="s">config must be an HSVConfig instance</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">track_max_distance</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">track_max_distance must be &gt;= 0</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">track_max_age</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">track_max_age must be &gt;= 0</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">min_hits</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">min_hits must be &gt;= 1</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">enable_tracking</span> <span class="o">=</span> <span class="nf">bool</span><span class="p">(</span><span class="n">enable_tracking</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">track_max_distance</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">track_max_distance</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">track_max_age</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">track_max_age</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">min_hits</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">min_hits</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_tracks</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">_Track</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_frame_number</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_next_id</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>先检查参数是否合法，再保存配置和跟踪状态。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>参数</th>
+      <th>默认值</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">config</code></td>
+      <td>必传</td>
+      <td>上一章创建的 <code class="language-plaintext highlighter-rouge">HSVConfig</code> 对象</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">enable_tracking</code></td>
+      <td><code class="language-plaintext highlighter-rouge">True</code></td>
+      <td>是否跨帧保持目标 ID</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">track_max_distance</code></td>
+      <td><code class="language-plaintext highlighter-rouge">80.0</code></td>
+      <td>匹配时允许的最大中心距离，单位为像素</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">track_max_age</code></td>
+      <td><code class="language-plaintext highlighter-rouge">15</code></td>
+      <td>根据当前帧与 <code class="language-plaintext highlighter-rouge">last_seen</code> 的帧号差判断轨迹是否过期</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">min_hits</code></td>
+      <td><code class="language-plaintext highlighter-rouge">1</code></td>
+      <td>轨迹至少命中多少次，才出现在返回的检测列表中</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">config</code> 必须是 <code class="language-plaintext highlighter-rouge">HSVConfig</code> 实例，距离和轨迹年龄不能为负数，<code class="language-plaintext highlighter-rouge">min_hits</code> 至少为 <code class="language-plaintext highlighter-rouge">1</code>。
+这里是纯算法类，默认 <code class="language-plaintext highlighter-rouge">min_hits=1</code>；后续 ROS 服务端默认使用 <code class="language-plaintext highlighter-rouge">2</code>。</p>
+
+<p>三个内部属性分别负责：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">self._tracks</code>：保存 <code class="language-plaintext highlighter-rouge">轨迹 ID → _Track 对象</code> 的对应关系。</li>
+  <li><code class="language-plaintext highlighter-rouge">self._frame_number</code>：记录启用跟踪后处理到的帧号，初始为 <code class="language-plaintext highlighter-rouge">0</code>。</li>
+  <li><code class="language-plaintext highlighter-rouge">self._next_id</code>：记录下一个新目标使用的 ID，初始为 <code class="language-plaintext highlighter-rouge">1</code>。</li>
+</ul>
+
+<p>这里手写 <code class="language-plaintext highlighter-rouge">__init__()</code>，主要是因为 <strong><code class="language-plaintext highlighter-rouge">ColorDetector</code> 是一个执行算法、维护运行状态的对象</strong>，用普通类表达很自然。</p>
+
+<p>与前面的两个数据类对比：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>类</th>
+      <th>主要职责</th>
+      <th>适合的写法</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Detection</code></td>
+      <td>保存一条检测结果</td>
+      <td><code class="language-plaintext highlighter-rouge">@dataclass</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_Track</code></td>
+      <td>保存一条轨迹状态</td>
+      <td><code class="language-plaintext highlighter-rouge">@dataclass</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ColorDetector</code></td>
+      <td>执行检测、分配 ID、管理轨迹</td>
+      <td>普通类，也可以用 dataclass</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>具体到这段代码，手写初始化有几个实际优势：</p>
+
+<ul>
+  <li><strong>校验与赋值顺序明确</strong>：先检查传入参数，再转换类型、保存属性，最后创建内部状态，顺着读就能理解。</li>
+  <li><strong>内部状态声明直接</strong>：<code class="language-plaintext highlighter-rouge">self._tracks = {}</code>、<code class="language-plaintext highlighter-rouge">self._next_id = 1</code> 就够了；使用 dataclass 需要额外写 <code class="language-plaintext highlighter-rouge">field(init=False, ...)</code>。</li>
+  <li><strong>不自动引入额外行为</strong>：普通类默认按对象身份比较；dataclass 默认会生成字段比较 <code class="language-plaintext highlighter-rouge">__eq__()</code> 和对象展示 <code class="language-plaintext highlighter-rouge">__repr__()</code>，这里通常用不上。</li>
+</ul>
+
+<h4 id="set_config替换检测配置">set_config()：替换检测配置</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">set_config</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">HSVConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Replace the active threshold configuration.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">HSVConfig</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">TypeError</span><span class="p">(</span><span class="sh">'</span><span class="s">config must be an HSVConfig instance</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+</code></pre></div></div>
+
+<p>调参后，可以把新的 <code class="language-plaintext highlighter-rouge">HSVConfig</code> 对象交给检测器。
+这里仍然检查对象类型，但只替换配置，不自动清空已有轨迹。</p>
+
+<h4 id="reset_tracking重置跟踪状态">reset_tracking()：重置跟踪状态</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">reset_tracking</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Drop all track state and restart IDs at 1.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_tracks</span><span class="p">.</span><span class="nf">clear</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_frame_number</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_next_id</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>清空所有轨迹，把帧号恢复为 <code class="language-plaintext highlighter-rouge">0</code>、下一个 ID 恢复为 <code class="language-plaintext highlighter-rouge">1</code>。
+如果切换输入源，或修改阈值后希望重新编号，可以调用这个方法。
+工具函数 用于切换跟随对象等重新开始新的跟随识别轨迹任务</p>
+
+<h3 id="6-detect处理一帧图像">6. detect()：处理一帧图像</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">detect</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Detection</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+        <span class="sh">"""</span><span class="s">
+        Detect colour blobs in a BGR frame.
+
+        Returns a list of detections and a dictionary containing one binary
+        mask per configured colour (disabled colours get an empty mask).
+        </span><span class="sh">"""</span>
+        
+        <span class="k">if</span> <span class="n">frame</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">frame</span><span class="p">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">frame must be a non-empty numpy array</span><span class="sh">'</span><span class="p">)</span><span class="c1">#检查图像能否正常使用 1.是否传入 2.传入的是不是Numpy数组 3. 图像大小为0即图像为空
+</span>        <span class="n">bgr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_as_bgr</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span> 
+        <span class="n">hsv</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">cvtColor</span><span class="p">(</span><span class="n">bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">COLOR_BGR2HSV</span><span class="p">)</span> <span class="c1">#默认BGR格式转HSV格式 再根据配置决定是否模糊降噪 HSV 将色调、饱和度和明度分开，方便根据颜色阈值筛选红色、蓝色等目标 
+</span>        <span class="n">blur_kernel</span> <span class="o">=</span> <span class="nf">_odd_kernel</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">blur_kernel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">blur_kernel</span><span class="p">:</span>
+            <span class="n">hsv</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nc">GaussianBlur</span><span class="p">(</span><span class="n">hsv</span><span class="p">,</span> <span class="p">(</span><span class="n">blur_kernel</span><span class="p">,</span> <span class="n">blur_kernel</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span><span class="c1"># 只有模糊核大小不为 `0` 时，才执行高斯模糊
+</span>            
+        <span class="n">masks</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">#保持每种颜色的二值图像 
+</span>        <span class="n">detections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Detection</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#保持识别到的对象 每个元素都是一个 Detection对象，包含 ID、颜色、中心坐标、面积和边界框等信息
+</span>        <span class="k">for</span> <span class="n">color_name</span><span class="p">,</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">colors</span><span class="p">.</span><span class="nf">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">threshold</span><span class="p">.</span><span class="n">enabled</span><span class="p">:</span> <span class="c1">#判断颜色是否启用
+</span>                <span class="n">masks</span><span class="p">[</span><span class="n">color_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">zeros</span><span class="p">(</span><span class="n">bgr</span><span class="p">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_threshold_mask</span><span class="p">(</span><span class="n">hsv</span><span class="p">,</span> <span class="n">threshold</span><span class="p">.</span><span class="nf">mask_ranges</span><span class="p">())</span><span class="c1">#获取当前颜色的阈值范围并self._threshold_mask 跟据范围提取颜色区域
+</span>            <span class="n">mask</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_clean_mask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="c1">#清空掩膜
+</span>            <span class="n">masks</span><span class="p">[</span><span class="n">color_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span>
+            <span class="n">contours</span><span class="p">,</span> <span class="n">_hierarchy</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">findContours</span><span class="p">(</span>
+                <span class="n">mask</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">RETR_EXTERNAL</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">CHAIN_APPROX_SIMPLE</span><span class="p">)</span><span class="c1">#提取轮廓
+</span>            <span class="k">for</span> <span class="n">contour</span> <span class="ow">in</span> <span class="n">contours</span><span class="p">:</span>
+                <span class="n">detection</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_contour_to_detection</span><span class="p">(</span><span class="n">contour</span><span class="p">,</span> <span class="n">color_name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">detection</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">detections</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">detection</span><span class="p">)</span> <span class="c1">#逐个处理轮廓
+</span>        <span class="n">order</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">colors</span><span class="p">)}</span>
+        <span class="n">detections</span><span class="p">.</span><span class="nf">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">order</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">color</span><span class="p">,</span> <span class="nf">len</span><span class="p">(</span><span class="n">order</span><span class="p">)),</span> <span class="n">item</span><span class="p">.</span><span class="n">color</span><span class="p">,</span> <span class="n">item</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">item</span><span class="p">.</span><span class="n">y</span><span class="p">))</span><span class="c1">#按配置中的顺序排序
+</span>		
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">enable_tracking</span><span class="p">:</span>  <span class="c1">#根据是否为跟踪任务进行命中次数判断
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">_update_tracks</span><span class="p">(</span><span class="n">detections</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">min_hits</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">detections</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">detection</span> <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">detections</span>
+                    <span class="k">if</span> <span class="n">detection</span><span class="p">.</span><span class="nb">id</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">_tracks</span>
+                    <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">_tracks</span><span class="p">[</span><span class="n">detection</span><span class="p">.</span><span class="nb">id</span><span class="p">].</span><span class="n">hits</span> <span class="o">&gt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">min_hits</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">detection</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">detections</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">detection</span><span class="p">.</span><span class="nb">id</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="k">return</span> <span class="n">detections</span><span class="p">,</span> <span class="n">masks</span>
+</code></pre></div></div>
+
+<p>这是检测器的主要入口，最后返回两个结果：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">detections</span><span class="p">,</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">detector</span><span class="p">.</span><span class="nf">detect</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">detections</code>：当前帧通过筛选的 <code class="language-plaintext highlighter-rouge">Detection</code> 对象列表。</li>
+  <li><code class="language-plaintext highlighter-rouge">masks</code>：<code class="language-plaintext highlighter-rouge">颜色名称 → 二值掩码</code> 的字典，禁用的颜色对应全黑掩码。</li>
+</ul>
+
+<p>按执行顺序解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>步骤</th>
+      <th>代码对应的作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>检查输入</td>
+      <td>拒绝 <code class="language-plaintext highlighter-rouge">None</code>、非 NumPy 数组和空数组</td>
+    </tr>
+    <tr>
+      <td>转换颜色空间</td>
+      <td><code class="language-plaintext highlighter-rouge">_as_bgr()</code> 统一图像格式，再把 BGR 转为 HSV</td>
+    </tr>
+    <tr>
+      <td>可选模糊</td>
+      <td>在 HSV 图像上进行高斯模糊，核尺寸由配置决定</td>
+    </tr>
+    <tr>
+      <td>遍历颜色</td>
+      <td>跳过禁用颜色，对启用颜色生成并清理掩码</td>
+    </tr>
+    <tr>
+      <td>查找轮廓</td>
+      <td><code class="language-plaintext highlighter-rouge">RETR_EXTERNAL</code> 只取外轮廓，<code class="language-plaintext highlighter-rouge">CHAIN_APPROX_SIMPLE</code> 压缩轮廓点</td>
+    </tr>
+    <tr>
+      <td>筛选目标</td>
+      <td><code class="language-plaintext highlighter-rouge">_contour_to_detection()</code> 过滤噪声并计算目标信息</td>
+    </tr>
+    <tr>
+      <td>排序</td>
+      <td>按配置中的颜色顺序，再按颜色名称和位置排列目标</td>
+    </tr>
+    <tr>
+      <td>分配编号</td>
+      <td>启用跟踪时跨帧匹配；关闭跟踪时每帧从 <code class="language-plaintext highlighter-rouge">1</code> 重新编号</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>为什么要保持颜色的二值图像？
+<img src="/assets/images/tutorials/machine-vision/%E8%BD%AC%E4%BA%8C%E5%80%BC%E5%9B%BE.png" alt="" /></p>
+
+<p>以红色为例转为二值图后 对于红色色块会转化为白色表示符合筛选条件
+masks 为字典可以保存多个颜色的二值图 彩色图像 → HSV 阈值筛选 → 二值掩膜 → 提取轮廓 → 得到目标坐标和面积。
+<img src="/assets/images/tutorials/machine-vision/detect.png" alt="detect.png" /></p>
+<h3 id="7-_as_bgr统一输入图像格式">7. _as_bgr()：统一输入图像格式</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_as_bgr</span><span class="p">(</span><span class="n">frame</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Convert supported frame layouts to 8-bit BGR.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">frame</span><span class="p">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">clip</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">).</span><span class="nf">astype</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">frame</span><span class="p">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">COLOR_GRAY2BGR</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">frame</span><span class="p">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">unsupported frame shape: </span><span class="si">{</span><span class="n">frame</span><span class="p">.</span><span class="n">shape</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">channels</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">channels</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">frame</span>
+        <span class="k">if</span> <span class="n">channels</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">COLOR_BGRA2BGR</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">unsupported frame channel count: </span><span class="si">{</span><span class="n">channels</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>这个方法不需要访问 <code class="language-plaintext highlighter-rouge">self</code>，所以使用上一章介绍的 <code class="language-plaintext highlighter-rouge">@staticmethod</code>。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>输入</th>
+      <th>处理方式</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>非 <code class="language-plaintext highlighter-rouge">uint8</code> 数组</td>
+      <td>先把数值截到 0–255，再转换为 <code class="language-plaintext highlighter-rouge">uint8</code></td>
+    </tr>
+    <tr>
+      <td>二维灰度图</td>
+      <td><code class="language-plaintext highlighter-rouge">COLOR_GRAY2BGR</code>，转换为三通道</td>
+    </tr>
+    <tr>
+      <td>三通道 BGR 图</td>
+      <td>直接返回</td>
+    </tr>
+    <tr>
+      <td>四通道 BGRA 图</td>
+      <td><code class="language-plaintext highlighter-rouge">COLOR_BGRA2BGR</code>，去掉透明度通道</td>
+    </tr>
+    <tr>
+      <td>其他维数或通道数</td>
+      <td>抛出 <code class="language-plaintext highlighter-rouge">ValueError</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注意：三通道输入按 BGR 解释，不会自动判断它是不是 RGB 图像。</p>
+
+<h3 id="8-_threshold_mask按-hsv-区间生成掩码">8. _threshold_mask()：按 HSV 区间生成掩码</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_threshold_mask</span><span class="p">(</span>
+        <span class="n">hsv</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Apply one or more inRange intervals and merge them with OR.</span><span class="sh">"""</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">zeros</span><span class="p">(</span><span class="n">hsv</span><span class="p">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span> <span class="c1">#创建一个全黑的掩膜
+</span>        <span class="k">for</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="ow">in</span> <span class="n">ranges</span><span class="p">:</span>  <span class="c1">#转化黑白图符合 置255为白色 不符合置0为黑色
+</span>            <span class="n">lower_array</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+            <span class="n">upper_array</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">bitwise_or</span><span class="p">(</span>
+                <span class="n">mask</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">inRange</span><span class="p">(</span><span class="n">hsv</span><span class="p">,</span> <span class="n">lower_array</span><span class="p">,</span> <span class="n">upper_array</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">mask</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>内容</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hsv</code></td>
+      <td>输入的 HSV 图像，是 NumPy 数组</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ranges</code></td>
+      <td>一个或多个 HSV 颜色范围</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-&gt; np.ndarray</code></td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>提示函数会返回一个 NumPy 数组</p>
+
+<p>先创建与输入图像同宽高的全黑掩码，再逐个处理 HSV 区间。</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">hsv.shape</code>：获取图像的形状。假设图像是 <code class="language-plaintext highlighter-rouge">480 × 640</code>，那么 HSV 数组的形状为 <code class="language-plaintext highlighter-rouge">(480, 640, 3)</code>。</li>
+  <li><code class="language-plaintext highlighter-rouge">hsv.shape[:2]</code>：只取前两个维度，即 <code class="language-plaintext highlighter-rouge">(480, 640)</code>，代表图像的高度和宽度。</li>
+  <li><code class="language-plaintext highlighter-rouge">np.zeros(...)</code>：创建一个所有元素都是 <code class="language-plaintext highlighter-rouge">0</code> 的数组。</li>
+  <li><code class="language-plaintext highlighter-rouge">dtype=np.uint8</code>：使用 8 位无符号整数，像素值范围为 <code class="language-plaintext highlighter-rouge">0～255</code>。
+所以，创建出来的是一张与原图大小相同的全黑单通道图像。</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">cv2.inRange()</code> 把区间内的像素标记为 <code class="language-plaintext highlighter-rouge">255</code>，其余为 <code class="language-plaintext highlighter-rouge">0</code>。 
+<code class="language-plaintext highlighter-rouge">cv2.bitwise_or()</code> 把多个区间的检测结果合并，只要任意区间命中，该像素就保留。</p>
+
+<p>这与上一章的 <code class="language-plaintext highlighter-rouge">mask_ranges()</code> 对应：普通颜色通常只有一个区间，开启环绕的红色有两个区间，
+因此 H 接近 <code class="language-plaintext highlighter-rouge">0</code> 和接近 <code class="language-plaintext highlighter-rouge">179</code> 的红色都可以进入同一张掩码。</p>
+
+<h3 id="9-_clean_mask形态学去噪">9. _clean_mask()：形态学去噪</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_clean_mask</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Remove speckles with open/close morphology.</span><span class="sh">"""</span>
+        <span class="n">kernel_size</span> <span class="o">=</span> <span class="nf">_odd_kernel</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">morph_kernel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">kernel_size</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">morph_iterations</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">mask</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">getStructuringElement</span><span class="p">(</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="n">MORPH_ELLIPSE</span><span class="p">,</span> <span class="p">(</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">))</span> <span class="c1"># 创建椭圆形结构元素
+</span>        <span class="n">cleaned</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">morphologyEx</span><span class="p">(</span>
+            <span class="n">mask</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">MORPH_OPEN</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span>
+            <span class="n">iterations</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">morph_iterations</span><span class="p">)</span> <span class="c1">#开运算
+</span>        <span class="n">cleaned</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">morphologyEx</span><span class="p">(</span>
+            <span class="n">cleaned</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">MORPH_CLOSE</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span>
+            <span class="n">iterations</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">morph_iterations</span><span class="p">)</span> <span class="c1">#闭运算
+</span>        <span class="k">return</span> <span class="n">cleaned</span>
+</code></pre></div></div>
+
+<p>核尺寸关闭或迭代次数不大于 <code class="language-plaintext highlighter-rouge">0</code> 时，直接返回原掩码；否则创建椭圆形结构元素，依次执行：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>操作</th>
+      <th>顺序</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>开运算 <code class="language-plaintext highlighter-rouge">MORPH_OPEN</code></td>
+      <td>先腐蚀，后膨胀</td>
+      <td>去除细小噪点(白点)</td>
+    </tr>
+    <tr>
+      <td>闭运算 <code class="language-plaintext highlighter-rouge">MORPH_CLOSE</code></td>
+      <td>先膨胀，后腐蚀</td>
+      <td>填补小孔洞、连接较小间隙(补缺口)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>满足任意一个条件，就直接返回原始掩膜，不执行形态学操作。</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">not kernel_size</code>：核大小无效或为 <code class="language-plaintext highlighter-rouge">0</code> 等假值。</li>
+  <li><code class="language-plaintext highlighter-rouge">morph_iterations &lt;= 0</code>：形态学操作的迭代次数小于或等于 <code class="language-plaintext highlighter-rouge">0</code>。</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">morph_iterations</code> 控制每次形态学操作的迭代次数。
+核越大、迭代次数越多，对目标形状的影响也越大，小目标可能一起被去除。
+<img src="/assets/images/tutorials/machine-vision/%E5%BC%80&amp;%E9%97%AD%E8%BF%90%E7%AE%97%E5%A4%84%E7%90%86%E5%9B%BE%E7%89%87.png" alt="" /></p>
+
+<h3 id="10-_contour_to_detection过滤轮廓并计算质心">10. _contour_to_detection()：过滤轮廓并计算质心</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_contour_to_detection</span><span class="p">(</span>
+        <span class="n">self</span><span class="p">,</span> <span class="n">contour</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">color_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Detection</span> <span class="o">|</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Filter one contour and convert it to a detection.</span><span class="sh">"""</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="nf">contourArea</span><span class="p">(</span><span class="n">contour</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">area</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">min_area</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">max_area</span> <span class="ow">and</span> <span class="n">area</span> <span class="o">&gt;</span> <span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">max_area</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">boundingRect</span><span class="p">(</span><span class="n">contour</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">min_dimension</span> <span class="ow">or</span> <span class="n">height</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">min_dimension</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="n">box_area</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">height</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">box_area</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">area</span> <span class="o">/</span> <span class="n">box_area</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">min_fill_ratio</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="n">moments</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">moments</span><span class="p">(</span><span class="n">contour</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">moments</span><span class="p">[</span><span class="sh">'</span><span class="s">m00</span><span class="sh">'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">center_x</span> <span class="o">=</span> <span class="n">moments</span><span class="p">[</span><span class="sh">'</span><span class="s">m10</span><span class="sh">'</span><span class="p">]</span> <span class="o">/</span> <span class="n">moments</span><span class="p">[</span><span class="sh">'</span><span class="s">m00</span><span class="sh">'</span><span class="p">]</span>
+            <span class="n">center_y</span> <span class="o">=</span> <span class="n">moments</span><span class="p">[</span><span class="sh">'</span><span class="s">m01</span><span class="sh">'</span><span class="p">]</span> <span class="o">/</span> <span class="n">moments</span><span class="p">[</span><span class="sh">'</span><span class="s">m00</span><span class="sh">'</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">center_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span> <span class="o">/</span> <span class="mf">2.0</span>
+            <span class="n">center_y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="k">return</span> <span class="nc">Detection</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color_name</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="nf">float</span><span class="p">(</span><span class="n">center_x</span><span class="p">),</span>
+            <span class="n">y</span><span class="o">=</span><span class="nf">float</span><span class="p">(</span><span class="n">center_y</span><span class="p">),</span>
+            <span class="n">area</span><span class="o">=</span><span class="n">area</span><span class="p">,</span>
+            <span class="n">bbox</span><span class="o">=</span><span class="p">(</span><span class="nf">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nf">int</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nf">int</span><span class="p">(</span><span class="n">width</span><span class="p">),</span> <span class="nf">int</span><span class="p">(</span><span class="n">height</span><span class="p">)),</span>
+        <span class="p">)</span>
+</code></pre></div></div>
+
+<p>把找到的轮廓转换成一个目标检测结果 <code class="language-plaintext highlighter-rouge">Detection</code>，同时过滤掉面积太小、太大、尺寸不合适或形状不符合要求的轮廓。</p>
+
+<h4 id="按面积宽高和填充率过滤">按面积、宽高和填充率过滤</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>检查项</th>
+      <th>过滤条件</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>最小面积</td>
+      <td><code class="language-plaintext highlighter-rouge">area &lt; min_area</code></td>
+    </tr>
+    <tr>
+      <td>最大面积</td>
+      <td><code class="language-plaintext highlighter-rouge">max_area</code> 非零，且 <code class="language-plaintext highlighter-rouge">area &gt; max_area</code></td>
+    </tr>
+    <tr>
+      <td>最小宽高</td>
+      <td>宽或高小于 <code class="language-plaintext highlighter-rouge">min_dimension</code></td>
+    </tr>
+    <tr>
+      <td>最小填充率</td>
+      <td><code class="language-plaintext highlighter-rouge">轮廓面积 / 外接矩形面积 &lt; min_fill_ratio</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>例如，一个外接矩形宽 <code class="language-plaintext highlighter-rouge">20</code>、高 <code class="language-plaintext highlighter-rouge">10</code>，轮廓面积为 <code class="language-plaintext highlighter-rouge">30</code>，填充率就是 <code class="language-plaintext highlighter-rouge">30 / 200 = 0.15</code>。
+若 <code class="language-plaintext highlighter-rouge">min_fill_ratio=0.20</code>，该轮廓会被过滤。</p>
+
+<h4 id="使用图像矩计算质心">使用图像矩计算质心</h4>
+
+<p><code class="language-plaintext highlighter-rouge">cv2.moments()</code> 返回轮廓的图像矩，质心计算如下：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">center_x</span> <span class="o">=</span> <span class="n">moments</span><span class="p">[</span><span class="sh">'</span><span class="s">m10</span><span class="sh">'</span><span class="p">]</span> <span class="o">/</span> <span class="n">moments</span><span class="p">[</span><span class="sh">'</span><span class="s">m00</span><span class="sh">'</span><span class="p">]</span>
+<span class="n">center_y</span> <span class="o">=</span> <span class="n">moments</span><span class="p">[</span><span class="sh">'</span><span class="s">m01</span><span class="sh">'</span><span class="p">]</span> <span class="o">/</span> <span class="n">moments</span><span class="p">[</span><span class="sh">'</span><span class="s">m00</span><span class="sh">'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>如果 <code class="language-plaintext highlighter-rouge">m00</code> 为 <code class="language-plaintext highlighter-rouge">0</code>，为避免除零，改用外接矩形中心。
+返回对象时暂时设置 <code class="language-plaintext highlighter-rouge">id=0</code>，真正的 ID 在 <code class="language-plaintext highlighter-rouge">detect()</code> 后续的跟踪或编号步骤中分配。</p>
+
+<h3 id="11-_update_tracks同色目标的最近邻匹配">11. _update_tracks()：同色目标的最近邻匹配</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_update_tracks</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">detections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Detection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Assign stable IDs using greedy nearest-neighbour matching.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_frame_number</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">active</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">track_id</span><span class="p">:</span> <span class="n">track</span> <span class="k">for</span> <span class="n">track_id</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">_tracks</span><span class="p">.</span><span class="nf">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_frame_number</span> <span class="o">-</span> <span class="n">track</span><span class="p">.</span><span class="n">last_seen</span> <span class="o">&lt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">track_max_age</span>
+        <span class="p">}</span>
+        <span class="n">unmatched_tracks</span> <span class="o">=</span> <span class="nf">set</span><span class="p">(</span><span class="n">active</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">color_name</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">colors</span><span class="p">:</span>
+            <span class="n">color_detections</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">detection</span> <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">detections</span>
+                <span class="k">if</span> <span class="n">detection</span><span class="p">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">color_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">color_detections</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">detection_index</span><span class="p">,</span> <span class="n">detection</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">color_detections</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">track_id</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">active</span><span class="p">.</span><span class="nf">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">track</span><span class="p">.</span><span class="n">color</span> <span class="o">!=</span> <span class="n">color_name</span> <span class="ow">or</span> <span class="n">track_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">unmatched_tracks</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">distance</span> <span class="o">=</span> <span class="nf">hypot</span><span class="p">(</span>
+                        <span class="n">detection</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">track</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">detection</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">track</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">track_max_distance</span><span class="p">:</span>
+                        <span class="n">candidates</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="n">distance</span><span class="p">,</span> <span class="n">detection_index</span><span class="p">,</span> <span class="n">track_id</span><span class="p">))</span>
+            <span class="n">candidates</span><span class="p">.</span><span class="nf">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+
+            <span class="n">matched_detections</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+            <span class="n">matched_tracks</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">_distance</span><span class="p">,</span> <span class="n">detection_index</span><span class="p">,</span> <span class="n">track_id</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">detection_index</span> <span class="ow">in</span> <span class="n">matched_detections</span> <span class="ow">or</span> <span class="n">track_id</span> <span class="ow">in</span> <span class="n">matched_tracks</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">detection</span> <span class="o">=</span> <span class="n">color_detections</span><span class="p">[</span><span class="n">detection_index</span><span class="p">]</span>
+                <span class="n">track</span> <span class="o">=</span> <span class="n">active</span><span class="p">[</span><span class="n">track_id</span><span class="p">]</span>
+                <span class="n">detection</span><span class="p">.</span><span class="nb">id</span> <span class="o">=</span> <span class="n">track_id</span>
+                <span class="n">track</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">detection</span><span class="p">.</span><span class="n">x</span>
+                <span class="n">track</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">detection</span><span class="p">.</span><span class="n">y</span>
+                <span class="n">track</span><span class="p">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">detection</span><span class="p">.</span><span class="n">area</span>
+                <span class="n">track</span><span class="p">.</span><span class="n">last_seen</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_frame_number</span>
+                <span class="n">track</span><span class="p">.</span><span class="n">hits</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">matched_detections</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">detection_index</span><span class="p">)</span>
+                <span class="n">matched_tracks</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">track_id</span><span class="p">)</span>
+                <span class="n">unmatched_tracks</span><span class="p">.</span><span class="nf">discard</span><span class="p">(</span><span class="n">track_id</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">detection_index</span><span class="p">,</span> <span class="n">detection</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">color_detections</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">detection_index</span> <span class="ow">in</span> <span class="n">matched_detections</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">track_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_next_id</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">_next_id</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">detection</span><span class="p">.</span><span class="nb">id</span> <span class="o">=</span> <span class="n">track_id</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">_tracks</span><span class="p">[</span><span class="n">track_id</span><span class="p">]</span> <span class="o">=</span> <span class="nf">_Track</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="n">track_id</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">color_name</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="n">detection</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">detection</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+                    <span class="n">area</span><span class="o">=</span><span class="n">detection</span><span class="p">.</span><span class="n">area</span><span class="p">,</span>
+                    <span class="n">last_seen</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">_frame_number</span><span class="p">,</span>
+                    <span class="n">hits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_tracks</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">track_id</span><span class="p">:</span> <span class="n">track</span> <span class="k">for</span> <span class="n">track_id</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">_tracks</span><span class="p">.</span><span class="nf">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_frame_number</span> <span class="o">-</span> <span class="n">track</span><span class="p">.</span><span class="n">last_seen</span> <span class="o">&lt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">track_max_age</span>
+        <span class="p">}</span>
+</code></pre></div></div>
+
+<p>这个方法直接修改检测对象的 <code class="language-plaintext highlighter-rouge">id</code>，并更新 <code class="language-plaintext highlighter-rouge">self._tracks</code>，不额外返回结果。</p>
+
+<h4 id="1-找出尚未过期的轨迹">1. 找出尚未过期的轨迹</h4>
+
+<p>每处理一帧，<code class="language-plaintext highlighter-rouge">self._frame_number</code> 加 <code class="language-plaintext highlighter-rouge">1</code>。
+只有满足 <code class="language-plaintext highlighter-rouge">当前帧号 - last_seen &lt;= track_max_age</code> 的历史轨迹，才参与本帧匹配。</p>
+
+<p><code class="language-plaintext highlighter-rouge">unmatched_tracks</code> 保存尚未被匹配的轨迹 ID，用来避免同一条轨迹被重复使用。</p>
+
+<h4 id="2-生成同色候选匹配">2. 生成同色候选匹配</h4>
+
+<p>按颜色分别处理，只比较颜色相同的检测目标和轨迹。
+通过 <code class="language-plaintext highlighter-rouge">hypot()</code> 计算中心距离，小于或等于 <code class="language-plaintext highlighter-rouge">track_max_distance</code> 才加入候选列表：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">candidates</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="n">distance</span><span class="p">,</span> <span class="n">detection_index</span><span class="p">,</span> <span class="n">track_id</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>随后按距离从小到大排序；距离相同时，再按检测下标、轨迹 ID 排序。</p>
+
+<h4 id="3-优先匹配距离最近的一对">3. 优先匹配距离最近的一对</h4>
+
+<p>遍历候选列表，跳过已经匹配过的检测目标或轨迹。
+匹配成功后沿用轨迹 ID，更新位置、面积和最后出现帧号，并把 <code class="language-plaintext highlighter-rouge">hits</code> 加 <code class="language-plaintext highlighter-rouge">1</code>。</p>
+
+<p>这种方式叫贪心最近邻匹配：每次优先选择当前最近的一对。
+它实现简单，但目标交叉、距离过近或移动过快时，仍可能交换 ID。</p>
+
+<h4 id="4-为新目标分配-id清理过期轨迹">4. 为新目标分配 ID，清理过期轨迹</h4>
+
+<p>没有匹配到历史轨迹的检测目标，会获得 <code class="language-plaintext highlighter-rouge">self._next_id</code>，并创建 <code class="language-plaintext highlighter-rouge">hits=1</code> 的新轨迹。
+最后删除过期轨迹。暂时未匹配、但尚未过期的轨迹会保留，供后续帧重新匹配；
+它们不会凭历史位置生成当前帧的检测结果。</p>
+
+<blockquote>
+  <p>自此，color_detector.py 的检测与跟踪部分结束。</p>
+</blockquote>
+
+<h2 id="检测成果">检测成果</h2>
+
+<p>在工作区根目录执行下面的代码，不需要启动 ROS 节点。
+先画出四色圆，验证颜色检测，再用连续两帧验证 ID 和 <code class="language-plaintext highlighter-rouge">min_hits</code>。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> <span class="s2">"</span><span class="nv">$WS</span><span class="s2">"</span>
+<span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"src/Mvc_sorting"</span> python3 - <span class="o">&lt;&lt;</span><span class="sh">'</span><span class="no">PY</span><span class="sh">'
+import cv2
+import numpy as np
+from Mvc_sorting.color_detector import ColorDetector
+from Mvc_sorting.hsv_config import HSVConfig
+
+frame = np.full((480, 640, 3), 35, dtype=np.uint8)
+colors = [
+    ((100, 100), (0, 0, 255)),
+    ((250, 100), (0, 255, 0)),
+    ((400, 100), (255, 0, 0)),
+    ((550, 100), (0, 255, 255)),
+]
+for center, bgr in colors:
+    cv2.circle(frame, center, 30, bgr, cv2.FILLED)
+
+detector = ColorDetector(HSVConfig.default(), enable_tracking=False)
+detections, masks = detector.detect(frame)
+print('colors:', [item.color for item in detections])
+print('count:', len(detections))
+print('masks:', list(masks))
+assert len(detections) == 4
+
+tracker = ColorDetector(HSVConfig.default(), min_hits=2)
+first, _ = tracker.detect(frame)
+second, _ = tracker.detect(frame)
+third, _ = tracker.detect(frame)
+print('tracked counts:', len(first), len(second), len(third))
+print('stable ids:', [item.id for item in second] == [item.id for item in third])
+assert len(first) == 0 and len(second) == len(third) == 4
+assert [item.id for item in second] == [item.id for item in third]
+</span><span class="no">PY
+</span></code></pre></div></div>
+
+<p>预期：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>colors: ['red', 'green', 'blue', 'yellow']
+count: 4
+masks: ['red', 'green', 'blue', 'yellow']
+tracked counts: 0 4 4
+stable ids: True
+</code></pre></div></div>
+
+<p>可以看到，四色圆都被识别，四种颜色都有对应掩码；开启 <code class="language-plaintext highlighter-rouge">min_hits=2</code> 后，
+第一帧不返回目标，第二帧开始返回，并在第三帧保持相同 ID。</p>
+
+<hr />
+</div>
+    <div class="tutorial-edit"><a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/md/%E4%B8%89.%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%B7%9F%E8%B8%AA%E5%B1%82%EF%BC%9Acolor_detector.py.md" target="_blank" rel="noopener">在 GitHub 查看原文 ↗</a></div>
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/machine-vision/02-hsv-config/"><span>← 上一章</span><strong>包骨架与 HSV 配置</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/machine-vision/04-visualization/"><span>下一章 →</span><strong>检测结果可视化</strong></a>
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

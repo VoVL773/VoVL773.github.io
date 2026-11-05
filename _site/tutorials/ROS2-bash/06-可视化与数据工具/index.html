@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    可视化与数据工具 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS2 基础教程</div>
+    <p class="tutorial-course-subtitle">ROS2基础 · ROS2实战 · 巡游小车实战</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2基础</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/README/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程导读</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/01-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>创建工作空间</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>多线程示例</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>话题通信</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>服务和参数</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>TF 坐标变换</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/" aria-current="page">
+            <span class="tutorial-chapter-number">06</span>
+            <span>可视化与数据工具</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>仿真与导航</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07B-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%93%8D%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>仿真与导航实操手册</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E9%99%84%E5%BD%95-%E5%8B%98%E8%AF%AF%E4%B8%8E%E9%80%9F%E6%9F%A5/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>附录：勘误与速查</span>
+          </a>
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/ROS2%E5%AE%9E%E6%88%98%E9%83%A8%E5%88%86%E8%AF%A6%E7%BB%86%E8%AE%B0%E5%BD%95/">
+            <span class="tutorial-chapter-number">10</span>
+            <span>ROS2 实战：海龟案例与通信练习</span>
+          </a>
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">巡游小车实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E5%B7%A1%E6%B8%B8%E5%B0%8F%E8%BD%A6%E4%BB%BF%E7%9C%9F-%E4%BB%8E%E9%9B%B6%E5%A4%8D%E5%88%BB%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">11</span>
+            <span>巡游小车实战：从零复刻</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/ROS2-bash/README/">ROS2 基础教程</a><span>/</span>
+      <span>ROS2基础</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS2 基础教程 · 第 6 章</div>
+      <h1>可视化与数据工具</h1>
+      <p>使用 RViz2 和 rosbag 观察、录制与回放数据。</p>
+    </header>
+    <div class="post-content tutorial-content"><!-- nav -->
+<blockquote>
+  <p>📖 <a href="/tutorials/ROS2-bash/README/">ROS 2 学习随笔</a> ｜ ⬅️ 上一章：<a href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">五、TF 坐标变换</a> ｜ <a href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">下一章：七、仿真与导航</a> ➡️</p>
+</blockquote>
+
+<p>本章讲两件事：</p>
+
+<ul>
+  <li><strong>RViz2</strong>：把 ROS 话题里的数据<strong>画出来</strong>（怎么看）</li>
+  <li><strong>ros2 bag</strong>：把话题数据<strong>录下来回放</strong>（怎么存）</li>
+</ul>
+
+<p>这两个工具是绝配——<strong>录一段包，然后一遍遍回放、一遍遍在 RViz 里看</strong>，是调试机器人最常用的工作流。</p>
+
+<h3 id="1rviz2-是什么">1、RViz2 是什么</h3>
+
+<p><strong>它是一个纯显示工具，自己不产生任何数据。</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>传感器 / 算法节点  ──发布──▶  ROS 话题  ──订阅──▶  RViz2 画出来
+   （数据源）                  （数据）              （只看不产）
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：记住这条，排错就有方向了</strong></p>
+
+  <p><strong>RViz 里看不到东西，永远只有两种原因：</strong></p>
+  <ol>
+    <li><strong>数据没来</strong>（话题没发布，或话题名/类型不匹配）</li>
+    <li><strong>参考系不对</strong>（Fixed Frame 设错了）</li>
+  </ol>
+
+  <p>而不是”RViz 坏了”。所以排查顺序永远是：先 <code class="language-plaintext highlighter-rouge">ros2 topic list</code> 确认数据在不在，再查 Fixed Frame。</p>
+</blockquote>
+
+<p>类比：RViz 之于 ROS，相当于<strong>示波器之于电路</strong>——只负责显示波形，不产生信号。</p>
+
+<h3 id="2启动与界面">2、启动与界面</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rviz2
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>首次启动看到一片灰 + 左边红字报错（<code class="language-plaintext highlighter-rouge">Fixed Frame [map] does not exist</code>），这是完全正常的。</strong></p>
+
+  <p>因为 RViz 默认配置里 Fixed Frame 是 <code class="language-plaintext highlighter-rouge">map</code>，而大多数学习用的 demo 根本没有这个坐标系。下一节就解决它。</p>
+</blockquote>
+
+<p>界面分四块：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────┬────────────────────────────┐
+│  Displays    │                            │
+│  （显示项清单）│        3D 视图             │
+│              │      （真正看东西的地方）    │
+│  Global      │                            │
+│  Options     │                            │
+│   └ Fixed    │                            │
+│     Frame    │                            │
+│              │                            │
+│  ┌ Grid      │                            │
+│  ┌ TF        │                            │
+├──────────────┴────────────────────────────┤
+│ Left-Click: Rotate   Middle-Click: Move   │ ← 鼠标操作提示
+│ Right-Click/Mouse Wheel: Zoom             │
+└───────────────────────────────────────────┘
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>区域</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>左：Displays</strong></td>
+      <td>要显示什么。每一项对应一类数据</td>
+    </tr>
+    <tr>
+      <td><strong>中：3D 视图</strong></td>
+      <td>画布</td>
+    </tr>
+    <tr>
+      <td><strong>右上：Views</strong></td>
+      <td>相机参数（视角类型、距离、角度）</td>
+    </tr>
+    <tr>
+      <td><strong>底部</strong></td>
+      <td>ROS 时间和鼠标操作提示</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="3三个核心概念">3、三个核心概念</h3>
+
+<p>只要搞懂这三个，RViz 就会用了。</p>
+
+<h4 id="概念-1fixed-frame固定参考系">概念 1：Fixed Frame（固定参考系）</h4>
+
+<p><strong>整幅画面的坐标原点。</strong> RViz 必须知道”我站在哪个坐标系里看世界”，才能把所有数据换算到同一个参考下画出来。</p>
+
+<blockquote>
+  <p>⚠️ <strong>规则：Fixed Frame 必须填你 TF 树里真实存在的坐标系</strong>，通常填最顶层的根。</p>
+
+  <p>比如 TF 树是 <code class="language-plaintext highlighter-rouge">base_link → camera_link → bottle_link</code>，就填 <strong><code class="language-plaintext highlighter-rouge">base_link</code></strong>。</p>
+
+  <p><strong>这一项填错 = 整个画面空白 + 红字报错。新手 90% 的时间都卡在这里。</strong></p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么 RViz 默认是 <code class="language-plaintext highlighter-rouge">map</code></strong></p>
+
+  <p><code class="language-plaintext highlighter-rouge">map</code> 是移动机器人导航的标准根坐标系，完整链表是：</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map ──▶ odom ──▶ base_link ──▶ 各种传感器
+</code></pre></div>  </div>
+
+  <p>RViz 面向的是这个主流场景，所以默认填了 <code class="language-plaintext highlighter-rouge">map</code>。学习 TF 或做小 demo 时没有 <code class="language-plaintext highlighter-rouge">map</code>，就必须改掉。</p>
+</blockquote>
+
+<h4 id="概念-2displays显示项">概念 2：Displays（显示项）</h4>
+
+<p>RViz 里的每一项 = <strong>“订阅某个话题 → 用某种方式画出来”</strong>。</p>
+
+<p>比如：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Display</th>
+      <th>订阅</th>
+      <th>画出什么</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TF</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/tf</code>、<code class="language-plaintext highlighter-rouge">/tf_static</code></td>
+      <td>所有坐标系的坐标轴</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LaserScan</code></td>
+      <td>某个激光话题</td>
+      <td>激光雷达扫描点</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>⚠️ <strong>要显示什么就得手动加什么，不会自动出现。</strong> 点左下角的 <strong><code class="language-plaintext highlighter-rouge">Add</code></strong> 按钮添加。</p>
+</blockquote>
+
+<h4 id="概念-3views视角">概念 3：Views（视角）</h4>
+
+<p>相机的位置和朝向。默认是 <code class="language-plaintext highlighter-rouge">Orbit</code>（轨道视角，可以绕着物体转）。</p>
+
+<h3 id="4完整操作流程">4、完整操作流程</h3>
+
+<p>拿第五章那个 TF demo 走一遍（<code class="language-plaintext highlighter-rouge">base_link → camera_link → bottle_link</code>）。</p>
+
+<h4 id="step-0确认数据源在跑">Step 0：确认数据源在跑</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 另开一个终端</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+ros2 topic list | <span class="nb">grep </span>tf
+<span class="c"># 应该看到 /tf 和 /tf_static</span>
+</code></pre></div></div>
+
+<p><strong>没有数据源，RViz 里怎么点都是空的。</strong></p>
+
+<h4 id="step-1启动-rviz">Step 1：启动 RViz</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rviz2
+</code></pre></div></div>
+
+<h4 id="step-2设-fixed-frame关键一步">Step 2：设 Fixed Frame（关键一步）</h4>
+
+<p>左侧 <code class="language-plaintext highlighter-rouge">Global Options</code> → <code class="language-plaintext highlighter-rouge">Fixed Frame</code> 那一行。有两种改法：</p>
+
+<p><strong>方法 A：直接打字（最可靠）</strong></p>
+
+<ol>
+  <li>鼠标<strong>左键单击</strong>显示 <code class="language-plaintext highlighter-rouge">map</code> 的那个框</li>
+  <li><code class="language-plaintext highlighter-rouge">Ctrl</code> + <code class="language-plaintext highlighter-rouge">A</code> 全选 → 输入 <code class="language-plaintext highlighter-rouge">base_link</code></li>
+  <li><strong>按回车</strong></li>
+</ol>
+
+<p><strong>方法 B：下拉选择</strong></p>
+
+<p>点右边的箭头，选 <code class="language-plaintext highlighter-rouge">base_link</code>。</p>
+
+<blockquote>
+  <p>⚠️ <strong>下拉列表是空的怎么办</strong></p>
+
+  <p>这是很常见的困惑。Fixed Frame 是个<strong>可编辑下拉框</strong>，列表内容 = “RViz 已经发现过的坐标系”，而发现<strong>依赖 TF 显示项去订阅话题</strong>。</p>
+
+  <p>这就形成了鸡生蛋问题：想设置参考系，但候选项又需要 TF 显示项才能发现。</p>
+
+  <p><strong>所以：列表空的时候，直接用方法 A 打字即可</strong>，完全绕过这个依赖。
+另外确认一下左侧 <code class="language-plaintext highlighter-rouge">TF</code> 那一项<strong>前面的勾打上了</strong>——没勾的话 RViz 不会订阅 TF，列表永远是空的。</p>
+</blockquote>
+
+<p>改完的瞬间红字消失，画面中间出现坐标轴。</p>
+
+<h4 id="step-3加-tf-显示项">Step 3：加 TF 显示项</h4>
+
+<p>左下角 <strong><code class="language-plaintext highlighter-rouge">Add</code></strong> → 弹窗里找 <strong><code class="language-plaintext highlighter-rouge">TF</code></strong> → 双击（或选中后点 OK）。</p>
+
+<p>加完后展开左侧的 <code class="language-plaintext highlighter-rouge">TF</code> 项，建议这样设：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>子选项</th>
+      <th>建议值</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Show Names</code></td>
+      <td>✅ 勾上</td>
+      <td>每个坐标轴旁显示坐标系名字</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Show Axes</code></td>
+      <td>✅ 勾上</td>
+      <td>显示坐标轴</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Show Arrows</code></td>
+      <td>✅ 勾上</td>
+      <td>用箭头表示父子关系</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Marker Scale</code></td>
+      <td>拖到 2~3</td>
+      <td>坐标轴放大，否则太小看不见</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Frames</code> → <code class="language-plaintext highlighter-rouge">All Enabled</code></td>
+      <td>✅ 勾上</td>
+      <td>显示全部坐标系</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>现在应该能看到三个坐标系：<code class="language-plaintext highlighter-rouge">base_link</code>、<code class="language-plaintext highlighter-rouge">camera_link</code>、<code class="language-plaintext highlighter-rouge">bottle_link</code>。</p>
+
+<blockquote>
+  <p>💡 <strong>只看到一个轴？</strong> 把 <code class="language-plaintext highlighter-rouge">Marker Scale</code> 调大。三个坐标系可能挨得很近，或者被 Grid 挡住了。</p>
+</blockquote>
+
+<h4 id="step-4鼠标操作">Step 4：鼠标操作</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>操作</th>
+      <th>效果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>左键拖</strong></td>
+      <td>旋转视角</td>
+    </tr>
+    <tr>
+      <td><strong>中键拖</strong></td>
+      <td>平移画面</td>
+    </tr>
+    <tr>
+      <td><strong>右键拖 / 滚轮</strong></td>
+      <td>缩放</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>这几条 RViz <strong>底部状态栏</strong>也写着，忘了随时低头看。</p>
+
+<h4 id="step-5保存配置">Step 5：保存配置</h4>
+
+<blockquote>
+  <p>⚠️ <strong>这一步很重要</strong>，不做的话下次启动又要从头配一遍。</p>
+</blockquote>
+
+<p>菜单 <code class="language-plaintext highlighter-rouge">File</code> → <code class="language-plaintext highlighter-rouge">Save Config As</code> → 存成 <code class="language-plaintext highlighter-rouge">~/tf_demo.rviz</code></p>
+
+<p>以后一步到位：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rviz2 <span class="nt">-d</span> ~/tf_demo.rviz
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-d</code>（<code class="language-plaintext highlighter-rouge">--display-config</code>）就是”加载指定配置文件”的意思。</p>
+
+<h3 id="5常用-display-速查">5、常用 Display 速查</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Display</th>
+      <th>订阅什么</th>
+      <th>能看到什么</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Grid</strong></td>
+      <td>（不订阅）</td>
+      <td>地面网格，纯参考用</td>
+    </tr>
+    <tr>
+      <td><strong>TF</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">/tf</code>、<code class="language-plaintext highlighter-rouge">/tf_static</code></td>
+      <td>所有坐标系的坐标轴</td>
+    </tr>
+    <tr>
+      <td><strong>RobotModel</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">/robot_description</code>、<code class="language-plaintext highlighter-rouge">/joint_states</code></td>
+      <td>机器人三维模型（URDF）</td>
+    </tr>
+    <tr>
+      <td><strong>LaserScan</strong></td>
+      <td>激光话题</td>
+      <td>激光雷达扫出的点</td>
+    </tr>
+    <tr>
+      <td><strong>PointCloud2</strong></td>
+      <td>点云话题</td>
+      <td>三维点云</td>
+    </tr>
+    <tr>
+      <td><strong>Image</strong></td>
+      <td>图像话题</td>
+      <td>摄像头画面（独立二维窗口）</td>
+    </tr>
+    <tr>
+      <td><strong>Map</strong></td>
+      <td>栅格地图话题</td>
+      <td>导航用的二维地图</td>
+    </tr>
+    <tr>
+      <td><strong>Path</strong></td>
+      <td>路径话题</td>
+      <td>规划出的轨迹</td>
+    </tr>
+    <tr>
+      <td><strong>Odometry</strong></td>
+      <td>里程计话题</td>
+      <td>运动轨迹 + 位姿</td>
+    </tr>
+    <tr>
+      <td><strong>Marker / MarkerArray</strong></td>
+      <td>marker 话题</td>
+      <td>用代码画的任意图形</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="6报错对照表">6、报错对照表</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>报错 / 现象</th>
+      <th>原因</th>
+      <th>解决</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Fixed Frame [map] does not exist</code></td>
+      <td>树里没有 <code class="language-plaintext highlighter-rouge">map</code></td>
+      <td>Fixed Frame 改成 <code class="language-plaintext highlighter-rouge">base_link</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">No tf data. Actual error: ...</code></td>
+      <td>TF 显示项收不到数据</td>
+      <td>① 发布器在跑吗 ② TF 项勾了吗 ③ Fixed Frame 存在吗</td>
+    </tr>
+    <tr>
+      <td>改成 <code class="language-plaintext highlighter-rouge">base_link</code> 后仍然空白</td>
+      <td>数据源根本没起</td>
+      <td><code class="language-plaintext highlighter-rouge">ros2 topic list</code> 确认话题在</td>
+    </tr>
+    <tr>
+      <td>某个 Display 一直是红的</td>
+      <td>话题名 / 类型不匹配</td>
+      <td>展开该 Display 的 <code class="language-plaintext highlighter-rouge">Topic</code> 项，逐字核对话题名</td>
+    </tr>
+    <tr>
+      <td>画面全黑或全白</td>
+      <td>相机跑到物体内部/外部了</td>
+      <td>滚轮缩放，或把 <code class="language-plaintext highlighter-rouge">Views</code> 里的 <code class="language-plaintext highlighter-rouge">Distance</code> 改回 3</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="7一句话总结">7、一句话总结</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RViz 用不明白 = 99% 是 Fixed Frame 和 Displays 这两个地方没配对
+</code></pre></div></div>
+
+<p><strong>固定套路：</strong></p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">ros2 topic list</code> —— 看有什么数据</li>
+  <li>起 <code class="language-plaintext highlighter-rouge">rviz2</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Fixed Frame</code> 填<strong>你 TF 树里真实存在的根坐标系</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">Add</code> —— 加对应的 Display</li>
+  <li>点进 Display 检查 <code class="language-plaintext highlighter-rouge">Topic</code> 名字对不对</li>
+  <li><code class="language-plaintext highlighter-rouge">File → Save Config As</code> —— 存起来</li>
+</ol>
+
+<hr />
+
+<h3 id="8ros2-bag数据录制与回放">8、ros2 bag：数据录制与回放</h3>
+
+<h4 id="81-为什么需要录包">8.1 为什么需要录包</h4>
+
+<p>这是 ROS 2 里<strong>最被低估的工具</strong>。它的价值不只是”记录数据”：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>用途</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>复现偶发 bug</strong></td>
+      <td>现场只出现一次的问题，录下来就能反复回放、反复调试</td>
+    </tr>
+    <tr>
+      <td><strong>离线调算法</strong></td>
+      <td>同一份数据喂给算法跑一百遍，每次输入完全一样</td>
+    </tr>
+    <tr>
+      <td><strong>做数据集</strong></td>
+      <td>跑一次真机，采一批数据回来慢慢用</td>
+    </tr>
+    <tr>
+      <td><strong>分享现场</strong></td>
+      <td>把包发给同事/厂商，对方不用有同样的硬件也能看</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>💡 <strong>一句话记住它的价值</strong>：<strong>把”一次性的、不可重复的现实”变成”可反复播放的文件”。</strong></p>
+</blockquote>
+
+<h4 id="82-录制">8.2 录制</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 最常用：录制所有话题（不含隐藏话题）</span>
+ros2 bag record <span class="nt">-a</span> <span class="nt">-o</span> my_bag
+
+<span class="c"># 只录指定话题（包小、干净，推荐）</span>
+ros2 bag record <span class="nt">-o</span> turtle_bag /turtle1/cmd_vel /turtle1/pose
+
+<span class="c"># 不指定 -o 时，自动生成 rosbag2_&lt;日期&gt;_&lt;时间&gt; 目录</span>
+ros2 bag record <span class="nt">-a</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>参数</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-a, --all</code></td>
+      <td>录制所有话题（可加 <code class="language-plaintext highlighter-rouge">--all-services</code> 连服务一起录）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-o, --output</code></td>
+      <td>输出目录名</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-s, --storage</code></td>
+      <td>存储格式，<code class="language-plaintext highlighter-rouge">mcap</code>（默认）或 <code class="language-plaintext highlighter-rouge">sqlite3</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>⚠️ <strong>怎么停止录制：按 <code class="language-plaintext highlighter-rouge">Ctrl+C</code></strong></p>
+
+  <p>不要用 <code class="language-plaintext highlighter-rouge">kill</code>。rosbag2 需要收到中断信号才能把索引写完——<strong>直接 kill -9 会导致 <code class="language-plaintext highlighter-rouge">metadata.yaml</code> 丢失</strong>，包就读不了了。</p>
+
+  <p>实测发现：在<strong>非终端环境</strong>下 <code class="language-plaintext highlighter-rouge">kill -INT</code> 可能不生效（rosbag2 靠 stdin 判断是否有键盘输入，日志会提示 <code class="language-plaintext highlighter-rouge">stdin is not a terminal device</code>）；这时用 <code class="language-plaintext highlighter-rouge">kill -TERM</code> 可以正常收尾。</p>
+</blockquote>
+
+<h4 id="83-产物长什么样">8.3 产物长什么样</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my_bag/
+├── metadata.yaml      ← 索引：话题列表、消息数、时间范围
+└── my_bag_0.mcap      ← 真正的数据
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：Jazzy 的默认存储格式是 <code class="language-plaintext highlighter-rouge">mcap</code>，不是 <code class="language-plaintext highlighter-rouge">sqlite3</code></strong></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>版本</th>
+        <th>默认格式</th>
+        <th>文件后缀</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Humble 及以前</td>
+        <td>sqlite3</td>
+        <td><code class="language-plaintext highlighter-rouge">.db3</code></td>
+      </tr>
+      <tr>
+        <td><strong>Jazzy 及以后</strong></td>
+        <td><strong>mcap</strong></td>
+        <td><strong><code class="language-plaintext highlighter-rouge">.mcap</code></strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>MCAP 是新一代格式，读写更快、支持索引和压缩。看老教程时如果对不上文件名，就是这个原因。想用回老格式加 <code class="language-plaintext highlighter-rouge">-s sqlite3</code>。</p>
+</blockquote>
+
+<h4 id="84-查看包信息">8.4 查看包信息</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 bag info my_bag
+</code></pre></div></div>
+
+<p>实测输出：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Files:             my_bag_0.mcap
+Bag size:          25.4 KiB
+Storage id:        mcap
+ROS Distro:        jazzy
+Duration:          29.729986683s
+Start:             Sep 24 2026 16:38:53.627928530
+End:               Sep 24 2026 16:39:23.357915213
+Messages:          13
+Topic information: Topic: /rosout     | Type: rcl_interfaces/msg/Log    | Count: 12
+                   Topic: /tf_static  | Type: tf2_msgs/msg/TFMessage    | Count: 1
+</code></pre></div></div>
+
+<p><strong>录完先 <code class="language-plaintext highlighter-rouge">info</code> 一下</strong>是好习惯——能立刻确认：时长对不对、话题有没有漏、消息数是否合理（比如一个 10 Hz 的话题录了 30 秒，消息数应该接近 300 而不是 1）。</p>
+
+<h4 id="85-回放">8.5 回放</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 bag play my_bag               <span class="c"># 正常回放</span>
+ros2 bag play my_bag <span class="nt">--loop</span>        <span class="c"># 循环播放</span>
+ros2 bag play my_bag <span class="nt">--rate</span> 2.0    <span class="c"># 2 倍速（0.5 就是慢放）</span>
+ros2 bag play my_bag <span class="nt">--start-paused</span> <span class="c"># 先暂停，按空格开始</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>参数</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-l, --loop</code></td>
+      <td>循环播放</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-r, --rate</code></td>
+      <td>播放倍速</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-p, --start-paused</code></td>
+      <td>启动后先暂停</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">--clock</code></td>
+      <td>发布 <code class="language-plaintext highlighter-rouge">/clock</code>，配合 <code class="language-plaintext highlighter-rouge">use_sim_time</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>回放时，所有订阅这些话题的节点（包括 RViz）都会以为数据是<strong>实时来</strong>的——这就是它的精妙之处。</p>
+
+<h4 id="86-常见问题">8.6 常见问题</h4>
+
+<p><strong>Q1：<code class="language-plaintext highlighter-rouge">ros2 bag info</code> 报 <code class="language-plaintext highlighter-rouge">Could not find metadata in bag directory</code></strong></p>
+
+<p>多半是上次录制<strong>没正常退出</strong>（被 kill 掉了），<code class="language-plaintext highlighter-rouge">metadata.yaml</code> 没写成。可以重建（实测可用）：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 bag reindex my_bag        <span class="c"># 从 mcap/db3 里重新生成 metadata.yaml</span>
+</code></pre></div></div>
+
+<p><strong>Q2：某些话题明明在发布，却录不到</strong></p>
+
+<p><strong>QoS 不匹配</strong>。传感器类话题（摄像头、激光雷达）常用 <code class="language-plaintext highlighter-rouge">BEST_EFFORT</code>，而 <code class="language-plaintext highlighter-rouge">bag record</code> 默认按 <code class="language-plaintext highlighter-rouge">RELIABLE</code> 订阅，两边对不上就收不到数据。</p>
+
+<p>解决：写一份 QoS 覆盖文件，用 <code class="language-plaintext highlighter-rouge">--qos-profile-overrides-path</code> 指定。这也是为什么很多人”录了半天包，打开发现是空的”。</p>
+
+<p><strong>Q3：包太大</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ① 只录需要的（最有效）</span>
+ros2 bag record <span class="nt">-o</span> small_bag /topic_a /topic_b
+
+<span class="c"># ② 开压缩</span>
+ros2 bag record <span class="nt">-a</span> <span class="nt">-o</span> my_bag <span class="nt">--compression-mode</span> file <span class="nt">--compression-format</span> zstd
+
+<span class="c"># ③ 限制写盘缓存</span>
+ros2 bag record <span class="nt">-a</span> <span class="nt">-o</span> my_bag <span class="nt">--max-cache-size</span> 100000000
+</code></pre></div></div>
+
+<p><strong>点云、图像话题是体积杀手</strong>——一秒钟能写几十 MB。录之前先想清楚哪些真的需要。</p>
+
+<h3 id="9rviz2--bag-联动实战">9、RViz2 + bag 联动实战</h3>
+
+<p>这是这两个工具最常见的组合用法，也是<strong>排查机器人问题的标准流程</strong>：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 第一步：录一段数据 ──</span>
+<span class="c"># 终端1</span>
+ros2 bag record <span class="nt">-a</span> <span class="nt">-o</span> my_run
+<span class="c">#   然后让机器人/仿真跑一会儿，复现问题</span>
+<span class="c">#   问题出现后按 Ctrl+C 停止</span>
+
+<span class="c"># ── 第二步：回放 ──</span>
+<span class="c"># 终端2</span>
+ros2 bag play my_run <span class="nt">--loop</span>
+
+<span class="c"># ── 第三步：看 ──</span>
+<span class="c"># 终端3</span>
+rviz2 <span class="nt">-d</span> ~/tf_demo.rviz
+</code></pre></div></div>
+
+<p><strong>为什么这个组合强大：</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>没有 bag：  问题出现 → 手忙脚乱地查 → 问题消失了 → 只能等下次
+有了 bag：  问题出现 → 录下来 → 反复回放 → 每次都是同样的数据 → 慢慢查
+</code></pre></div></div>
+
+<p>配合 <code class="language-plaintext highlighter-rouge">--loop</code> 循环播放，你可以让同一段故障数据<strong>一遍遍重演</strong>，直到找出原因。</p>
+
+<blockquote>
+  <p>⚠️ <strong>回放时的时间问题</strong></p>
+
+  <p>如果包里录了 <code class="language-plaintext highlighter-rouge">/clock</code>（仿真时间），回放时数据的时间戳是”过去”的。这时：</p>
+  <ul>
+    <li>回放端加 <code class="language-plaintext highlighter-rouge">--clock</code> 让 rosbag2 发布 <code class="language-plaintext highlighter-rouge">/clock</code></li>
+    <li>其它节点（包括 RViz）如果开了 <code class="language-plaintext highlighter-rouge">use_sim_time</code>，就能跟着包里的时间走</li>
+    <li><strong>两边不一致会出现”数据永远在等”的现象</strong>——RViz 里表现为什么都不显示</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">/tf_static</code> 在包里只有一条</strong></p>
+
+  <p>看上面的 <code class="language-plaintext highlighter-rouge">info</code> 输出会发现 <code class="language-plaintext highlighter-rouge">/tf_static</code> 的 <code class="language-plaintext highlighter-rouge">Count: 1</code>——因为静态变换只发一次（latched）。
+但回放时不用担心：rosbag2 会把这条以 <code class="language-plaintext highlighter-rouge">TRANSIENT_LOCAL</code> QoS 重新发出来，晚加入的订阅者照样能收到。这和第 5.5 节讲的 QoS 是同一个机制。</p>
+</blockquote>
+
+<hr />
+
+<!-- nav -->
+
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">⬅️ 上一章</th>
+      <th style="text-align: center">🏠 目录</th>
+      <th style="text-align: right">下一章 ➡️</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><a href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">五、TF 坐标变换</a></td>
+      <td style="text-align: center"><a href="/tutorials/ROS2-bash/README/">返回目录</a></td>
+      <td style="text-align: right"><a href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">七、仿真与导航</a></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/"><span>← 上一章</span><strong>TF 坐标变换</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/"><span>下一章 →</span><strong>仿真与导航</strong></a>
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

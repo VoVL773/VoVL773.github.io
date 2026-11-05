@@ -5,17 +5,19 @@
     <link>http://localhost:4000/</link>
     <description>间接性踌躇满志，持续性记录生活。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 24 Oct 2026 22:13:14 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 05 Nov 2026 08:40:02 +0800</lastBuildDate>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>ROS 2 机器视觉实践：从色块识别到目标跟踪</title>
-      <link>http://localhost:4000/2026/10/23/MVC/</link>
-      <guid isPermaLink="true">http://localhost:4000/2026/10/23/MVC/</guid>
-      <pubDate>Fri, 23 Oct 2026 00:00:00 +0800</pubDate>
-      <description>引言：
+      <title>一句话，让节点动起来：大模型如何控制具身智能设备</title>
+      <link>http://localhost:4000/2026/11/04/llm-embodied-node/</link>
+      <guid isPermaLink="true">http://localhost:4000/2026/11/04/llm-embodied-node/</guid>
+      <pubDate>Wed, 04 Nov 2026 00:00:00 +0800</pubDate>
+      <description>
+  “3 号温室有点干，浇 5 分钟水，浇完告诉我含水率。”
+
 </description>
-      <category>教程</category><category>Python</category><category>图像处理</category>
+      <category>大模型</category><category>具身智能</category><category>MQTT</category><category>物联网</category>
     </item>
     
     <item>

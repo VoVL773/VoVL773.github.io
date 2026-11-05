@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    包骨架与 HSV 配置 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS 2 机器视觉实战</div>
+    <p class="tutorial-course-subtitle">从颜色检测到视觉服务</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">课程导读</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/00-overview/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程介绍与学习路线</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">基础与接口</div>
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/01-interfaces/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>接口包与消息定义</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/machine-vision/02-hsv-config/" aria-current="page">
+            <span class="tutorial-chapter-number">02</span>
+            <span>包骨架与 HSV 配置</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">纯 Python 视觉模块</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/03-color-detector/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>颜色检测与目标跟踪</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/04-visualization/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>检测结果可视化</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/05-gui/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>交互调参与控制面板</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/06-image-sources/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>合成图像与测试场景</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">接入 ROS 2</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/07-ros-server/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>ROS 2 视觉服务端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/08-ros-client/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>ROS 2 订阅客户端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/09-launch-testing/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>配置、启动与测试</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    <a class="tutorial-source" href="https://github.com/VoVL773/Machine_vision-_color_sorting_system" target="_blank" rel="noopener">项目源码 ↗</a>
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/machine-vision/00-overview/">ROS 2 机器视觉实战</a><span>/</span>
+      <span>基础与接口</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS 2 机器视觉实战 · 第 2 章</div>
+      <h1>包骨架与 HSV 配置</h1>
+      <p>创建 Python 包，用 HSVConfig 管理颜色阈值、参数校验与配置持久化。</p>
+    </header>
+    <div class="post-content tutorial-content"><blockquote>
+  <p>先脱离ROS2 跑通基础的Opencv部分再与ROS2结合</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 pkg create <span class="nt">--build-type</span> ament_python Mvc_sorting <span class="se">\</span>
+  <span class="nt">--dependencies</span> rclpy std_msgs sensor_msgs std_srvs color_sorting_interfaces <span class="se">\</span>
+  <span class="nt">--license</span> Apache-2.0
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>依赖</th>
+      <th>作用</th>
+      <th>本项目用在哪</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rclpy</code></td>
+      <td>ROS 2 Python 客户端库</td>
+      <td><code class="language-plaintext highlighter-rouge">Node</code>、发布/订阅、定时器、参数、<code class="language-plaintext highlighter-rouge">spin</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std_msgs</code></td>
+      <td>ROS 标准消息包</td>
+      <td><code class="language-plaintext highlighter-rouge">ColorTargetArray</code> 里的 <code class="language-plaintext highlighter-rouge">std_msgs/Header</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sensor_msgs</code></td>
+      <td>传感器消息包</td>
+      <td><code class="language-plaintext highlighter-rouge">sensor_msgs/Image</code>：ROS 图像话题输入、调试图像发布</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std_srvs</code></td>
+      <td>标准服务包</td>
+      <td><code class="language-plaintext highlighter-rouge">std_srvs/Trigger</code>：<code class="language-plaintext highlighter-rouge">save_config</code> / <code class="language-plaintext highlighter-rouge">load_config</code> 服务</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">color_sorting_interfaces</code></td>
+      <td>你自己的接口包</td>
+      <td><code class="language-plaintext highlighter-rouge">ColorTarget</code>、<code class="language-plaintext highlighter-rouge">ColorTargetArray</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Python相关的依赖在package声明即可,  不用写到 –dependencies里
+如果漏写了在package补上重新构建即可</p>
+
+<h2 id="一-setuppypackagexml初步注册">一. setup.py&amp;package.xml初步注册</h2>
+<p>写最小对照版本 可对比判断是否少写依赖
+<code class="language-plaintext highlighter-rouge">package.xml</code></p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="cp">&lt;?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?&gt;</span>
+<span class="nt">&lt;package</span> <span class="na">format=</span><span class="s">"3"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;name&gt;</span>Mvc_sorting<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;version&gt;</span>0.1.0<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;description&gt;</span>HSV colour blob detection and ROS 2 colour target publisher<span class="nt">&lt;/description&gt;</span>
+  <span class="nt">&lt;maintainer</span> <span class="na">email=</span><span class="s">"3152398081@qq.com"</span><span class="nt">&gt;</span>vovl773<span class="nt">&lt;/maintainer&gt;</span>
+  <span class="nt">&lt;license&gt;</span>Apache-2.0<span class="nt">&lt;/license&gt;</span>
+
+  <span class="nt">&lt;depend&gt;</span>rclpy<span class="nt">&lt;/depend&gt;</span>
+  <span class="nt">&lt;depend&gt;</span>std_msgs<span class="nt">&lt;/depend&gt;</span>
+  <span class="nt">&lt;depend&gt;</span>color_sorting_interfaces<span class="nt">&lt;/depend&gt;</span>
+
+  <span class="nt">&lt;test_depend&gt;</span>ament_copyright<span class="nt">&lt;/test_depend&gt;</span>
+  <span class="nt">&lt;test_depend&gt;</span>ament_flake8<span class="nt">&lt;/test_depend&gt;</span>
+  <span class="nt">&lt;test_depend&gt;</span>ament_pep257<span class="nt">&lt;/test_depend&gt;</span>
+  <span class="nt">&lt;test_depend&gt;</span>python3-pytest<span class="nt">&lt;/test_depend&gt;</span>
+
+  <span class="nt">&lt;export&gt;</span>
+    <span class="nt">&lt;build_type&gt;</span>ament_python<span class="nt">&lt;/build_type&gt;</span>
+  <span class="nt">&lt;/export&gt;</span>
+<span class="nt">&lt;/package&gt;</span>
+</code></pre></div></div>
+
+<p>setup.py</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">setuptools</span> <span class="kn">import</span> <span class="n">find_packages</span><span class="p">,</span> <span class="n">setup</span>
+
+<span class="n">package_name</span> <span class="o">=</span> <span class="sh">'</span><span class="s">Mvc_sorting</span><span class="sh">'</span>
+
+<span class="nf">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="n">package_name</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="sh">'</span><span class="s">0.1.0</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="nf">find_packages</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="sh">'</span><span class="s">test</span><span class="sh">'</span><span class="p">]),</span>
+    <span class="n">data_files</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="sh">'</span><span class="s">share/ament_index/resource_index/packages</span><span class="sh">'</span><span class="p">,</span>
+            <span class="p">[</span><span class="sh">'</span><span class="s">resource/</span><span class="sh">'</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">]),</span>
+        <span class="p">(</span><span class="sh">'</span><span class="s">share/</span><span class="sh">'</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">,</span> <span class="p">[</span><span class="sh">'</span><span class="s">package.xml</span><span class="sh">'</span><span class="p">]),</span>
+    <span class="p">],</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="sh">'</span><span class="s">setuptools</span><span class="sh">'</span><span class="p">],</span>
+    <span class="n">zip_safe</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">maintainer</span><span class="o">=</span><span class="sh">'</span><span class="s">vovl773</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">maintainer_email</span><span class="o">=</span><span class="sh">'</span><span class="s">3152398081@qq.com</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">HSV colour blob detection and ROS 2 colour target publisher</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">license</span><span class="o">=</span><span class="sh">'</span><span class="s">Apache-2.0</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">extras_require</span><span class="o">=</span><span class="p">{</span><span class="sh">'</span><span class="s">test</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="sh">'</span><span class="s">pytest</span><span class="sh">'</span><span class="p">]},</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+        <span class="sh">'</span><span class="s">console_scripts</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+
+</code></pre></div></div>
+<h2 id="二逐步讲解hsv_configpyhsv配置层">二.逐步讲解hsv_config.py(HSV配置层)</h2>
+
+<h3 id="1导入模块">1.导入模块</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="n">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">import</span> <span class="n">json</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">from</span> <span class="n">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>代码</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">from __future__ import annotations</code></td>
+      <td>延迟处理类型注解，便于引用类名等类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dataclass</code></td>
+      <td>自动生成类的初始化方法等常用方法</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">field</code></td>
+      <td>为数据类的字段设置特殊默认值，例如动态生成默认字典</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">json</code></td>
+      <td>读取和写入 JSON 文件</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">os</code></td>
+      <td>处理文件路径、创建目录、替换文件</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Any</code></td>
+      <td>表示任意类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Dict</code></td>
+      <td>字典类型注解</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">List</code></td>
+      <td>列表类型注解</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Sequence</code></td>
+      <td>表示列表、元组等有序序列</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Tuple</code></td>
+      <td>元组类型注解</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="1-为什么需要-field">1. 为什么需要 <code class="language-plaintext highlighter-rouge">field</code>？</h5>
+
+<p>先看一个普通的 <code class="language-plaintext highlighter-rouge">dataclass</code>：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">HSVConfig</span><span class="p">:</span>    
+	<span class="n">min_area</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span>    
+	<span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="bp">None</span>
+</code></pre></div></div>
+
+<p>这里有两个属性：</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">min_area</code>：默认值是 <code class="language-plaintext highlighter-rouge">300</code>，没有问题。</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">colors</code>：默认值是 <code class="language-plaintext highlighter-rouge">None</code>，但每次创建对象后，如果希望它自动得到一个新的空字典，就需要额外处理。</p>
+  </li>
+</ul>
+
+<p>这时候就可以使用 <code class="language-plaintext highlighter-rouge">field</code>。</p>
+
+<h5 id="2-最常见的用途default_factory">2. 最常见的用途：<code class="language-plaintext highlighter-rouge">default_factory</code></h5>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">HSVConfig</span><span class="p">:</span>    
+	<span class="n">min_area</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span>    
+	<span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="nf">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>重点看这一行：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="nf">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">default_factory=dict</code> 的意思是：每次创建对象时，都调用 <code class="language-plaintext highlighter-rouge">dict()</code>，生成一个新的空字典作为默认值。</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">field()</code>：对某一个属性进行额外配置。</li>
+  <li><code class="language-plaintext highlighter-rouge">default_factory=dict</code>：每创建一个对象，就生成一个新的字典。</li>
+  <li><code class="language-plaintext highlighter-rouge">default_factory=list</code>：每创建一个对象，就生成一个新的列表。
+```python
+“"”错误情况”””
+shared_colors = {}</li>
+</ul>
+
+<p>class HSVConfig:
+    def <strong>init</strong>(self):
+        self.colors = shared_colors</p>
+
+<p>config1 = HSVConfig()
+config2 = HSVConfig()</p>
+
+<p>config1.colors[“red”] = (0, 255, 255)</p>
+
+<p>print(config1.colors)  # {‘red’: (0, 255, 255)}
+print(config2.colors)  # {‘red’: (0, 255, 255)}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+而每创建一个对象，就生成一个新的字典 可以让config1与config2互不干扰
+
+#### 解释 dataclass:
+普通 Python 类通常需要手动编写 `__init__()`：
+
+```python
+class Example:    
+	def __init__(self, name):        
+		self.name = name
+</code></pre></div></div>
+
+<p>使用 <code class="language-plaintext highlighter-rouge">@dataclass</code> 后，可以简化为：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Example</span><span class="p">:</span>    
+	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div></div>
+
+<h3 id="2-颜色顺序与默认阈值">2. 颜色顺序与默认阈值</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">COLOR_ORDER</span> <span class="o">=</span> <span class="p">(</span><span class="sh">'</span><span class="s">red</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">green</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">)</span> <span class="c1">#记录四种颜色的处理顺序
+</span><span class="n">DEFAULT_COLORS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1"># 字典定义四种颜色的检测配置
+</span>    <span class="sh">'</span><span class="s">red</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="c1">#是否启用检测
+</span>        <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="c1"># 色相是否需要跨越HSV色相环的边界
+</span>        <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span> <span class="c1">#HSV 三个通道的下限
+</span>        <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span> <span class="c1">#HSV 三个通道的上限
+</span>    <span class="p">},</span>
+    <span class="sh">'</span><span class="s">green</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
+        <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">85</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span>
+        <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">140</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span>
+        <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">38</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>例如： 红色像素：【 0 ≤ H ≤ 10  ，120 ≤ S ≤ 255  ，70 ≤ V ≤ 255 】 色相  饱和度 亮度
+这里的“色相是否需要跨越 HSV 色相环的边界处理”，指的是：当检测某种颜色（尤其是红色）时，是否需要同时检查 H 通道两端的数值范围。
+红色比较特殊：它位于色相环的连接处附近。</p>
+<ul>
+  <li>一部分红色的 H 值接近 <code class="language-plaintext highlighter-rouge">0</code>。( 0 - 10)</li>
+  <li>另一部分红色的 H 值接近 <code class="language-plaintext highlighter-rouge">179</code>。(170 - 179)
+希望同时检测两端的红色，可以使用两个区间</li>
+</ul>
+
+<h3 id="3-过滤与形态学参数">3. 过滤与形态学参数</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DEFAULT_FILTER</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="sh">'</span><span class="s">min_area</span><span class="sh">'</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+	<span class="sh">'</span><span class="s">max_area</span><span class="sh">'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+	<span class="sh">'</span><span class="s">min_dimension</span><span class="sh">'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+	<span class="sh">'</span><span class="s">min_fill_ratio</span><span class="sh">'</span><span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">DEFAULT_MORPHOLOGY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="sh">'</span><span class="s">kernel</span><span class="sh">'</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+	<span class="sh">'</span><span class="s">iterations</span><span class="sh">'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+	<span class="sh">'</span><span class="s">blur_kernel</span><span class="sh">'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这些参数不负责定义颜色，而是帮助后续检测算法筛除噪声、处理掩膜。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>参数</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">min_area = 300</code></td>
+      <td>最小目标面积，小于该值的候选目标可被过滤</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">max_area = 0</code></td>
+      <td>按此文件的规则，<code class="language-plaintext highlighter-rouge">0</code> 表示不设置最大面积限制</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">min_dimension = 8</code></td>
+      <td>候选目标的最小尺寸阈值</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">min_fill_ratio = 0.20</code></td>
+      <td>候选区域的最小填充比例</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">kernel = 5</code></td>
+      <td>形态学处理的核尺寸参数</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">iterations = 1</code></td>
+      <td>形态学操作的迭代次数</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">blur_kernel = 3</code></td>
+      <td>模糊处理的核尺寸参数</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="附增大黄色阈值黄色检测效果较差已更改这里保存第一版的阈值方便回退">附：增大黄色阈值(黄色检测效果较差已更改这里保存第一版的阈值方便回退)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DEFAULT_CONFIG_VERSION</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1">#版本号
+</span>
+<span class="c1"># Yellow defaults before config version 2.  A saved configuration that still
+# uses these exact values is migrated so that golden/orange-yellow objects are
+# detected after upgrading.
+</span><span class="n">LEGACY_YELLOW_LOWER</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>  
+<span class="n">LEGACY_YELLOW_UPPER</span> <span class="o">=</span> <span class="p">[</span><span class="mi">35</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+</code></pre></div></div>
+<h3 id="4-参数校验函数辅助函数">4. 参数校验函数：(辅助函数)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span> <span class="c1">#只需要整数和浮点数 
+</span>        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s"> must be an integer, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="n">number</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">#转为整数
+</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s"> must be an integer, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="sh">'</span><span class="p">)</span>
+		<span class="c1"># 排除浮点数只留整数
+</span>    <span class="k">return</span> <span class="n">number</span>
+</code></pre></div></div>
+<p>注： 布尔值是整数类型的子类。如果不排除，<code class="language-plaintext highlighter-rouge">True</code> 就可能被误认为合法的整数参数。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_as_float</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(...)</span>
+    <span class="k">return</span> <span class="nf">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_as_bool</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nf">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="p">.</span><span class="nf">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="sh">'</span><span class="s">true</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">false</span><span class="sh">'</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">.</span><span class="nf">lower</span><span class="p">()</span> <span class="o">==</span> <span class="sh">'</span><span class="s">true</span><span class="sh">'</span>
+
+    <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(...)</span>
+</code></pre></div></div>
+
+<h4 id="_as_triplet验证-hsv-三元组"><code class="language-plaintext highlighter-rouge">_as_triplet()</code>：验证 HSV 三元组</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_as_triplet</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">limits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="sh">"""</span><span class="s">Validate a three-element HSV triplet and clamp it to its limits.</span><span class="sh">"""</span>
+    <span class="c1">#判断数据类型是否正确
+</span>    <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">)</span> <span class="ow">or</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s"> must be a list of three integers</span><span class="sh">'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s"> must contain exactly three values</span><span class="sh">'</span><span class="p">)</span>
+    <span class="c1">#验证是否越界    
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="nf">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">limits</span><span class="p">)):</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s">[</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s">]</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s">[</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s">] must be in [0, </span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s">]</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="nf">return </span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>这个函数接收三个参数：</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">values</code>：待检查的 HSV 数值。</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">limits</code>：每个通道允许的最大值。</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">field_name</code>：出错时显示的字段名称。</p>
+  </li>
+</ul>
+
+<p>例如：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">_as_triplet</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>期望得到：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">70</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="nf">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">limits</span><span class="p">)):</span>
+</code></pre></div></div>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">zip(values, limits)</code>：把每个输入值和对应上限配对。</li>
+  <li><code class="language-plaintext highlighter-rouge">enumerate(...)</code>：同时获取元素的索引。</li>
+  <li><code class="language-plaintext highlighter-rouge">index</code>：当前通道的下标，依次为 <code class="language-plaintext highlighter-rouge">0、1、2</code>。</li>
+  <li><code class="language-plaintext highlighter-rouge">value</code>：当前通道的值。</li>
+  <li><code class="language-plaintext highlighter-rouge">limit</code>：该通道允许的最大值。
+例如：对于  <code class="language-plaintext highlighter-rouge">values = [0, 120, 70] </code>limits = (179, 255, 255)  循环会依次检查 <code class="language-plaintext highlighter-rouge">(0, 179)</code>、<code class="language-plaintext highlighter-rouge">(120, 255)</code>、<code class="language-plaintext highlighter-rouge">(70, 255)</code>。 判断是否越界
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">return </span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="5-colorthreshold类-用来保存和管理该颜色的-hsv-阈值">5. ColorThreshold类 (用来保存和管理该颜色的 HSV 阈值)</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ColorThreshold</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">HSV threshold for one colour class.</span><span class="sh">"""</span>
+    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">wrap_hue</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">lower</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">upper</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Validate and normalise the threshold values.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="nf">_as_bool</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">enabled</span><span class="p">,</span> <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">wrap_hue</span> <span class="o">=</span> <span class="nf">_as_bool</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">wrap_hue</span><span class="p">,</span> <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">lower</span> <span class="o">=</span> <span class="nf">_as_triplet</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">,</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">upper</span> <span class="o">=</span> <span class="nf">_as_triplet</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">,</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">hue lower bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s"> is greater than upper bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">channel</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">((</span><span class="sh">'</span><span class="s">saturation</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">value</span><span class="sh">'</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s"> lower bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s"> is greater than </span><span class="sh">'</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">upper bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>这个类分两个部分</p>
+<h4 id="1-使用dataclass的初始化">1. 使用dataclass的初始化</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@dataclass</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">wrap_hue</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">lower</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">upper</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+</code></pre></div></div>
+<p>dataclass是很常用装饰器 可以省去许多重复代码
+对比不使用的写法</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="n">enabled</span><span class="p">:</span><span class="nb">bool</span><span class="p">,</span>
+<span class="n">wrap_hue</span><span class="p">:</span><span class="nb">bool</span><span class="p">,</span>
+<span class="n">lower</span><span class="p">:</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">],</span>
+<span class="n">upper</span><span class="p">:</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">]):</span>
+		<span class="n">self</span><span class="p">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">True</span>
+		<span class="n">self</span><span class="p">.</span><span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">lower</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">upper</span> <span class="o">=</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+</code></pre></div></div>
+<p>对比而言 dataclass 的写法就简洁许多了</p>
+<h4 id="2-post_initself-创建对象后自动校验是否合法">2. <strong>post_init</strong>(self) 创建对象后自动校验是否合法</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Validate and normalise the threshold values.</span><span class="sh">"""</span>
+        <span class="c1"># 类型判断
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="nf">_as_bool</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">enabled</span><span class="p">,</span> <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">wrap_hue</span> <span class="o">=</span> <span class="nf">_as_bool</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">wrap_hue</span><span class="p">,</span> <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">lower</span> <span class="o">=</span> <span class="nf">_as_triplet</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">,</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">upper</span> <span class="o">=</span> <span class="nf">_as_triplet</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">,</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># 校验色相H
+</span>            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">hue lower bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s"> is greater than upper bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">channel</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">((</span><span class="sh">'</span><span class="s">saturation</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">value</span><span class="sh">'</span><span class="p">)):</span> 
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s"> lower bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s"> is greater than </span><span class="sh">'</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">upper bound </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>这段代码要求：</p>
+<ul>
+  <li>H 下限不能大于 H 上限。</li>
+  <li>S 下限不能大于 S 上限。</li>
+  <li>V 下限不能大于 V 上限。
+如果传入不合法的阈值，就立即报错，而不是等到识别效果异常时才发现问题。</li>
+</ul>
+
+<h3 id="6-classmethod--from_dict--to_dict函数">6. @classmethod &amp; from_dict() &amp; to_dict()函数</h3>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">@classmethod</code> 用来定义类方法。类方法接收的第一个参数是 <code class="language-plaintext highlighter-rouge">cls</code>，代表类本身，而不是某个具体对象</p>
+</blockquote>
+
+<p>这里来说明Python的常见三种方法:</p>
+<h4 id="1-实例方法self">1. 实例方法：<code class="language-plaintext highlighter-rouge">self</code></h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">enabled</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>操作某个具体对象的数据，例如某一个红色阈值对象。</p>
+<h4 id="2-类方法cls">2. 类方法：<code class="language-plaintext highlighter-rouge">cls</code></h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nf">cls</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>操作类本身，或者根据不同数据创建该类的对象。</p>
+<h4 id="3-静态方法没有自动传入的-self-或-cls">3. 静态方法：没有自动传入的 <code class="language-plaintext highlighter-rouge">self</code> 或 <code class="language-plaintext highlighter-rouge">cls</code></h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@staticmethod</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</code></pre></div></div>
+
+<p>把相关功能放在类里面，但不需要自动访问对象或类。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>方法类型</th>
+      <th>第一个参数</th>
+      <th>主要用途</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>实例方法</td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>操作具体对象</td>
+    </tr>
+    <tr>
+      <td>类方法</td>
+      <td><code class="language-plaintext highlighter-rouge">cls</code></td>
+      <td>操作类、创建对象</td>
+    </tr>
+    <tr>
+      <td>静态方法</td>
+      <td>无特殊参数</td>
+      <td>组织相关工具功能</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>对于from_dict()
+如果创建ColorThreshold的数据来自 JSON 字典 需要从字典中读取数据，再把它转换成对象。每次手动转换会比较麻烦。
+而 类方法的典型用途：把外部数据转换为类的对象 所以这里使用类方法 from_dict 读取字典数据创建类 与后面的 to_dict结合实现配置信息的保存与读取</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">'</span><span class="s">color</span><span class="sh">'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="sh">'</span><span class="s">ColorThreshold</span><span class="sh">'</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Build a threshold from a JSON-like dictionary.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">color </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s"> must be an object</span><span class="sh">'</span><span class="p">)</span> <span class="c1">#检查传入的是否为字典
+</span>        <span class="n">threshold</span> <span class="o">=</span> <span class="nf">cls</span><span class="p">(</span>
+            <span class="n">enabled</span><span class="o">=</span><span class="nf">_as_bool</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">.enabled</span><span class="sh">'</span><span class="p">),</span>
+            <span class="n">wrap_hue</span><span class="o">=</span><span class="nf">_as_bool</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">.wrap_hue</span><span class="sh">'</span><span class="p">),</span>
+            <span class="n">lower</span><span class="o">=</span><span class="nf">_as_triplet</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+                              <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">.lower</span><span class="sh">'</span><span class="p">),</span>
+            <span class="n">upper</span><span class="o">=</span><span class="nf">_as_triplet</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">,</span> <span class="p">[</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">]),</span> <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">.upper</span><span class="sh">'</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">threshold</span>  <span class="c1">#返回创建好的对象
+</span></code></pre></div></div>
+
+<p>python自动传入 <br />
+cls ：ColorThreshold 会调用自动生成的初始化方法，并执行类中定义的 <code class="language-plaintext highlighter-rouge">__post_init__()</code> 参数验证逻辑。
+data : ‘提供的字典’ 
+name : 类对象名</p>
+
+<p>例如：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">name</span> <span class="o">=</span> <span class="sh">"</span><span class="s">hello</span><span class="se">\n</span><span class="s">world</span><span class="sh">"</span>
+<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>输出效果：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hello
+world
+<span class="s1">'hello\nworld'</span>
+</code></pre></div></div>
+
+<p>第二种写法把换行符显示成了 <code class="language-plaintext highlighter-rouge">\n</code>，因此更容易排查字符串中的特殊字符</p>
+
+<p><code class="language-plaintext highlighter-rouge">!r</code>、<code class="language-plaintext highlighter-rouge">!s</code>、<code class="language-plaintext highlighter-rouge">!a</code> 有什么区别？</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>写法</th>
+      <th>实际转换</th>
+      <th>用途</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{name}</code></td>
+      <td>默认格式化</td>
+      <td>一般输出</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{name!s}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">str(name)</code></td>
+      <td>面向用户的可读文本</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{name!r}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">repr(name)</code></td>
+      <td>调试、检查对象</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{name!a}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ascii(name)</code></td>
+      <td>将非 ASCII 字符转义显示</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sh">"""</span><span class="s">Return a JSON-serialisable representation.</span><span class="sh">"""</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="sh">'</span><span class="s">enabled</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">enabled</span><span class="p">,</span>
+            <span class="sh">'</span><span class="s">wrap_hue</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">wrap_hue</span><span class="p">,</span>
+            <span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">:</span> <span class="nf">list</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">),</span>  <span class="c1"># 元组转列表
+</span>            <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">:</span> <span class="nf">list</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">),</span>
+        <span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="7--mask_rangesself--处理红色色相环绕">7.  mask_ranges(self) : 处理红色色相环绕</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">mask_ranges</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+        <span class="sh">"""</span><span class="s">
+        Return the inRange intervals for this colour.
+        When ``wrap_hue`` is enabled, a second interval is added around hue 180
+        so that red colours on both sides of the OpenCV hue wrap are captured.
+        </span><span class="sh">"""</span>
+        <span class="n">ranges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">wrap_hue</span><span class="p">:</span>  <span class="c1"># 开启了wrap_hue 计算第二个区间
+</span>            <span class="n">wrap_low</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">180</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1">#计算第二个区间的上下限
+</span>            <span class="n">wrap_high</span> <span class="o">=</span> <span class="mi">179</span>
+            <span class="k">if</span> <span class="n">wrap_low</span> <span class="o">&lt;=</span> <span class="n">wrap_high</span><span class="p">:</span>
+                <span class="n">ranges</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span>
+                    <span class="p">((</span><span class="n">wrap_low</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">self</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                     <span class="p">(</span><span class="n">wrap_high</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">self</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+        <span class="k">return</span> <span class="n">ranges</span>
+</code></pre></div></div>
+<p>返回多个 HSV 区间，供后续代码用于 <code class="language-plaintext highlighter-rouge">cv2.inRange()</code></p>
+
+<h3 id="8-hsvconfig-类-整个颜色系统的配置中心">8. HSVConfig 类 (整个颜色系统的配置中心)</h3>
+<p><img src="/assets/images/tutorials/machine-vision/HSVConfig%E7%B1%BB.png" alt="类方法" /></p>
+<h4 id="初始化">初始化</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">HSVConfig</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Full detector configuration: per-colour thresholds and filters.</span><span class="sh">"""</span>
+
+    <span class="n">colors</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ColorThreshold</span><span class="p">]</span> <span class="o">=</span> <span class="nf">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">ColorThreshold</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">DEFAULT_COLORS</span><span class="p">.</span><span class="nf">items</span><span class="p">()</span>
+        <span class="p">})</span>  <span class="c1">#颜色字典 管理所有颜色
+</span>    <span class="n">min_area</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span>
+    <span class="n">max_area</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">min_dimension</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">min_fill_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.20</span>
+    <span class="n">morph_kernel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">morph_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">blur_kernel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Validate the configuration after construction.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">validate</span><span class="p">()</span>  <span class="c1"># 验证函数
+</span></code></pre></div></div>
+
+<p>颜色属性声明如下</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">colors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">"</span><span class="s">red</span><span class="sh">"</span><span class="p">:</span> <span class="n">red_threshold</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">yellow</span><span class="sh">"</span><span class="p">:</span> <span class="n">yellow_threshold</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">blue</span><span class="sh">"</span><span class="p">:</span> <span class="n">blue_threshold</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">ColorThreshold</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">DEFAULT_COLORS</span><span class="p">.</span><span class="nf">items</span><span class="p">()</span>
+        <span class="p">}</span>
+</code></pre></div></div>
+<p>这个lambda表达式是当创建 <code class="language-plaintext highlighter-rouge">HSVConfig</code> 对象时，通过指定的函数生成默认值。 <code class="language-plaintext highlighter-rouge">default_factory</code> 可以为每个实例生成独立的字典。
+遍历颜色字典的每一项然后 生成 “red” : {“enable: True” ….. } , 这样的键值对到字典里 之后调用之前的from_dict函数创建ColorThreshold对象 作为Color属性的值来保存</p>
+
+<p>其他属性如下:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>字段</th>
+      <th>默认值</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">min_area</code></td>
+      <td><code class="language-plaintext highlighter-rouge">300</code></td>
+      <td>目标轮廓最小面积</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">max_area</code></td>
+      <td><code class="language-plaintext highlighter-rouge">0</code></td>
+      <td>最大面积；<code class="language-plaintext highlighter-rouge">0</code> 表示不限制最大面积</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">min_dimension</code></td>
+      <td><code class="language-plaintext highlighter-rouge">8</code></td>
+      <td>目标宽度或高度的最小过滤尺寸</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">min_fill_ratio</code></td>
+      <td><code class="language-plaintext highlighter-rouge">0.20</code></td>
+      <td>目标填充率下限</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">morph_kernel</code></td>
+      <td><code class="language-plaintext highlighter-rouge">5</code></td>
+      <td>形态学处理的核尺寸</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">morph_iterations</code></td>
+      <td><code class="language-plaintext highlighter-rouge">1</code></td>
+      <td>形态学操作重复次数</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">blur_kernel</code></td>
+      <td><code class="language-plaintext highlighter-rouge">3</code></td>
+      <td>模糊处理的核尺寸</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="检测配置是否合法">检测配置是否合法</h4>
+<p><img src="/assets/images/tutorials/machine-vision/HSVConfig.vaildate.png" alt="vaildate" /></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>  <span class="c1"># 检验配置是否合法
+</span>        <span class="sh">"""</span><span class="s">Validate all fields and raise ValueError when invalid.</span><span class="sh">"""</span>
+        <span class="c1"># 检测字典类型 与 字典数据类型是否合法
+</span>        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">colors must be a non-empty object</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">all</span><span class="p">(</span><span class="nf">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">colour names must be non-empty strings</span><span class="sh">'</span><span class="p">)</span>
+        <span class="c1"># 检测每个颜色对象
+</span>        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">.</span><span class="nf">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="n">ColorThreshold</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">color </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s"> is not a ColorThreshold</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">checked</span> <span class="o">=</span> <span class="nc">ColorThreshold</span><span class="p">(</span>
+                <span class="n">enabled</span><span class="o">=</span><span class="n">threshold</span><span class="p">.</span><span class="n">enabled</span><span class="p">,</span>
+                <span class="n">wrap_hue</span><span class="o">=</span><span class="n">threshold</span><span class="p">.</span><span class="n">wrap_hue</span><span class="p">,</span>
+                <span class="n">lower</span><span class="o">=</span><span class="n">threshold</span><span class="p">.</span><span class="n">lower</span><span class="p">,</span>
+                <span class="n">upper</span><span class="o">=</span><span class="n">threshold</span><span class="p">.</span><span class="n">upper</span><span class="p">,</span>
+            <span class="p">)</span> <span class="c1"># 再次创建对象利用自身的检测函数检测数值是否合法并再次赋值会原对象
+</span>            <span class="n">threshold</span><span class="p">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">checked</span><span class="p">.</span><span class="n">enabled</span>
+            <span class="n">threshold</span><span class="p">.</span><span class="n">wrap_hue</span> <span class="o">=</span> <span class="n">checked</span><span class="p">.</span><span class="n">wrap_hue</span>
+            <span class="n">threshold</span><span class="p">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">checked</span><span class="p">.</span><span class="n">lower</span>
+            <span class="n">threshold</span><span class="p">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">checked</span><span class="p">.</span><span class="n">upper</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">min_area</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">min_area</span><span class="p">,</span> <span class="sh">'</span><span class="s">filter.min_area</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">max_area</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">max_area</span><span class="p">,</span> <span class="sh">'</span><span class="s">filter.max_area</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">min_dimension</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">min_dimension</span><span class="p">,</span> <span class="sh">'</span><span class="s">filter.min_dimension</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">min_fill_ratio</span> <span class="o">=</span> <span class="nf">_as_float</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">min_fill_ratio</span><span class="p">,</span> <span class="sh">'</span><span class="s">filter.min_fill_ratio</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">morph_kernel</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">morph_kernel</span><span class="p">,</span> <span class="sh">'</span><span class="s">morphology.kernel</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">morph_iterations</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">morph_iterations</span><span class="p">,</span> <span class="sh">'</span><span class="s">morphology.iterations</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">blur_kernel</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">blur_kernel</span><span class="p">,</span> <span class="sh">'</span><span class="s">morphology.blur_kernel</span><span class="sh">'</span><span class="p">)</span>
+<span class="c1"># 对每个参数的范围进行检测并弹出对应报错
+</span>        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">min_area</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter.min_area must be &gt;= 0</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">max_area</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter.max_area must be &gt;= 0</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">max_area</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">max_area</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">min_area</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter.max_area must be 0 or &gt;= filter.min_area</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">min_dimension</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter.min_dimension must be &gt;= 0</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">min_fill_ratio</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter.min_fill_ratio must be in [0.0, 1.0]</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">morph_kernel</span> <span class="o">&lt;=</span> <span class="mi">31</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">morphology.kernel must be in [0, 31]</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">morph_iterations</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">morphology.iterations must be &gt;= 0</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">blur_kernel</span> <span class="o">&lt;=</span> <span class="mi">31</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">morphology.blur_kernel must be in [0, 31]</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>这段代码就是检测是否合法规定了：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">max_area = 0</code>：不限制最大面积。</li>
+  <li><code class="language-plaintext highlighter-rouge">max_area = 5000</code> 且 <code class="language-plaintext highlighter-rouge">min_area = 300</code>：合法。</li>
+  <li><code class="language-plaintext highlighter-rouge">max_area = 200</code> 且 <code class="language-plaintext highlighter-rouge">min_area = 300</code>：非法。</li>
+  <li><code class="language-plaintext highlighter-rouge">morph_kernel</code>： 形态学处理的核尺寸 必须在 <code class="language-plaintext highlighter-rouge">0</code> 到 <code class="language-plaintext highlighter-rouge">31</code> 之间。</li>
+  <li><code class="language-plaintext highlighter-rouge">morph_iterations</code>：形态学操作重复次数 必须大于等于 <code class="language-plaintext highlighter-rouge">0</code>。</li>
+  <li><code class="language-plaintext highlighter-rouge">blur_kernel</code>：模糊处理的核尺寸  必须在 <code class="language-plaintext highlighter-rouge">0</code> 到 <code class="language-plaintext highlighter-rouge">31</code> 之间。</li>
+</ul>
+
+<h4 id="获取默认配置-读取和创建字典-获取保存配置">获取默认配置 &amp;读取和创建字典-&gt;获取保存配置</h4>
+
+<p><img src="/assets/images/tutorials/machine-vision/HSVConfigdict%E7%B1%BB%E6%96%B9%E6%B3%95.png" alt="流程图" /></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="sh">'</span><span class="s">HSVConfig</span><span class="sh">'</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Return the built-in default configuration.</span><span class="sh">"""</span>
+        <span class="k">return</span> <span class="nf">cls</span><span class="p">()</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="sh">'</span><span class="s">HSVConfig</span><span class="sh">'</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Build a configuration from a JSON-like dictionary.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">configuration root must be an object</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="n">colors_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">colors</span><span class="sh">'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">colors_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">colors must be an object</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="n">version</span> <span class="o">=</span> <span class="nf">_as_int</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">version</span><span class="sh">'</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="sh">'</span><span class="s">version</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">version</span> <span class="o">&lt;</span> <span class="n">DEFAULT_CONFIG_VERSION</span><span class="p">:</span>
+            <span class="n">legacy_yellow</span> <span class="o">=</span> <span class="n">colors_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">)</span>
+            <span class="nf">if </span><span class="p">(</span><span class="nf">isinstance</span><span class="p">(</span><span class="n">legacy_yellow</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="n">legacy_yellow</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">)</span> <span class="o">==</span> <span class="n">LEGACY_YELLOW_LOWER</span>
+                    <span class="ow">and</span> <span class="n">legacy_yellow</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">)</span> <span class="o">==</span> <span class="n">LEGACY_YELLOW_UPPER</span><span class="p">):</span>
+                <span class="n">colors_data</span> <span class="o">=</span> <span class="nf">dict</span><span class="p">(</span><span class="n">colors_data</span><span class="p">)</span>
+                <span class="n">migrated</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">legacy_yellow</span><span class="p">.</span><span class="nf">items</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="sh">'</span><span class="s">lower</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">upper</span><span class="sh">'</span><span class="p">)}</span>
+                <span class="n">colors_data</span><span class="p">[</span><span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="o">**</span><span class="n">DEFAULT_COLORS</span><span class="p">[</span><span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">],</span> <span class="o">**</span><span class="n">migrated</span><span class="p">}</span>
+
+        <span class="n">colors</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ColorThreshold</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">COLOR_ORDER</span><span class="p">:</span>
+            <span class="n">raw</span> <span class="o">=</span> <span class="n">colors_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">DEFAULT_COLORS</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">raw</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">DEFAULT_COLORS</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="o">**</span><span class="n">raw</span><span class="p">}</span>
+            <span class="n">colors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ColorThreshold</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">raw</span> <span class="ow">in</span> <span class="n">colors_data</span><span class="p">.</span><span class="nf">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">:</span>
+                <span class="n">colors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ColorThreshold</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="n">filter_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">filter</span><span class="sh">'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">morphology_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">morphology</span><span class="sh">'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">filter_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">filter must be an object</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">morphology_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">morphology must be an object</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="nf">cls</span><span class="p">(</span>
+            <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+            <span class="n">min_area</span><span class="o">=</span><span class="n">filter_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">min_area</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_FILTER</span><span class="p">[</span><span class="sh">'</span><span class="s">min_area</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">max_area</span><span class="o">=</span><span class="n">filter_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">max_area</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_FILTER</span><span class="p">[</span><span class="sh">'</span><span class="s">max_area</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">min_dimension</span><span class="o">=</span><span class="n">filter_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">min_dimension</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_FILTER</span><span class="p">[</span><span class="sh">'</span><span class="s">min_dimension</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">min_fill_ratio</span><span class="o">=</span><span class="n">filter_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">min_fill_ratio</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_FILTER</span><span class="p">[</span><span class="sh">'</span><span class="s">min_fill_ratio</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">morph_kernel</span><span class="o">=</span><span class="n">morphology_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">kernel</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_MORPHOLOGY</span><span class="p">[</span><span class="sh">'</span><span class="s">kernel</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">morph_iterations</span><span class="o">=</span><span class="n">morphology_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">iterations</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_MORPHOLOGY</span><span class="p">[</span><span class="sh">'</span><span class="s">iterations</span><span class="sh">'</span><span class="p">]),</span>
+            <span class="n">blur_kernel</span><span class="o">=</span><span class="n">morphology_data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+                <span class="sh">'</span><span class="s">blur_kernel</span><span class="sh">'</span><span class="p">,</span> <span class="n">DEFAULT_MORPHOLOGY</span><span class="p">[</span><span class="sh">'</span><span class="s">blur_kernel</span><span class="sh">'</span><span class="p">]),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">config</span>
+
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sh">"""</span><span class="s">Return a JSON-serialisable representation.</span><span class="sh">"""</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="sh">'</span><span class="s">version</span><span class="sh">'</span><span class="p">:</span> <span class="n">DEFAULT_CONFIG_VERSION</span><span class="p">,</span>
+            <span class="sh">'</span><span class="s">colors</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">threshold</span><span class="p">.</span><span class="nf">to_dict</span><span class="p">()</span>
+                       <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">.</span><span class="nf">items</span><span class="p">()},</span>
+            <span class="sh">'</span><span class="s">filter</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+                <span class="sh">'</span><span class="s">min_area</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">min_area</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">max_area</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">max_area</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">min_dimension</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">min_dimension</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">min_fill_ratio</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">min_fill_ratio</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="sh">'</span><span class="s">morphology</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+                <span class="sh">'</span><span class="s">kernel</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">morph_kernel</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">iterations</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">morph_iterations</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">blur_kernel</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">blur_kernel</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+</code></pre></div></div>
+
+<p>解释： 因为存在V1 黄色阈值未提升版 和 V2 黄色阈值增加版 所以对不同版本号做了不同处理V1版本的配置文件写成字典时黄色阈值保持较低阈值</p>
+<h3 id="加载和保存json格式">加载和保存JSON格式</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="sh">'</span><span class="s">HSVConfig</span><span class="sh">'</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Load and validate a configuration from ``path``.</span><span class="sh">"""</span>
+        <span class="n">expanded</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">expanded</span><span class="p">,</span> <span class="sh">'</span><span class="s">r</span><span class="sh">'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">'</span><span class="s">utf-8</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">json</span><span class="p">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">invalid JSON in </span><span class="si">{</span><span class="n">expanded</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">exc</span><span class="p">.</span><span class="n">msg</span><span class="si">}</span><span class="s"> at line </span><span class="si">{</span><span class="n">exc</span><span class="p">.</span><span class="n">lineno</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span> <span class="k">from</span> <span class="n">exc</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cls</span><span class="p">.</span><span class="nf">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1"># 从JSON读取使用from_dict生成配置类
+</span>        <span class="k">except</span> <span class="nb">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">invalid HSV configuration </span><span class="si">{</span><span class="n">expanded</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span> <span class="k">from</span> <span class="n">exc</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Validate and atomically write the configuration to ``path``.</span><span class="sh">"""</span>
+        <span class="n">expanded</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">abspath</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">validate</span><span class="p">()</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">expanded</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parent</span><span class="p">:</span>
+            <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">temporary</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">expanded</span><span class="si">}</span><span class="s">.tmp</span><span class="sh">'</span>
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="sh">'</span><span class="s">w</span><span class="sh">'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">'</span><span class="s">utf-8</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="n">json</span><span class="p">.</span><span class="nf">dump</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">to_dict</span><span class="p">(),</span> <span class="n">stream</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">stream</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sh">'</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">os</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">expanded</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">expanded</span>
+</code></pre></div></div>
+
+<p>这里就是简单的将 类的信息保存成JSON格式 之后加载时用 load的from_dict 创建配置对象</p>
+
+<blockquote>
+  <p>自此 包骨架和hsv_config.py 的部分结束</p>
+</blockquote>
+
+<h2 id="检测成果">检测成果:</h2>
+
+<p>如果直接写python文件运行先<code class="language-plaintext highlighter-rouge">colon build &amp;&amp; source install/setup.bash</code>  之后 
+<code class="language-plaintext highlighter-rouge">python3 src/Mvc_sorting/Mvc_sorting/text.py</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nb">cd</span> <span class="s2">"</span><span class="nv">$WS</span><span class="s2">"</span>
+
+<span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"src/Mvc_sorting"</span> python3 - <span class="o">&lt;&lt;</span><span class="sh">'</span><span class="no">PY</span><span class="sh">'
+
+from Mvc_sorting.hsv_config import HSVConfig
+
+c = HSVConfig.default()
+
+print('version:', c.to_dict()['version'])
+
+print('yellow:', c.colors['yellow'].lower, c.colors['yellow'].upper)
+
+print('red ranges:', c.colors['red'].mask_ranges())
+</span><span class="no">
+PY
+
+</span></code></pre></div></div>
+<p>这里就是让其他python文件引用HSVConfig检测配置是否生成成功</p>
+
+<p>预期：</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+version: 2
+
+yellow: (15, 80, 80) (38, 255, 255)
+
+red ranges: [((0, 120, 70), (10, 255, 255)), ((170, 120, 70), (179, 255, 255))]
+
+</code></pre></div></div>
+<p>可以看到成功读取到了配置里的信息 且 红色的双区间也生效了</p>
+
+<hr />
+</div>
+    <div class="tutorial-edit"><a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/md/%E4%BA%8C.%E5%8C%85%E9%AA%A8%E6%9E%B6%E5%88%9B%E5%BB%BA%E4%B8%8E%20HSV%20%E9%85%8D%E7%BD%AE%E5%B1%82.md" target="_blank" rel="noopener">在 GitHub 查看原文 ↗</a></div>
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/machine-vision/01-interfaces/"><span>← 上一章</span><strong>接口包与消息定义</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/machine-vision/03-color-detector/"><span>下一章 →</span><strong>颜色检测与目标跟踪</strong></a>
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

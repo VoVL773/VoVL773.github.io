@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    服务和参数 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS2 基础教程</div>
+    <p class="tutorial-course-subtitle">ROS2基础 · ROS2实战 · 巡游小车实战</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2基础</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/README/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程导读</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/01-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>创建工作空间</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>多线程示例</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>话题通信</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/" aria-current="page">
+            <span class="tutorial-chapter-number">04</span>
+            <span>服务和参数</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>TF 坐标变换</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>可视化与数据工具</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>仿真与导航</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07B-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%93%8D%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>仿真与导航实操手册</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E9%99%84%E5%BD%95-%E5%8B%98%E8%AF%AF%E4%B8%8E%E9%80%9F%E6%9F%A5/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>附录：勘误与速查</span>
+          </a>
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/ROS2%E5%AE%9E%E6%88%98%E9%83%A8%E5%88%86%E8%AF%A6%E7%BB%86%E8%AE%B0%E5%BD%95/">
+            <span class="tutorial-chapter-number">10</span>
+            <span>ROS2 实战：海龟案例与通信练习</span>
+          </a>
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">巡游小车实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E5%B7%A1%E6%B8%B8%E5%B0%8F%E8%BD%A6%E4%BB%BF%E7%9C%9F-%E4%BB%8E%E9%9B%B6%E5%A4%8D%E5%88%BB%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">11</span>
+            <span>巡游小车实战：从零复刻</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/ROS2-bash/README/">ROS2 基础教程</a><span>/</span>
+      <span>ROS2基础</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS2 基础教程 · 第 4 章</div>
+      <h1>服务和参数</h1>
+      <p>掌握服务接口、参数配置、闭环控制与 launch。</p>
+    </header>
+    <div class="post-content tutorial-content"><!-- nav -->
+<blockquote>
+  <p>📖 <a href="/tutorials/ROS2-bash/README/">ROS 2 学习随笔</a> ｜ ⬅️ 上一章：<a href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/">三、话题通信</a> ｜ <a href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">下一章：五、TF 坐标变换</a> ➡️</p>
+</blockquote>
+
+<p>多种通信方式都是话题通信的变种。</p>
+
+<blockquote>
+  <p>💡 <strong>知识点：三种通信方式的准确定位</strong></p>
+
+  <p>说”都是话题的变种”从<strong>实现层面</strong>看没错（底层都基于 DDS），但<strong>使用语义</strong>差别很大，混淆会导致选错工具：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th> </th>
+        <th>话题 Topic</th>
+        <th>服务 Service</th>
+        <th>动作 Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>模式</td>
+        <td>发布/订阅，单向</td>
+        <td>请求/响应，一问一答</td>
+        <td>长任务 + 中途反馈</td>
+      </tr>
+      <tr>
+        <td>阻塞</td>
+        <td>不阻塞</td>
+        <td><strong>客户端会等响应</strong></td>
+        <td>不阻塞，可取消</td>
+      </tr>
+      <tr>
+        <td>反馈</td>
+        <td>无</td>
+        <td>无</td>
+        <td><strong>有持续反馈</strong></td>
+      </tr>
+      <tr>
+        <td>典型场景</td>
+        <td>传感器数据、速度指令</td>
+        <td>查询、设置参数、触发一次计算</td>
+        <td>导航到目标点、抓取</td>
+      </tr>
+      <tr>
+        <td>命令</td>
+        <td><code class="language-plaintext highlighter-rouge">ros2 topic</code></td>
+        <td><code class="language-plaintext highlighter-rouge">ros2 service</code></td>
+        <td><code class="language-plaintext highlighter-rouge">ros2 action</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>判断口诀：<strong>持续不断的数据流 → 话题；”做完告诉我结果” → 服务；”做完之前还要告诉我进度” → 动作。</strong></p>
+</blockquote>
+
+<p>服务 <code class="language-plaintext highlighter-rouge">ros2 service list -t</code>，还是以海龟节点为例。</p>
+
+<p>首先启动一个海龟节点 <code class="language-plaintext highlighter-rouge">ros2 run turtlesim turtlesim_node</code></p>
+
+<p>新开一个终端 <code class="language-plaintext highlighter-rouge">ros2 service list -t</code></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/clear [std_srvs/srv/Empty]
+/kill [turtlesim/srv/Kill]
+/reset [std_srvs/srv/Empty]
+/spawn [turtlesim/srv/Spawn]
+/turtle1/set_pen [turtlesim/srv/SetPen]
+/turtle1/teleport_absolute [turtlesim/srv/TeleportAbsolute]
+/turtle1/teleport_relative [turtlesim/srv/TeleportRelative]
+/turtlesim/describe_parameters [rcl_interfaces/srv/DescribeParameters]
+/turtlesim/get_parameter_types [rcl_interfaces/srv/GetParameterTypes]
+/turtlesim/get_parameters [rcl_interfaces/srv/GetParameters]
+/turtlesim/get_type_description [type_description_interfaces/srv/GetTypeDescription]
+/turtlesim/list_parameters [rcl_interfaces/srv/ListParameters]
+/turtlesim/set_parameters [rcl_interfaces/srv/SetParameters]
+/turtlesim/set_parameters_atomically [rcl_interfaces/srv/SetParametersAtomically]
+</code></pre></div></div>
+
+<p>这是海龟节点的所有服务，查看方框里的对应接口即可使用。</p>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">-t</code> 就是 <code class="language-plaintext highlighter-rouge">--show-types</code></strong></p>
+
+  <p>加 <code class="language-plaintext highlighter-rouge">-t</code> 才会显示方括号里的<strong>接口类型</strong>。不加只列服务名。这个 <code class="language-plaintext highlighter-rouge">-t</code> 在 <code class="language-plaintext highlighter-rouge">ros2 topic list -t</code> 里同样适用，非常好用——因为<strong>有了类型名就能反推 import 语句</strong>（见第三部分的推导规则）。</p>
+</blockquote>
+
+<p>现在我们调用 <code class="language-plaintext highlighter-rouge">/spawn</code> 服务新建一个海龟。先查看对应的接口信息 <code class="language-plaintext highlighter-rouge">ros2 interface show turtlesim/srv/Spawn</code></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float32 x
+float32 y
+float32 theta
+string name # Optional.  A unique name will be created and returned if this is empty
+---
+string name
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">---</code> 上方是<strong>输入信息</strong>（请求 request），下方是<strong>输出信息</strong>（响应 response）。</p>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记说”其中只有 x 和 y 是必需变量”，这个说法不准确</strong>：
+<code class="language-plaintext highlighter-rouge">.srv</code> 里<strong>所有字段都有默认值</strong>（数值型默认 0，字符串默认空），所以严格来说<strong>没有任何字段是”必需”的</strong>。<code class="language-plaintext highlighter-rouge">ros2 service call</code> 时可以只写你想改的字段，其余自动取默认值。
+真正”可选”的是 <code class="language-plaintext highlighter-rouge">name</code>——留空时 turtlesim 会自动生成一个唯一名字并在响应里告诉你。</p>
+</blockquote>
+
+<p>示例：<code class="language-plaintext highlighter-rouge">ros2 service call /spawn turtlesim/srv/Spawn "{x: 1, y: 1}"</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">call</code> 一个服务：<code class="language-plaintext highlighter-rouge">服务名 接口名 参数</code></p>
+
+<p>可以使用可视化工具 rqt，直接输入 <code class="language-plaintext highlighter-rouge">rqt</code> 进入界面。</p>
+
+<p><code class="language-plaintext highlighter-rouge">plugins</code> → <code class="language-plaintext highlighter-rouge">service</code> → <code class="language-plaintext highlighter-rouge">service call</code> → 选择服务 → 输入参数 → <code class="language-plaintext highlighter-rouge">call</code> 即可。</p>
+
+<p>通过服务可以修改参数，如下：</p>
+
+<p><code class="language-plaintext highlighter-rouge">ros2 service list | grep parameter</code> 显示如下</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/turtlesim/describe_parameters [rcl_interfaces/srv/DescribeParameters]
+/turtlesim/get_parameter_types [rcl_interfaces/srv/GetParameterTypes]
+/turtlesim/get_parameters [rcl_interfaces/srv/GetParameters]
+/turtlesim/list_parameters [rcl_interfaces/srv/ListParameters]
+/turtlesim/set_parameters [rcl_interfaces/srv/SetParameters]
+/turtlesim/set_parameters_atomically [rcl_interfaces/srv/SetParametersAtomically]
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：参数（Parameter）本质上就是”用服务实现的配置项”</strong></p>
+
+  <p>上面这一堆 <code class="language-plaintext highlighter-rouge">get_parameters</code>、<code class="language-plaintext highlighter-rouge">set_parameters</code> 就是每个 ROS 2 节点<strong>自动带的</strong>服务。参数 = 节点运行时可读写的键值对配置，底层通过服务访问，所以能用 <code class="language-plaintext highlighter-rouge">ros2 service call</code> 直接操作。</p>
+
+  <p>参数支持的类型：<code class="language-plaintext highlighter-rouge">bool</code>、<code class="language-plaintext highlighter-rouge">int64</code>、<code class="language-plaintext highlighter-rouge">float64</code>、<code class="language-plaintext highlighter-rouge">string</code>、<code class="language-plaintext highlighter-rouge">byte[]</code>，以及这些类型的<strong>数组</strong>。</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">ros2 param list</code> 列出所有的参数列表</p>
+
+<p><code class="language-plaintext highlighter-rouge">ros2 param describe /turtlesim background_r</code> 输出参数的说明</p>
+
+<p><code class="language-plaintext highlighter-rouge">describe</code>、<code class="language-plaintext highlighter-rouge">get</code>、<code class="language-plaintext highlighter-rouge">set</code> 等等各字段都有效果</p>
+
+<p>导出 yaml 格式文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 param dump /turtlesim <span class="o">&gt;</span> turtlesim_param.yaml
+</code></pre></div></div>
+
+<p>使用格式文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run turtlesim turtlesim_node <span class="nt">--ros-args</span> <span class="nt">--params-file</span> turtlesim_param.yaml
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记写的是 <code class="language-plaintext highlighter-rouge">--ros-arg</code>（少了 s）</strong>，已修正为 <strong><code class="language-plaintext highlighter-rouge">--ros-args</code></strong>（复数）。
+另外 <strong><code class="language-plaintext highlighter-rouge">--params-file</code> 不能单独使用</strong>，它必须跟在 <code class="language-plaintext highlighter-rouge">--ros-args</code> 后面。凡是传递给 ROS 系统本身（而不是给你程序）的参数，都要放在 <code class="language-plaintext highlighter-rouge">--ros-args</code> 之后。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">--ros-args</code> 后面能放什么</strong></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>用途</th>
+        <th>写法</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>加载参数文件</td>
+        <td><code class="language-plaintext highlighter-rouge">--ros-args --params-file xxx.yaml</code></td>
+      </tr>
+      <tr>
+        <td>单独设一个参数</td>
+        <td><code class="language-plaintext highlighter-rouge">--ros-args -p background_r:=200</code></td>
+      </tr>
+      <tr>
+        <td>重命名节点</td>
+        <td><code class="language-plaintext highlighter-rouge">--ros-args -r __node:=new_name</code></td>
+      </tr>
+      <tr>
+        <td>重映射话题</td>
+        <td><code class="language-plaintext highlighter-rouge">--ros-args -r /old_topic:=/new_topic</code></td>
+      </tr>
+      <tr>
+        <td>设置日志级别</td>
+        <td><code class="language-plaintext highlighter-rouge">--ros-args --log-level debug</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>注意 <code class="language-plaintext highlighter-rouge">:=</code> 不是 <code class="language-plaintext highlighter-rouge">=</code></strong>。这是 ROS 2 特有的赋值符号，写成 <code class="language-plaintext highlighter-rouge">=</code> 会报错。可以在运行时改参数而<strong>不用改代码</strong>，调试时特别方便。</p>
+</blockquote>
+
+<p>rqt 也可进行快速的可视化修改。</p>
+
+<h3 id="人脸检测实例">人脸检测实例</h3>
+
+<p>首先需要自定义一个服务端接口，服务端进行人脸检测后将检测结果返回给客户端。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 pkg create chapt4_interfaces <span class="se">\</span>
+    <span class="nt">--build-type</span> ament_cmake <span class="se">\</span>
+    <span class="nt">--dependencies</span> rosidl_default_generators sensor_msgs <span class="se">\</span>
+    <span class="nt">--license</span> Apache-2.0
+</code></pre></div></div>
+
+<p>创建目录 <code class="language-plaintext highlighter-rouge">srv</code> 后创建文件 <code class="language-plaintext highlighter-rouge">FaceDetector.srv</code>，写入以下内容：</p>
+
+<pre><code class="language-srv">sensor_msgs/Image image   # 原始图像
+---
+int16 number              # 人脸数目
+float32 use_time          # 识别耗时
+int32[] top               # 位置信息（变长数组，因为人脸数量不定）
+int32[] right
+int32[] bottom
+int32[] left
+</code></pre>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么用四个数组而不是一个数组套结构体</strong></p>
+
+  <p>ROS 2 的 <code class="language-plaintext highlighter-rouge">.msg</code> <strong>不支持嵌套定义结构体</strong>，你不可以在 <code class="language-plaintext highlighter-rouge">.srv</code> 里现场定义一个新类型。想返回”人脸的四个坐标”，只能：</p>
+
+  <ol>
+    <li><strong>并列多个数组</strong>（本代码的做法）——简单，但依赖”第 i 个元素互相对应”这个约定；</li>
+    <li><strong>单独定义一个 <code class="language-plaintext highlighter-rouge">.msg</code></strong>，然后在 <code class="language-plaintext highlighter-rouge">.srv</code> 里用 <code class="language-plaintext highlighter-rouge">MyFace[] faces</code>。</li>
+  </ol>
+
+  <p>方法 2 更安全（编译器帮你保证对应关系），方法 1 更省事。人少的时候方法 1 够用；如果字段有七八个，强烈建议改成方法 2，否则很容易下标错位。</p>
+</blockquote>
+
+<p>对 <code class="language-plaintext highlighter-rouge">CMakeLists.txt</code> 文件加入：</p>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># find dependencies</span>
+<span class="nb">find_package</span><span class="p">(</span>ament_cmake REQUIRED<span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span>rosidl_default_generators REQUIRED<span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span>sensor_msgs REQUIRED<span class="p">)</span>
+
+<span class="nf">rosidl_generate_interfaces</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+    <span class="s2">"srv/FaceDetector.srv"</span>
+    DEPENDENCIES sensor_msgs      <span class="c1"># 用到了 sensor_msgs/Image，必须声明</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>再在 <code class="language-plaintext highlighter-rouge">package.xml</code> 添加 <code class="language-plaintext highlighter-rouge">&lt;member_of_group&gt;rosidl_interface_packages&lt;/member_of_group&gt;</code></p>
+
+<p>之后初始化环境后 <code class="language-plaintext highlighter-rouge">ros2 interface show chapt4_interfaces/srv/FaceDetector</code> 即可查看并验证接口信息</p>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记写的是 <code class="language-plaintext highlighter-rouge">chapt4_interface</code>（少了 s）</strong>，已修正为 <code class="language-plaintext highlighter-rouge">chapt4_interfaces</code>——包名以 <code class="language-plaintext highlighter-rouge">ros2 pkg create</code> 时的名字为准。</p>
+</blockquote>
+
+<h4 id="python-部分">Python 部分</h4>
+
+<p><code class="language-plaintext highlighter-rouge">learn_face_detect.py</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">face_recognition</span>
+<span class="kn">import</span> <span class="n">cv2</span>
+<span class="kn">from</span> <span class="n">ament_index_python.packages</span> <span class="kn">import</span> <span class="n">get_package_share_directory</span>  <span class="c1"># 获取功能包 share 绝对路径
+</span><span class="kn">import</span> <span class="n">os</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># 获取 resource 目录的真实路径
+</span>    <span class="c1"># 为什么要用 get_package_share_directory 而不是写死相对路径？
+</span>    <span class="c1"># 因为包被 install 之后，源码目录和运行目录是分开的，写死路径必然找不到文件
+</span>    <span class="n">default_img_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span>
+        <span class="nf">get_package_share_directory</span><span class="p">(</span><span class="sh">'</span><span class="s">demo_python_service</span><span class="sh">'</span><span class="p">),</span> <span class="sh">'</span><span class="s">resource</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">image1_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">default_img_path</span><span class="p">,</span> <span class="sh">'</span><span class="s">people1.jpg</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">image2_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">default_img_path</span><span class="p">,</span> <span class="sh">'</span><span class="s">people2.jpg</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">image1</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">imread</span><span class="p">(</span><span class="n">image1_path</span><span class="p">)</span>     <span class="c1"># 读成 OpenCV 的 numpy 数组格式
+</span>    <span class="n">image2</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">imread</span><span class="p">(</span><span class="n">image2_path</span><span class="p">)</span>
+
+    <span class="c1"># face_locations 返回的是 [(top, right, bottom, left), ...] 列表
+</span>    <span class="c1"># model='hog'：CPU 版，快但精度一般；'cnn'：GPU 版，准但慢
+</span>    <span class="c1"># number_of_times_to_upsample：放大次数，越大越容易检出小脸，也越慢
+</span>    <span class="n">face_locations1</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="p">.</span><span class="nf">face_locations</span><span class="p">(</span>
+        <span class="n">image1</span><span class="p">,</span> <span class="n">number_of_times_to_upsample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="sh">'</span><span class="s">hog</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">face_locations2</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="p">.</span><span class="nf">face_locations</span><span class="p">(</span>
+        <span class="n">image2</span><span class="p">,</span> <span class="n">number_of_times_to_upsample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="sh">'</span><span class="s">hog</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">top</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">left</span> <span class="ow">in</span> <span class="n">face_locations1</span><span class="p">:</span>
+        <span class="c1"># cv2.rectangle 的两个点：左上角 (left, top) 和右下角 (right, bottom)
+</span>        <span class="c1"># 注意 x 在前 y 在后，而 face_locations 返回的顺序是 top 在前，别搞反
+</span>        <span class="n">cv2</span><span class="p">.</span><span class="nf">rectangle</span><span class="p">(</span><span class="n">image1</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">top</span><span class="p">),</span> <span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>   <span class="c1"># 4 是线宽
+</span>    <span class="k">for</span> <span class="n">top</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">left</span> <span class="ow">in</span> <span class="n">face_locations2</span><span class="p">:</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">rectangle</span><span class="p">(</span><span class="n">image2</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">top</span><span class="p">),</span> <span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+
+    <span class="n">cv2</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="sh">'</span><span class="s">Face Detect Result 1</span><span class="sh">'</span><span class="p">,</span> <span class="n">image1</span><span class="p">)</span>   <span class="c1"># 弹窗显示
+</span>    <span class="n">cv2</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="sh">'</span><span class="s">Face Detect Result 2</span><span class="sh">'</span><span class="p">,</span> <span class="n">image2</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="p">.</span><span class="nf">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>             <span class="c1"># 0 表示无限等待键盘输入，按任意键继续
+</span>    <span class="n">cv2</span><span class="p">.</span><span class="nf">destroyAllWindows</span><span class="p">()</span>    <span class="c1"># 关闭所有 OpenCV 窗口
+</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">cv2</code> 的坐标是 <code class="language-plaintext highlighter-rouge">(x, y)</code>，而 <code class="language-plaintext highlighter-rouge">face_locations</code> 返回 <code class="language-plaintext highlighter-rouge">(top, right, bottom, left)</code></strong></p>
+
+  <p>这是初学最容易出错的地方：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th> </th>
+        <th>顺序</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">face_locations</code> 返回</td>
+        <td><code class="language-plaintext highlighter-rouge">(top, right, bottom, left)</code> = <code class="language-plaintext highlighter-rouge">(y1, x2, y2, x1)</code></td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">cv2.rectangle</code> 要的</td>
+        <td><code class="language-plaintext highlighter-rouge">(left, top)</code> 和 <code class="language-plaintext highlighter-rouge">(right, bottom)</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>所以必须像代码里那样<strong>重新组合</strong>，直接 <code class="language-plaintext highlighter-rouge">cv2.rectangle(img, loc[:2], loc[2:], ...)</code> 会画到完全错误的位置。</p>
+</blockquote>
+
+<blockquote>
+  <p>⚠️ <strong>注意：<code class="language-plaintext highlighter-rouge">resource/</code> 里的图片必须登记到 <code class="language-plaintext highlighter-rouge">setup.py</code></strong></p>
+
+  <p>只在源码目录放图片是不够的，<code class="language-plaintext highlighter-rouge">colcon build</code> 不会自动拷贝它。必须在 <code class="language-plaintext highlighter-rouge">setup.py</code> 的 <code class="language-plaintext highlighter-rouge">data_files</code> 里声明：</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data_files</span><span class="o">=</span><span class="p">[</span>
+    <span class="bp">...</span>
+    <span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="sh">'</span><span class="s">share</span><span class="sh">'</span><span class="p">,</span> <span class="n">package_name</span><span class="p">,</span> <span class="sh">'</span><span class="s">resource</span><span class="sh">'</span><span class="p">),</span>
+        <span class="nf">glob</span><span class="p">(</span><span class="sh">'</span><span class="s">resource/*.jpg</span><span class="sh">'</span><span class="p">)),</span>
+<span class="p">],</span>
+</code></pre></div>  </div>
+
+  <p>否则 <code class="language-plaintext highlighter-rouge">get_package_share_directory(...) + '/resource/people1.jpg'</code> 指向的文件<strong>在 install 目录里根本不存在</strong>，<code class="language-plaintext highlighter-rouge">cv2.imread</code> 会返回 <code class="language-plaintext highlighter-rouge">None</code>（注意：<strong>不报错</strong>，只是后续操作全部失败，很难查）。</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">face_detect_node.py</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">chapt4_interfaces.srv</span> <span class="kn">import</span> <span class="n">FaceDetector</span>
+<span class="kn">from</span> <span class="n">ament_index_python.packages</span> <span class="kn">import</span> <span class="n">get_package_share_directory</span>
+<span class="kn">from</span> <span class="n">cv_bridge</span> <span class="kn">import</span> <span class="n">CvBridge</span>   <span class="c1"># 用于在 ROS 图像消息和 OpenCV 图像之间转换
+</span><span class="kn">import</span> <span class="n">cv2</span>
+<span class="kn">import</span> <span class="n">face_recognition</span>
+<span class="kn">import</span> <span class="n">time</span>
+
+
+<span class="k">class</span> <span class="nc">FaceDetectionNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">'</span><span class="s">face_detection_node</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">bridge</span> <span class="o">=</span> <span class="nc">CvBridge</span><span class="p">()</span>
+
+        <span class="c1"># 创建服务端：参数为 (接口类型, 服务名, 回调函数)
+</span>        <span class="c1"># 回调函数负责处理请求并返回响应
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">service</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_service</span><span class="p">(</span>
+            <span class="n">FaceDetector</span><span class="p">,</span> <span class="sh">'</span><span class="s">/face_detect</span><span class="sh">'</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">detect_face_callback</span><span class="p">)</span>
+
+        <span class="c1"># 拼接默认图片路径（请求里没带图时用这张）
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">default_image_path</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nf">get_package_share_directory</span><span class="p">(</span><span class="sh">'</span><span class="s">demo_python_service</span><span class="sh">'</span><span class="p">)</span> <span class="o">+</span> <span class="sh">'</span><span class="s">/resource/default.jpg</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 声明参数：名字, 默认值。声明之后才能用 ros2 param 查看/修改
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">upsample_times</span><span class="sh">'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># 控制放大次数
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">model</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">hog</span><span class="sh">'</span><span class="p">)</span>        <span class="c1"># 指定模型
+</span>
+        <span class="c1"># 读取参数值：get_parameter(名字).value
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">model</span><span class="sh">'</span><span class="p">).</span><span class="n">value</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">upsample_times</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">upsample_times</span><span class="sh">'</span><span class="p">).</span><span class="n">value</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">人脸识别服务启动!</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">detect_face_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">服务回调：签名固定是 (self, request, response)，且必须 return response</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="c1"># 请求里带了图像数据 → 从 ROS Image 消息转成 OpenCV 格式
+</span>            <span class="n">cv_image</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">bridge</span><span class="p">.</span><span class="nf">imgmsg_to_cv2</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">image</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># 没带图 → 用默认图片
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">将使用默认图像</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">cv_image</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">imread</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">default_image_path</span><span class="p">)</span>
+
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="nf">time</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">'</span><span class="s">加载图像，开始检测</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="n">face_locations</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="p">.</span><span class="nf">face_locations</span><span class="p">(</span>
+            <span class="n">cv_image</span><span class="p">,</span>
+            <span class="n">number_of_times_to_upsample</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">upsample_times</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="nf">time</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">检测完成，耗时 </span><span class="si">{</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="si">}</span><span class="s">s</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 填充响应字段
+</span>        <span class="n">response</span><span class="p">.</span><span class="n">number</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">face_locations</span><span class="p">)</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">use_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="k">for</span> <span class="n">top</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">left</span> <span class="ow">in</span> <span class="n">face_locations</span><span class="p">:</span>
+            <span class="n">response</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>         <span class="c1"># 变长数组用 append 追加
+</span>            <span class="n">response</span><span class="p">.</span><span class="n">right</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+            <span class="n">response</span><span class="p">.</span><span class="n">bottom</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">bottom</span><span class="p">)</span>
+            <span class="n">response</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span>                      <span class="c1"># ⚠️ 必须返回 response，否则客户端会一直等
+</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">FaceDetectionNode</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记有一处致命拼写错误</strong>（已修正）：</p>
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">self</span><span class="p">.</span><span class="n">upsample_times</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_patamete</span><span class="p">(</span><span class="sh">'</span><span class="s">upsample_times</span><span class="sh">'</span><span class="p">).</span><span class="n">value</span>   <span class="c1"># ❌ get_patamete
+</span><span class="n">self</span><span class="p">.</span><span class="n">upsample_times</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">upsample_times</span><span class="sh">'</span><span class="p">).</span><span class="n">value</span>  <span class="c1"># ✅ get_parameter
+</span></code></pre></div>  </div>
+  <p>正确拼写是 <strong><code class="language-plaintext highlighter-rouge">parameter</code></strong>。写成 <code class="language-plaintext highlighter-rouge">get_patamete</code> 会直接 <code class="language-plaintext highlighter-rouge">AttributeError</code>，节点根本启动不起来。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：服务回调的三个硬性约定</strong></p>
+
+  <ol>
+    <li><strong>签名固定</strong>：<code class="language-plaintext highlighter-rouge">def callback(self, request, response)</code>，参数名可以改，但顺序和个数不能变；</li>
+    <li><strong>必须 <code class="language-plaintext highlighter-rouge">return response</code></strong>：忘了 return 会返回 <code class="language-plaintext highlighter-rouge">None</code>，客户端<strong>永远等不到响应</strong>（表现为卡死，且没有报错——很难查）；</li>
+    <li><strong>要快</strong>：服务回调同样跑在 spin 线程里，耗时操作会阻塞该节点所有其它回调。</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：CvBridge 为什么必须存在</strong></p>
+
+  <p>ROS 的图像消息 <code class="language-plaintext highlighter-rouge">sensor_msgs/Image</code> 和 OpenCV 的 <code class="language-plaintext highlighter-rouge">numpy.ndarray</code> 是两套完全不同的数据结构：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th> </th>
+        <th>ROS <code class="language-plaintext highlighter-rouge">Image</code></th>
+        <th>OpenCV <code class="language-plaintext highlighter-rouge">ndarray</code></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>数据</td>
+        <td>一段扁平字节，<code class="language-plaintext highlighter-rouge">data</code> 字段</td>
+        <td>多维数组 <code class="language-plaintext highlighter-rouge">(h, w, c)</code></td>
+      </tr>
+      <tr>
+        <td>元信息</td>
+        <td>单独字段 <code class="language-plaintext highlighter-rouge">height</code>/<code class="language-plaintext highlighter-rouge">width</code>/<code class="language-plaintext highlighter-rouge">encoding</code></td>
+        <td>从数组 shape 推断</td>
+      </tr>
+      <tr>
+        <td>编码</td>
+        <td>显式声明 <code class="language-plaintext highlighter-rouge">rgb8</code>/<code class="language-plaintext highlighter-rouge">bgr8</code>…</td>
+        <td>维度顺序隐含</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><code class="language-plaintext highlighter-rouge">CvBridge</code> 就是这两者之间的翻译官：</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bridge</span><span class="p">.</span><span class="nf">imgmsg_to_cv2</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>          <span class="c1"># ROS → OpenCV
+</span><span class="n">bridge</span><span class="p">.</span><span class="nf">cv2_to_imgmsg</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="sh">'</span><span class="s">bgr8</span><span class="sh">'</span><span class="p">)</span>  <span class="c1"># OpenCV → ROS
+</span></code></pre></div>  </div>
+
+  <p><strong><code class="language-plaintext highlighter-rouge">encoding</code> 务必显式指定。</strong> OpenCV 的通道顺序是 <strong>BGR</strong>，而 ROS 的惯例是 <strong>RGB</strong>。不写的话，图像能传但<strong>颜色是反的</strong>（红蓝互换），而且不会报错，只能靠肉眼发现。</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">face_detect_client_node.py</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">chapt4_interfaces.srv</span> <span class="kn">import</span> <span class="n">FaceDetector</span>
+<span class="kn">from</span> <span class="n">sensor_msgs.msg</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="n">ament_index_python.packages</span> <span class="kn">import</span> <span class="n">get_package_share_directory</span>
+<span class="kn">import</span> <span class="n">cv2</span>
+<span class="kn">from</span> <span class="n">cv_bridge</span> <span class="kn">import</span> <span class="n">CvBridge</span>
+
+
+<span class="k">class</span> <span class="nc">FaceDetectorClient</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">'</span><span class="s">face_detect_client</span><span class="sh">'</span><span class="p">)</span>
+        <span class="c1"># 创建服务客户端：接口类型和服务名必须与服务端完全一致
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_client</span><span class="p">(</span><span class="n">FaceDetector</span><span class="p">,</span> <span class="sh">'</span><span class="s">/face_detect</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">bridge</span> <span class="o">=</span> <span class="nc">CvBridge</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">test1_image_path</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nf">get_package_share_directory</span><span class="p">(</span><span class="sh">'</span><span class="s">demo_python_service</span><span class="sh">'</span><span class="p">)</span> <span class="o">+</span> <span class="sh">'</span><span class="s">/resource/test1.jpg</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">imread</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">test1_image_path</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">人脸识别客户端已经启动</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">send_request</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="c1"># 1. 判断服务是否上线（服务端可能还没启动）
+</span>        <span class="k">while</span> <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">'</span><span class="s">等待服务端上线...</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 2. 构造 Request
+</span>        <span class="n">request</span> <span class="o">=</span> <span class="n">FaceDetector</span><span class="p">.</span><span class="nc">Request</span><span class="p">()</span>   <span class="c1"># 注意是 接口名.Request()
+</span>        <span class="c1"># 显式指定 encoding='bgr8'，避免颜色通道错乱
+</span>        <span class="n">request</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">bridge</span><span class="p">.</span><span class="nf">cv2_to_imgmsg</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">image</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">'</span><span class="s">bgr8</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 3. 发送异步请求，并等待处理完成
+</span>        <span class="n">future</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">call_async</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin_until_future_complete</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">future</span><span class="p">)</span>   <span class="c1"># 阻塞直到服务端返回
+</span>
+        <span class="c1"># 4. 根据结果处理
+</span>        <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="p">.</span><span class="nf">result</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">接收到响应：图像中共有：</span><span class="si">{</span><span class="n">response</span><span class="p">.</span><span class="n">number</span><span class="si">}</span><span class="s"> 张脸，耗时 </span><span class="si">{</span><span class="n">response</span><span class="p">.</span><span class="n">use_time</span><span class="si">}</span><span class="s">s</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">show_face_locations</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">show_face_locations</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">number</span><span class="p">):</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">top</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">bottom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">rectangle</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">top</span><span class="p">),</span> <span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="sh">'</span><span class="s">Face Detection Result</span><span class="sh">'</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">destroyAllWindows</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">face_detect_client</span> <span class="o">=</span> <span class="nc">FaceDetectorClient</span><span class="p">()</span>
+    <span class="n">face_detect_client</span><span class="p">.</span><span class="nf">send_request</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：同步调用 vs 异步调用</strong></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>写法</th>
+        <th>特点</th>
+        <th>适用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">client.call(request)</code></td>
+        <td>阻塞，等结果</td>
+        <td>简单脚本、和 spin 混用时容易死锁</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">client.call_async(request)</code></td>
+        <td>立即返回 <code class="language-plaintext highlighter-rouge">future</code></td>
+        <td><strong>推荐</strong>，可配合 <code class="language-plaintext highlighter-rouge">spin_until_future_complete</code> 或回调</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>为什么推荐 async？因为 ROS 2 里<strong>同步调用要求当前没有在 spin</strong>——如果你在回调里用同步 <code class="language-plaintext highlighter-rouge">call()</code>，而 <code class="language-plaintext highlighter-rouge">spin()</code> 正在跑，就会<strong>死锁</strong>（自己在等自己）。用 <code class="language-plaintext highlighter-rouge">call_async</code> 则没有这个限制。</p>
+
+  <p><code class="language-plaintext highlighter-rouge">future</code> 是”期货凭证”：调用时立即拿到，结果稍后填进去。<code class="language-plaintext highlighter-rouge">spin_until_future_complete(self, future)</code> 会一边转事件循环一边等它完成——这就是它比 <code class="language-plaintext highlighter-rouge">future.result()</code> 更安全的原因。</p>
+</blockquote>
+
+<h3 id="通过自定义服务发布目标地点让海龟前往">通过自定义服务发布目标地点让海龟前往</h3>
+
+<p>接口</p>
+
+<pre><code class="language-srv">float32 target_x   # 目标坐标
+float32 target_y
+---
+int8 SUCCESS = 1   # 常量：1 表示成功
+int8 FAIL = 0      # 常量：0 表示失败
+int8 result
+</code></pre>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记把 <code class="language-plaintext highlighter-rouge">FAIL</code> 写成了 <code class="language-plaintext highlighter-rouge">FALL</code></strong>（已修正）。这是一个会直接崩的问题：
+<code class="language-plaintext highlighter-rouge">.srv</code> 里定义了 <code class="language-plaintext highlighter-rouge">FALL</code>，但 Python 代码里写的是 <code class="language-plaintext highlighter-rouge">Patrol.Response.FAIL</code>，运行时 <code class="language-plaintext highlighter-rouge">AttributeError: FAIL</code>。
+<strong>常量的名字是你自己定的，但定义和使用必须严格一致。</strong></p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">.srv</code> 里的常量怎么用</strong></p>
+
+  <p><code class="language-plaintext highlighter-rouge">int8 SUCCESS = 1</code> 定义在 <code class="language-plaintext highlighter-rouge">---</code> 下方（响应区），会被生成到 <code class="language-plaintext highlighter-rouge">Patrol.Response</code> 上：</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Patrol</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">SUCCESS</span>   <span class="c1"># 服务端赋值用
+</span><span class="n">Patrol</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">FAIL</span>
+</code></pre></div>  </div>
+
+  <p>好处是<strong>调用双方不用记”1 代表成功”这种魔法数字</strong>，代码自解释。注意常量<strong>不属于消息字段</strong>，不会占传输空间，只是编译期生成的类属性。</p>
+</blockquote>
+
+<p>更改：</p>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">rosidl_generate_interfaces</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+  <span class="s2">"srv/FaceDetector.srv"</span>
+  <span class="s2">"srv/Patrol.srv"</span>
+  DEPENDENCIES sensor_msgs
+<span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>注意：这里 <code class="language-plaintext highlighter-rouge">DEPENDENCIES sensor_msgs</code> 是给 <code class="language-plaintext highlighter-rouge">FaceDetector.srv</code> 用的。<code class="language-plaintext highlighter-rouge">Patrol.srv</code> 只用内置类型，不需要额外依赖，但<strong>保留这一行没有坏处</strong>（它是整个 generate 调用的公共依赖列表）。</p>
+</blockquote>
+
+<p>python：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">math</span>
+
+<span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">chapt4_interfaces.srv</span> <span class="kn">import</span> <span class="n">Patrol</span>
+<span class="kn">from</span> <span class="n">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">Twist</span>
+<span class="kn">from</span> <span class="n">turtlesim.msg</span> <span class="kn">import</span> <span class="n">Pose</span>
+
+
+<span class="k">class</span> <span class="nc">TurtleController</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">'</span><span class="s">turtle_controller</span><span class="sh">'</span><span class="p">)</span>
+
+        <span class="c1"># 创建服务端，服务名 patrol，回调 self.patrol_callback
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">patrol_server_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_service</span><span class="p">(</span>
+            <span class="n">Patrol</span><span class="p">,</span> <span class="sh">'</span><span class="s">patrol</span><span class="sh">'</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">patrol_callback</span><span class="p">)</span>
+
+        <span class="c1"># 速度指令发布器
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">cmd_vel_publisher_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_publisher</span><span class="p">(</span>
+            <span class="n">Twist</span><span class="p">,</span> <span class="sh">'</span><span class="s">/turtle1/cmd_vel</span><span class="sh">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># 订阅海龟实时位姿（要控制它，必须先知道它在哪、朝哪）
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">pose_subscription_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_subscription</span><span class="p">(</span>
+            <span class="n">Pose</span><span class="p">,</span> <span class="sh">'</span><span class="s">/turtle1/pose</span><span class="sh">'</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_callback</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># 50Hz 控制循环（0.02 秒一次）—— 闭环控制的频率要远高于动作速度
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">control_timer_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">control_loop</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">:</span> <span class="n">Pose</span> <span class="o">|</span> <span class="bp">None</span> <span class="o">=</span> <span class="bp">None</span>       <span class="c1"># 需要 Python 3.10+ 的联合类型语法
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">target_x_</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="bp">None</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">target_y_</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="bp">None</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">海龟巡逻服务已启动</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">pose_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pose</span><span class="p">:</span> <span class="n">Pose</span><span class="p">):</span>
+        <span class="c1"># 只做"记下最新位姿"这一件事，越快越好
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="o">=</span> <span class="n">pose</span>
+
+    <span class="k">def</span> <span class="nf">patrol_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="c1"># 判断目标点是否在模拟器边界内（turtlesim 画布约 11.09 × 11.09）
+</span>        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">request</span><span class="p">.</span><span class="n">target_x</span> <span class="o">&lt;</span> <span class="mf">12.0</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">request</span><span class="p">.</span><span class="n">target_y</span> <span class="o">&lt;</span> <span class="mf">12.0</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">target_x_</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">target_x</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">target_y_</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">target_y</span>
+            <span class="n">response</span><span class="p">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">Patrol</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">SUCCESS</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">目标点 (</span><span class="si">{</span><span class="n">request</span><span class="p">.</span><span class="n">target_x</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">request</span><span class="p">.</span><span class="n">target_y</span><span class="si">}</span><span class="s">) 已接收</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response</span><span class="p">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">Patrol</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">FAIL</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">"</span><span class="s">目标点 (</span><span class="si">{</span><span class="n">request</span><span class="p">.</span><span class="n">target_x</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">request</span><span class="p">.</span><span class="n">target_y</span><span class="si">}</span><span class="s">) 超出范围</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+    <span class="k">def</span> <span class="nf">control_loop</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="c1"># 还没收到位姿或目标点时不做控制
+</span>        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">target_x_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">self</span><span class="p">.</span><span class="n">target_y_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">target_x_</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">x</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">target_y_</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">y</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="nf">hypot</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>      <span class="c1"># 直线距离 = sqrt(dx² + dy²)
+</span>
+        <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>                 <span class="c1"># 到达目标点（留 0.1 的容差）
+</span>            <span class="n">self</span><span class="p">.</span><span class="n">cmd_vel_publisher_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="nc">Twist</span><span class="p">())</span>   <span class="c1"># 发一条全零速度 = 急停
+</span>            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">已到达目标点</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">target_x_</span> <span class="o">=</span> <span class="bp">None</span>          <span class="c1"># 清空目标，下个周期就 return 了
+</span>            <span class="n">self</span><span class="p">.</span><span class="n">target_y_</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">return</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="nc">Twist</span><span class="p">()</span>
+        <span class="c1"># 先转向：目标方向角 - 当前朝向角 = 角度偏差
+</span>        <span class="n">angle_error</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="nf">atan2</span><span class="p">(</span><span class="n">dy</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">pose_</span><span class="p">.</span><span class="n">theta</span>
+        <span class="c1"># 归一化到 [-pi, pi]：避免出现"要转 350°"这种绕远路的情况
+</span>        <span class="c1"># 原理：sin/cos 是周期函数，(sin θ, cos θ) 能唯一还原出 [-π, π] 内的角
+</span>        <span class="n">angle_error</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="nf">atan2</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">angle_error</span><span class="p">),</span> <span class="n">math</span><span class="p">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">angle_error</span><span class="p">))</span>
+
+        <span class="c1"># 比例控制（P 控制）：偏差越大转得越快，并限制最大角速度 3.0 rad/s
+</span>        <span class="n">msg</span><span class="p">.</span><span class="n">angular</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="nf">min</span><span class="p">(</span><span class="mf">6.0</span> <span class="o">*</span> <span class="n">angle_error</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">),</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">)</span>
+
+        <span class="c1"># 朝向基本对准后才开始前进 —— 否则会走出一条弧线而不是直线
+</span>        <span class="k">if</span> <span class="nf">abs</span><span class="p">(</span><span class="n">angle_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">.</span><span class="n">linear</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">distance</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>   <span class="c1"># 距离越近走得越慢，防止冲过头
+</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">cmd_vel_publisher_</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">TurtleController</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：这段代码是标准的”闭环控制”骨架</strong></p>
+
+  <p>它同时用到了 ROS 2 的三种通信方式，是个很好的综合练习：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>角色</th>
+        <th>通信方式</th>
+        <th>作用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">cmd_vel_publisher_</code></td>
+        <td>发布话题</td>
+        <td>输出控制量</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">pose_subscription_</code></td>
+        <td>订阅话题</td>
+        <td>读取当前状态</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">patrol_server_</code></td>
+        <td>提供服务</td>
+        <td>接收外部任务指令</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>控制逻辑是经典的 <strong>“感知 → 计算偏差 → 输出 → 再感知”</strong> 循环，跑在 50Hz 定时器里。三个概念值得记住：</p>
+
+  <ul>
+    <li><strong>比例控制（P 控制）</strong>：输出 = 系数 × 偏差。简单有效，但系数太大会震荡，太小会迟缓；</li>
+    <li><strong>先转向再前进</strong>：因为海龟不能横着走（非完整约束），必须先对准；</li>
+    <li><strong>容差</strong>：现实中没有”正好等于目标”，所以用 <code class="language-plaintext highlighter-rouge">distance &lt; 0.1</code> 判断到达。</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>⚠️ <strong>注意两个可以改进的地方</strong></p>
+
+  <p><strong>1. 服务端和客户端的范围对不上</strong></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>位置</th>
+        <th>范围</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>服务端校验</td>
+        <td><code class="language-plaintext highlighter-rouge">0 &lt; x &lt; 12.0</code></td>
+      </tr>
+      <tr>
+        <td>turtlesim 实际画布</td>
+        <td>约 <code class="language-plaintext highlighter-rouge">0 ~ 11.09</code></td>
+      </tr>
+      <tr>
+        <td>客户端随机生成</td>
+        <td><code class="language-plaintext highlighter-rouge">randint(0, 14)</code> → <code class="language-plaintext highlighter-rouge">0 ~ 14</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>客户端有相当比例的目标点<strong>必然超出范围而返回 FAIL</strong>。如果这是刻意用来演示失败分支，那没问题；否则建议把客户端改成 <code class="language-plaintext highlighter-rouge">randint(1, 11)</code>，服务端边界改成 <code class="language-plaintext highlighter-rouge">11.09</code>。
+（turtlesim 画布尺寸来自源码：窗口 <code class="language-plaintext highlighter-rouge">setFixedSize(500, 500)</code>，比例尺 <code class="language-plaintext highlighter-rouge">meter_ = 45</code>，所以 <code class="language-plaintext highlighter-rouge">(500-1)/45 ≈ 11.088</code>。<strong>原点在左下角</strong>，x 向右、y 向上。）</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="n">chapt4_interfaces.srv</span> <span class="kn">import</span> <span class="n">Patrol</span>
+<span class="kn">import</span> <span class="n">random</span>
+<span class="kn">import</span> <span class="n">time</span>
+
+
+<span class="k">class</span> <span class="nc">PatrolClient</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">'</span><span class="s">patrol_client</span><span class="sh">'</span><span class="p">)</span>
+        <span class="c1"># 创建服务客户端，服务名 patrol
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">patrol_client_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_client</span><span class="p">(</span><span class="n">Patrol</span><span class="p">,</span> <span class="sh">'</span><span class="s">patrol</span><span class="sh">'</span><span class="p">)</span>
+        <span class="c1"># 创建定时器，每 10 秒触发一次 timer_callback
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">timer_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_timer</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">timer_callback</span><span class="p">)</span>
+        <span class="c1"># 用当前时间做随机种子
+</span>        <span class="c1"># （其实大可不必：Python 默认就用操作系统熵自动播种，不设也是随机的）
+</span>        <span class="n">random</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="nf">time</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">timer_callback</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="c1"># 1. 等待服务端上线
+</span>        <span class="c1"># ⚠️ 这里在回调里做阻塞等待，见下方分析
+</span>        <span class="k">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">patrol_client_</span><span class="p">.</span><span class="nf">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">等待服务的过程中被打断...</span><span class="sh">"</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">等待服务端上线中</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="c1"># 2. 构造请求
+</span>        <span class="n">request</span> <span class="o">=</span> <span class="n">Patrol</span><span class="p">.</span><span class="nc">Request</span><span class="p">()</span>
+        <span class="n">request</span><span class="p">.</span><span class="n">target_x</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="nf">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>   <span class="c1"># 闭区间：0~14 共 15 个值
+</span>        <span class="n">request</span><span class="p">.</span><span class="n">target_y</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="nf">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="sh">"</span><span class="s">请求巡逻: (</span><span class="si">{</span><span class="n">request</span><span class="p">.</span><span class="n">target_x</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">request</span><span class="p">.</span><span class="n">target_y</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="c1"># 3. 发送异步请求，并注册回调处理结果
+</span>        <span class="c1"># add_done_callback：future 完成时自动调用 response_callback，不阻塞当前回调
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">patrol_client_</span><span class="p">.</span><span class="nf">call_async</span><span class="p">(</span><span class="n">request</span><span class="p">).</span><span class="nf">add_done_callback</span><span class="p">(</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">response_callback</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">response_callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="p">.</span><span class="nf">result</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">response</span><span class="p">.</span><span class="n">result</span> <span class="o">==</span> <span class="n">Patrol</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">目标点处理成功</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span><span class="p">.</span><span class="n">result</span> <span class="o">==</span> <span class="n">Patrol</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">FAIL</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">目标点处理失败</span><span class="sh">"</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="nc">PatrolClient</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记这里有个值得认真对待的设计问题：在定时器回调里阻塞等</strong></p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">patrol_client_</span><span class="p">.</span><span class="nf">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+</code></pre></div>  </div>
+
+  <p>这行本身能跑，但在<strong>单线程 executor</strong>（<code class="language-plaintext highlighter-rouge">rclpy.spin</code> 的默认行为）下，它会把<strong>整个节点</strong>卡住：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>被卡住的</th>
+        <th>后果</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>其它定时器</td>
+        <td>不触发</td>
+      </tr>
+      <tr>
+        <td>服务响应回调</td>
+        <td>收不到（<code class="language-plaintext highlighter-rouge">response_callback</code> 永远不执行）</td>
+      </tr>
+      <tr>
+        <td>订阅回调</td>
+        <td>收不到消息</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>因为<strong>所有回调共享同一个 spin 线程</strong>。等待期间它一直在 <code class="language-plaintext highlighter-rouge">while</code> 里空转，别的回调根本没有机会执行。</p>
+
+  <p><strong>更重要的是</strong>：<code class="language-plaintext highlighter-rouge">wait_for_service</code> 等的是”服务端上线”，而 <code class="language-plaintext highlighter-rouge">response_callback</code> 恰恰要靠同一个线程才能被调用。所以一旦服务端没启动，这个节点就彻底卡死，连日志都不再输出。</p>
+
+  <p><strong>正确做法</strong>：不在回调里阻塞。要么先发请求、服务没上线就跳过这个周期：</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">timer_callback</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">patrol_client_</span><span class="p">.</span><span class="nf">service_is_ready</span><span class="p">():</span>   <span class="c1"># 非阻塞检查
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">服务端未就绪，跳过本次</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">Patrol</span><span class="p">.</span><span class="nc">Request</span><span class="p">()</span>
+    <span class="bp">...</span>
+</code></pre></div>  </div>
+
+  <p>要么给节点用多线程 executor（<code class="language-plaintext highlighter-rouge">rclpy.executors.MultiThreadedExecutor</code>），让不同回调能并行。<strong>这是 ROS 2 里最容易踩、也最值得记住的一类坑：回调要短。</strong></p>
+</blockquote>
+
+<p>相信大家发现，一下子开 3 个终端分别开三个节点过于麻烦了，接下来介绍 Launch 的用法。</p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">demo_python_service</code> 包下新建一个 <code class="language-plaintext highlighter-rouge">launch</code> 目录，用于放置 <code class="language-plaintext highlighter-rouge">demo.launch.py</code> 脚本用于一键启动。</p>
+
+<p><code class="language-plaintext highlighter-rouge">demo.launch.py</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">launch</span>
+<span class="kn">import</span> <span class="n">launch_ros</span>
+
+
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+    <span class="c1"># 函数名必须是 generate_launch_description，launch 系统靠它拿到启动描述
+</span>    <span class="n">action_node_turtle_control</span> <span class="o">=</span> <span class="n">launch_ros</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">demo_python_service</span><span class="sh">'</span><span class="p">,</span>    <span class="c1"># 包名：必须与 ros2 pkg create 时一致
+</span>        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">turtle_control</span><span class="sh">'</span><span class="p">,</span>      <span class="c1"># 可执行文件名：来自 setup.py 的 entry_points
+</span>        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">screen</span><span class="sh">'</span><span class="p">,</span>                  <span class="c1"># 日志输出到终端（调试时最常用）
+</span>    <span class="p">)</span>
+    <span class="n">action_node_patrol_client</span> <span class="o">=</span> <span class="n">launch_ros</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">demo_python_service</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">patrol_client</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">log</span><span class="sh">'</span><span class="p">,</span>                     <span class="c1"># 日志只写文件，不打印到终端
+</span>    <span class="p">)</span>
+    <span class="n">action_node_turtlesim_node</span> <span class="o">=</span> <span class="n">launch_ros</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="nc">Node</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="sh">'</span><span class="s">turtlesim</span><span class="sh">'</span><span class="p">,</span>              <span class="c1"># 系统自带的包，同样能启动
+</span>        <span class="n">executable</span><span class="o">=</span><span class="sh">'</span><span class="s">turtlesim_node</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">output</span><span class="o">=</span><span class="sh">'</span><span class="s">both</span><span class="sh">'</span><span class="p">,</span>                    <span class="c1"># 同时输出到终端和日志文件
+</span>    <span class="p">)</span>
+
+    <span class="c1"># 合成启动描述并返回
+</span>    <span class="n">launch_description</span> <span class="o">=</span> <span class="n">launch</span><span class="p">.</span><span class="nc">LaunchDescription</span><span class="p">([</span>
+        <span class="n">action_node_turtle_control</span><span class="p">,</span>
+        <span class="n">action_node_patrol_client</span><span class="p">,</span>
+        <span class="n">action_node_turtlesim_node</span><span class="p">,</span>
+    <span class="p">])</span>
+    <span class="k">return</span> <span class="n">launch_description</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>原笔记两处 <code class="language-plaintext highlighter-rouge">package='demo_python_service1'</code> 都写错了</strong>（已修正为 <code class="language-plaintext highlighter-rouge">demo_python_service</code>）。多了个 <code class="language-plaintext highlighter-rouge">1</code> 会导致 launch 报 <code class="language-plaintext highlighter-rouge">Package 'demo_python_service1' not found</code>，整个 launch 直接失败。
+全文出现过 <code class="language-plaintext highlighter-rouge">demo_python_pkg</code>、<code class="language-plaintext highlighter-rouge">Ros2_learn</code>、<code class="language-plaintext highlighter-rouge">demo_python_service</code>、<code class="language-plaintext highlighter-rouge">demo_python_service1</code> 四个名字，<strong>跟做时务必统一成你实际创建的包名</strong>。</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 <strong>知识点：<code class="language-plaintext highlighter-rouge">output</code> 的三个取值</strong></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>取值</th>
+        <th>含义</th>
+        <th>什么时候用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">'screen'</code></td>
+        <td>打印到当前终端</td>
+        <td><strong>调试首选</strong>，能立刻看到报错</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">'log'</code></td>
+        <td>只写入 <code class="language-plaintext highlighter-rouge">~/.ros/log/</code></td>
+        <td>节点多、刷屏严重时</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">'both'</code></td>
+        <td>两者都输出</td>
+        <td>既要看又要留档</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>另外 <code class="language-plaintext highlighter-rouge">package</code> 和 <code class="language-plaintext highlighter-rouge">executable</code> 是<strong>最容易配错的两个字段</strong>：</p>
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">package</code> = <code class="language-plaintext highlighter-rouge">ros2 pkg create</code> 时的包名；</li>
+    <li><code class="language-plaintext highlighter-rouge">executable</code> = <code class="language-plaintext highlighter-rouge">setup.py</code> 里 <code class="language-plaintext highlighter-rouge">entry_points</code> 中等号<strong>左边</strong>那个名字（<strong>不是</strong>文件名，也不是函数名）。</li>
+  </ul>
+
+  <p>手动验证方法：先 <code class="language-plaintext highlighter-rouge">ros2 run 包名 可执行名</code> 能跑通，再写进 launch 就一定对。</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">setup.py</code> 写入：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
+<span class="kn">from</span> <span class="n">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+
+<span class="nf">setup</span><span class="p">(</span>
+    <span class="bp">...</span>
+    <span class="n">data_files</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="sh">'</span><span class="s">share/ament_index/resource_index/packages</span><span class="sh">'</span><span class="p">,</span>
+            <span class="p">[</span><span class="sh">'</span><span class="s">resource/</span><span class="sh">'</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">]),</span>
+        <span class="p">(</span><span class="sh">'</span><span class="s">share/</span><span class="sh">'</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">,</span> <span class="p">[</span><span class="sh">'</span><span class="s">package.xml</span><span class="sh">'</span><span class="p">]),</span>
+        <span class="c1"># 把 launch 目录下的脚本安装到 share/&lt;包名&gt;/launch/
+</span>        <span class="c1"># 这样 ros2 launch &lt;包名&gt; xxx.launch.py 才能找到它
+</span>        <span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="sh">'</span><span class="s">share</span><span class="sh">'</span><span class="p">,</span> <span class="n">package_name</span><span class="p">,</span> <span class="sh">'</span><span class="s">launch</span><span class="sh">'</span><span class="p">),</span>
+            <span class="nf">glob</span><span class="p">(</span><span class="sh">'</span><span class="s">launch/*.launch.py</span><span class="sh">'</span><span class="p">)),</span>
+    <span class="p">],</span>
+    <span class="bp">...</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>💡 <strong>知识点：为什么 launch 文件也必须登记</strong></p>
+
+  <p><code class="language-plaintext highlighter-rouge">ros2 launch</code> 是在 <strong>install 目录</strong>里找 launch 文件的（和你运行节点是同一个逻辑），而不是在你的源码目录里找。所以不写进 <code class="language-plaintext highlighter-rouge">data_files</code>，<code class="language-plaintext highlighter-rouge">ros2 launch</code> 就会报 <code class="language-plaintext highlighter-rouge">file not found</code>。</p>
+
+  <p>启动命令：</p>
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 launch demo_python_service demo.launch.py
+</code></pre></div>  </div>
+  <p>格式是 <code class="language-plaintext highlighter-rouge">ros2 launch 包名 launch文件名</code>。</p>
+
+  <p><strong>launch 的真正价值不只是”少开几个终端”</strong>，而是：</p>
+  <ul>
+    <li>统一管理参数、命名空间、话题重映射；</li>
+    <li>处理<strong>启动顺序和依赖</strong>（可以等某个节点就绪再启动下一个）；</li>
+    <li>一个 launch 文件就是一份可复现的系统配置，团队协作时不会”你那边能跑我这边不行”。</li>
+  </ul>
+</blockquote>
+
+<hr />
+
+<!-- nav -->
+
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">⬅️ 上一章</th>
+      <th style="text-align: center">🏠 目录</th>
+      <th style="text-align: right">下一章 ➡️</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><a href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/">三、话题通信</a></td>
+      <td style="text-align: center"><a href="/tutorials/ROS2-bash/README/">返回目录</a></td>
+      <td style="text-align: right"><a href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">五、TF 坐标变换</a></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/"><span>← 上一章</span><strong>话题通信</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/"><span>下一章 →</span><strong>TF 坐标变换</strong></a>
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

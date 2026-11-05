@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    交互调参与控制面板 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS 2 机器视觉实战</div>
+    <p class="tutorial-course-subtitle">从颜色检测到视觉服务</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">课程导读</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/00-overview/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程介绍与学习路线</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">基础与接口</div>
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/01-interfaces/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>接口包与消息定义</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/02-hsv-config/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>包骨架与 HSV 配置</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">纯 Python 视觉模块</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/03-color-detector/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>颜色检测与目标跟踪</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/04-visualization/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>检测结果可视化</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/machine-vision/05-gui/" aria-current="page">
+            <span class="tutorial-chapter-number">05</span>
+            <span>交互调参与控制面板</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/06-image-sources/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>合成图像与测试场景</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">接入 ROS 2</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/07-ros-server/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>ROS 2 视觉服务端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/08-ros-client/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>ROS 2 订阅客户端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/09-launch-testing/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>配置、启动与测试</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    <a class="tutorial-source" href="https://github.com/VoVL773/Machine_vision-_color_sorting_system" target="_blank" rel="noopener">项目源码 ↗</a>
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/machine-vision/00-overview/">ROS 2 机器视觉实战</a><span>/</span>
+      <span>纯 Python 视觉模块</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS 2 机器视觉实战 · 第 5 章</div>
+      <h1>交互调参与控制面板</h1>
+      <p>通过 OpenCV 滑块实时修改 HSV 参数，与检测器共享配置。</p>
+    </header>
+    <div class="post-content tutorial-content"><blockquote>
+  <p>上一章负责画面显示，这一章通过 OpenCV 滑块修改 HSVConfig。
+面板与检测器共享配置对象，实现拖动滑块后使用新阈值检测。</p>
+</blockquote>
+
+<h2 id="一-创建-guipy">一. 创建 gui.py</h2>
+
+<p>在 <code class="language-plaintext highlighter-rouge">src/Mvc_sorting/Mvc_sorting/</code> 下创建 <code class="language-plaintext highlighter-rouge">gui.py</code>，继续使用 OpenCV 依赖。
+GUI 验收需要可用的桌面显示环境；无显示环境可以先阅读代码，继续下一章的合成场景。</p>
+
+<p>窗口名使用 <code class="language-plaintext highlighter-rouge">HSV Controls</code> 这类 ASCII 名称。中文滑块文字的显示取决于 OpenCV 图形后端和字体，
+窗口名与滑块文字的支持情况也可能不同。</p>
+
+<h2 id="二-逐步讲解-guipy中文调参面板">二. 逐步讲解 gui.py（中文调参面板）</h2>
+
+<h3 id="1-导入模块">1. 导入模块</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="n">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">import</span> <span class="n">cv2</span>
+
+<span class="kn">from</span> <span class="n">.hsv_config</span> <span class="kn">import</span> <span class="n">HSVConfig</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>代码</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Callable</code></td>
+      <td>声明配置改变后要调用的函数类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Dict</code></td>
+      <td>保存滑块名称与位置的对应关系</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cv2</code></td>
+      <td>创建窗口和滑块，读取与设置滑块位置</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">HSVConfig</code></td>
+      <td>保存面板正在编辑的配置</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="2-滑块名称和帮助文字">2. 滑块名称和帮助文字</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">COLOR_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">颜色(0红1绿2蓝3黄)</span><span class="sh">'</span>
+<span class="n">ENABLED_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">启用(1开)</span><span class="sh">'</span>
+<span class="n">WRAP_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">红色环绕(1开)</span><span class="sh">'</span>
+<span class="n">H_MIN_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">色相最小</span><span class="sh">'</span>
+<span class="n">H_MAX_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">色相最大</span><span class="sh">'</span>
+<span class="n">S_MIN_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">饱和度最小</span><span class="sh">'</span>
+<span class="n">S_MAX_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">饱和度最大</span><span class="sh">'</span>
+<span class="n">V_MIN_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">亮度最小</span><span class="sh">'</span>
+<span class="n">V_MAX_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">亮度最大</span><span class="sh">'</span>
+<span class="n">AREA_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">最小面积/100</span><span class="sh">'</span>
+<span class="n">MORPH_TRACKBAR</span> <span class="o">=</span> <span class="sh">'</span><span class="s">形态学核(0关)</span><span class="sh">'</span>
+
+<span class="n">TRACKBAR_HELP</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sh">'</span><span class="s">滑块说明：颜色 0红/1绿/2蓝/3黄；启用 1开0关；红色环绕用于红色；</span><span class="sh">'</span>
+    <span class="sh">'</span><span class="s">最小面积 = 滑块值 x 100 平方像素；形态学核 0或1表示关闭。</span><span class="sh">'</span>
+    <span class="sh">'</span><span class="s">快捷键：s保存 l加载 r恢复默认 m掩码 h帮助 q退出。</span><span class="sh">'</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>把滑块名称写成常量，后面创建、读取和设置时统一引用，避免文字不一致导致找不到滑块。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>滑块</th>
+      <th>范围</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>颜色</td>
+      <td>默认 0–3</td>
+      <td>默认顺序为红、绿、蓝、黄；实际由配置字典顺序决定</td>
+    </tr>
+    <tr>
+      <td>启用 / 红色环绕</td>
+      <td>0–1</td>
+      <td>当前颜色是否参与检测、是否增加 H 环绕区间</td>
+    </tr>
+    <tr>
+      <td>H 下限 / 上限</td>
+      <td>0–179</td>
+      <td>当前颜色的色相范围</td>
+    </tr>
+    <tr>
+      <td>S、V 下限 / 上限</td>
+      <td>0–255</td>
+      <td>饱和度、亮度范围</td>
+    </tr>
+    <tr>
+      <td>最小面积/100</td>
+      <td>0–1000</td>
+      <td>实际面积阈值为滑块值 × 100，作用于所有颜色</td>
+    </tr>
+    <tr>
+      <td>形态学核</td>
+      <td>0–31</td>
+      <td>作用于所有颜色；检测器把 0/1 视为关闭，偶数调整为奇数</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>虽然标注为“红色环绕”，代码会把开关写入当前选中颜色的 <code class="language-plaintext highlighter-rouge">wrap_hue</code>。
+通常只对红色开启。
+<code class="language-plaintext highlighter-rouge">TRACKBAR_HELP</code> 只是说明文字，保存、加载等快捷键由后续服务端处理，面板本身不实现文件读写。</p>
+
+<h3 id="3-hsvtrackbarpanel-类管理滑块和配置同步">3. HSVTrackbarPanel 类（管理滑块和配置同步）</h3>
+
+<p>下面的方法片段都放在同一个类中，保留类内缩进。</p>
+
+<h4 id="初始化">初始化</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">HSVTrackbarPanel</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Create and synchronise HSV threshold Trackbars on an OpenCV window.</span><span class="sh">"""</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="n">self</span><span class="p">,</span>
+        <span class="n">window_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">HSVConfig</span><span class="p">,</span>
+        <span class="n">on_change</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="bp">None</span><span class="p">]</span> <span class="o">|</span> <span class="bp">None</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Attach the panel to ``window_name`` and show the current config.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">window_name</span> <span class="o">=</span> <span class="n">window_name</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_on_change</span> <span class="o">=</span> <span class="n">on_change</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_color_names</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">config</span><span class="p">.</span><span class="n">colors</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_guard</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_current_color_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">_guard</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">namedWindow</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_create_trackbars</span><span class="p">()</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">sync_from_config</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_guard</span> <span class="o">=</span> <span class="bp">False</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>属性</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">window_name</code></td>
+      <td>控件所在的窗口名</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_config</code></td>
+      <td>正在编辑的配置对象</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_on_change</code></td>
+      <td>可选回调，配置变化时通知调用者</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_color_names</code></td>
+      <td>配置中的颜色顺序</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_current_color_index</code></td>
+      <td>当前选中颜色的下标</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_guard</code></td>
+      <td>阻止程序同步控件时重复进入回调</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">Callable[[], None]</code> 表示不接收参数、没有返回值的函数；<code class="language-plaintext highlighter-rouge">None</code> 表示不需要通知。
+创建滑块时也可能触发回调，所以初始化期间先打开 <code class="language-plaintext highlighter-rouge">_guard</code>，结束后在 <code class="language-plaintext highlighter-rouge">finally</code> 中恢复。</p>
+
+<h3 id="4-current_color_name读取当前颜色">4. current_color_name：读取当前颜色</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">current_color_name</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Return the colour currently selected in the Trackbar panel.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sh">''</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_current_color_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">@property</code> 把方法变成只读属性，使用时写 <code class="language-plaintext highlighter-rouge">panel.current_color_name</code>，不加括号。
+没有颜色时返回空字符串；否则先限制下标范围，再返回对应颜色名。</p>
+
+<h3 id="5-_create_trackbars创建所有滑块">5. _create_trackbars()：创建所有滑块</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_create_trackbars</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Create every Trackbar with its range and default position.</span><span class="sh">"""</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span>
+            <span class="n">COLOR_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span>
+            <span class="n">ENABLED_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span>
+            <span class="n">WRAP_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span><span class="n">H_MIN_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">179</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span><span class="n">H_MAX_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">179</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span><span class="n">S_MIN_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span><span class="n">S_MAX_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span><span class="n">V_MIN_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span><span class="n">V_MAX_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span>
+            <span class="n">AREA_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">createTrackbar</span><span class="p">(</span>
+            <span class="n">MORPH_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_trackbar</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">cv2.createTrackbar(名称, 窗口名, 初始位置, 最大值, 回调)</code> 创建一条滑块。
+所有滑块共用 <code class="language-plaintext highlighter-rouge">_on_trackbar</code> 回调，每次变化都重新读取整组参数。
+创建时的初值只是占位，随后 <code class="language-plaintext highlighter-rouge">sync_from_config()</code> 会用当前配置覆盖。</p>
+
+<h3 id="6-sync_from_config配置--滑块">6. sync_from_config()：配置 → 滑块</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">sync_from_config</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">color_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="bp">None</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Push the current configuration values into the Trackbars.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">color_index</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">color_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_current_color_index</span>
+        <span class="n">color_index</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">color_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_current_color_index</span> <span class="o">=</span> <span class="n">color_index</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="n">colors</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">[</span><span class="n">color_index</span><span class="p">]]</span>
+
+        <span class="n">previous_guard</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_guard</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_guard</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">setTrackbarPos</span><span class="p">(</span><span class="n">COLOR_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="n">color_index</span><span class="p">)</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">setTrackbarPos</span><span class="p">(</span>
+                <span class="n">ENABLED_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="n">threshold</span><span class="p">.</span><span class="n">enabled</span><span class="p">))</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">setTrackbarPos</span><span class="p">(</span>
+                <span class="n">WRAP_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="n">threshold</span><span class="p">.</span><span class="n">wrap_hue</span><span class="p">))</span>
+            <span class="n">positions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">H_MIN_TRACKBAR</span><span class="p">:</span> <span class="n">threshold</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">H_MAX_TRACKBAR</span><span class="p">:</span> <span class="n">threshold</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">S_MIN_TRACKBAR</span><span class="p">:</span> <span class="n">threshold</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">S_MAX_TRACKBAR</span><span class="p">:</span> <span class="n">threshold</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">V_MIN_TRACKBAR</span><span class="p">:</span> <span class="n">threshold</span><span class="p">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                <span class="n">V_MAX_TRACKBAR</span><span class="p">:</span> <span class="n">threshold</span><span class="p">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                <span class="n">AREA_TRACKBAR</span><span class="p">:</span> <span class="nf">min</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="n">min_area</span> <span class="o">//</span> <span class="mi">100</span><span class="p">)),</span>
+                <span class="n">MORPH_TRACKBAR</span><span class="p">:</span> <span class="nf">min</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="n">morph_kernel</span><span class="p">)),</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">.</span><span class="nf">items</span><span class="p">():</span>
+                <span class="n">cv2</span><span class="p">.</span><span class="nf">setTrackbarPos</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_guard</span> <span class="o">=</span> <span class="n">previous_guard</span>
+</code></pre></div></div>
+
+<p>这个方法用于启动、切换颜色或加载配置后，把对象中的数值显示到滑块上。</p>
+
+<ol>
+  <li>确定颜色下标并限制范围。</li>
+  <li>读取该颜色的 <code class="language-plaintext highlighter-rouge">ColorThreshold</code>。</li>
+  <li>临时把 <code class="language-plaintext highlighter-rouge">_guard</code> 设为 <code class="language-plaintext highlighter-rouge">True</code>，防止 <code class="language-plaintext highlighter-rouge">setTrackbarPos()</code> 触发的回调反过来修改配置。</li>
+  <li>设置启用、环绕、H/S/V 和全局参数。</li>
+  <li>在 <code class="language-plaintext highlighter-rouge">finally</code> 中恢复之前的 <code class="language-plaintext highlighter-rouge">_guard</code> 状态。</li>
+</ol>
+
+<p>面积使用 <code class="language-plaintext highlighter-rouge">min_area // 100</code> 显示，只能精确表示 100 的整数倍。
+例如 <code class="language-plaintext highlighter-rouge">min_area=450</code> 会显示为 <code class="language-plaintext highlighter-rouge">4</code>；同步本身不修改配置，但之后编辑滑块并写回时会按 <code class="language-plaintext highlighter-rouge">400</code> 保存。</p>
+
+<h3 id="7-set_config切换配置对象">7. set_config()：切换配置对象</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">set_config</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">HSVConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Switch the panel to a new configuration object.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_color_names</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">config</span><span class="p">.</span><span class="n">colors</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">setTrackbarMax</span><span class="p">(</span>
+            <span class="n">COLOR_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">,</span>
+            <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">sync_from_config</span><span class="p">(</span><span class="nf">min</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_current_color_index</span><span class="p">,</span>
+                                  <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<p>加载新的配置后，需要重新绑定 <code class="language-plaintext highlighter-rouge">_config</code>，更新颜色列表与颜色滑块最大值，
+再显示当前颜色的参数。原下标超出新颜色列表时会被限制在有效范围内。</p>
+
+<h3 id="8-_on_trackbar滑块--配置">8. _on_trackbar()：滑块 → 配置</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_on_trackbar</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Read all controls and update the configuration.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_guard</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">index</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">COLOR_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">))</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">!=</span> <span class="n">self</span><span class="p">.</span><span class="n">_current_color_index</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_current_color_index</span> <span class="o">=</span> <span class="n">index</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">sync_from_config</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_notify</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="n">threshold</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="n">colors</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">_color_names</span><span class="p">[</span><span class="n">index</span><span class="p">]]</span>
+        <span class="n">lower</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nf">int</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">H_MIN_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">)),</span>
+            <span class="nf">int</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">S_MIN_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">)),</span>
+            <span class="nf">int</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">V_MIN_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">)),</span>
+        <span class="p">]</span>
+        <span class="n">upper</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nf">int</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">H_MAX_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">)),</span>
+            <span class="nf">int</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">S_MAX_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">)),</span>
+            <span class="nf">int</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">V_MAX_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">)),</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">lower</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">upper</span><span class="p">[</span><span class="n">channel</span><span class="p">]:</span>
+                <span class="n">upper</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span> <span class="o">=</span> <span class="n">lower</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span>
+
+        <span class="n">threshold</span><span class="p">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="nf">bool</span><span class="p">(</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">ENABLED_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">))</span>
+        <span class="n">threshold</span><span class="p">.</span><span class="n">wrap_hue</span> <span class="o">=</span> <span class="nf">bool</span><span class="p">(</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">WRAP_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">))</span>
+        <span class="n">threshold</span><span class="p">.</span><span class="n">lower</span> <span class="o">=</span> <span class="p">(</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lower</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">threshold</span><span class="p">.</span><span class="n">upper</span> <span class="o">=</span> <span class="p">(</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">upper</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">upper</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="n">min_area</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">AREA_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="n">morph_kernel</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">getTrackbarPos</span><span class="p">(</span><span class="n">MORPH_TRACKBAR</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">window_name</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_config</span><span class="p">.</span><span class="nf">validate</span><span class="p">()</span>
+        <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">sync_from_config</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">_notify</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h4 id="切换颜色">切换颜色</h4>
+
+<p>先检查 <code class="language-plaintext highlighter-rouge">_guard</code> 和颜色列表。如果颜色选择发生变化，直接把新颜色的配置同步到控件，
+通知调用者后返回，避免把上一个颜色的滑块数值写进新颜色。</p>
+
+<h4 id="修改阈值">修改阈值</h4>
+
+<p>选中颜色不变时，读取 H/S/V 的上下限。
+如果某个下限大于上限，就把上限提高到相同值，保证 <code class="language-plaintext highlighter-rouge">lower &lt;= upper</code>。
+例如 H 下限从 <code class="language-plaintext highlighter-rouge">10</code> 拖到 <code class="language-plaintext highlighter-rouge">20</code>、上限仍是 <code class="language-plaintext highlighter-rouge">15</code> 时，上限会一起变成 <code class="language-plaintext highlighter-rouge">20</code>。</p>
+
+<p>然后写入启用开关、环绕开关和全局面积/形态学参数，调用 <code class="language-plaintext highlighter-rouge">validate()</code>。
+校验成功后再同步控件并通知；失败时直接返回，当前实现没有额外的回滚逻辑。</p>
+
+<h3 id="9-_notify通知配置已改变">9. _notify()：通知配置已改变</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_notify</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Invoke the optional change callback.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">_on_change</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>调用者传入 <code class="language-plaintext highlighter-rouge">on_change</code> 时才执行通知。
+检测器如果持有同一个 <code class="language-plaintext highlighter-rouge">HSVConfig</code> 对象，下次检测就会读取修改后的字段；
+如果替换了整个配置对象，则还需要同步调用检测器的 <code class="language-plaintext highlighter-rouge">set_config()</code>。</p>
+
+<blockquote>
+  <p>自此，gui.py 的中文调参面板部分结束。</p>
+</blockquote>
+
+<h2 id="检测成果">检测成果</h2>
+
+<p>下面的独立示例不依赖 ROS，拖动滑块后会打印当前颜色的配置。
+先点击 OpenCV 窗口，再按 <code class="language-plaintext highlighter-rouge">q</code> 或 <code class="language-plaintext highlighter-rouge">Esc</code> 退出；示例没有实现保存/加载快捷键。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> <span class="s2">"</span><span class="nv">$WS</span><span class="s2">"</span>
+<span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"src/Mvc_sorting"</span> python3 - <span class="o">&lt;&lt;</span><span class="sh">'</span><span class="no">PY</span><span class="sh">'
+import cv2
+from Mvc_sorting.gui import HSVTrackbarPanel
+from Mvc_sorting.hsv_config import HSVConfig
+from Mvc_sorting.visualization import gui_is_available
+
+if not gui_is_available():
+    print('没有可用显示环境，跳过 GUI 验收。')
+else:
+    config = HSVConfig.default()
+    def on_change():
+        name = panel.current_color_name
+        print(name, config.colors[name].to_dict(), 'min_area:', config.min_area)
+    panel = HSVTrackbarPanel('HSV Controls', config, on_change=on_change)
+    print('初始颜色:', panel.current_color_name)
+    try:
+        while True:
+            key = cv2.waitKey(30) &amp; 0xFF
+            if key in (27, ord('q')):
+                break
+            if cv2.getWindowProperty('HSV Controls', cv2.WND_PROP_VISIBLE) &lt; 1:
+                break
+    finally:
+        cv2.destroyAllWindows()
+</span><span class="no">PY
+</span></code></pre></div></div>
+
+<p>预期：初始颜色为 <code class="language-plaintext highlighter-rouge">red</code>；切换到 <code class="language-plaintext highlighter-rouge">3</code> 时显示黄色配置；
+拖动下限超过上限时，上限自动跟随；面积滑块为 <code class="language-plaintext highlighter-rouge">5</code> 时，打印 <code class="language-plaintext highlighter-rouge">min_area: 500</code>。
+无显示环境时仅输出跳过提示，不代表已通过桌面交互验收。</p>
+
+<hr />
+</div>
+    <div class="tutorial-edit"><a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/md/%E4%BA%94.%E4%B8%AD%E6%96%87%E8%B0%83%E5%8F%82%E9%9D%A2%E6%9D%BF%EF%BC%9Agui.py.md" target="_blank" rel="noopener">在 GitHub 查看原文 ↗</a></div>
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/machine-vision/04-visualization/"><span>← 上一章</span><strong>检测结果可视化</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/machine-vision/06-image-sources/"><span>下一章 →</span><strong>合成图像与测试场景</strong></a>
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

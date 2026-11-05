@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    附录：勘误与速查 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS2 基础教程</div>
+    <p class="tutorial-course-subtitle">ROS2基础 · ROS2实战 · 巡游小车实战</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2基础</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/README/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程导读</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/01-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>创建工作空间</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A4%BA%E4%BE%8B/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>多线程示例</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/03-%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>话题通信</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/04-%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%8F%82%E6%95%B0/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>服务和参数</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/05-TF%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>TF 坐标变换</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/06-%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B7%A5%E5%85%B7/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>可视化与数据工具</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>仿真与导航</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/07B-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%93%8D%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>仿真与导航实操手册</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/ROS2-bash/%E9%99%84%E5%BD%95-%E5%8B%98%E8%AF%AF%E4%B8%8E%E9%80%9F%E6%9F%A5/" aria-current="page">
+            <span class="tutorial-chapter-number">09</span>
+            <span>附录：勘误与速查</span>
+          </a>
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">ROS2实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/ROS2%E5%AE%9E%E6%88%98%E9%83%A8%E5%88%86%E8%AF%A6%E7%BB%86%E8%AE%B0%E5%BD%95/">
+            <span class="tutorial-chapter-number">10</span>
+            <span>ROS2 实战：海龟案例与通信练习</span>
+          </a>
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">巡游小车实战</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/ROS2-bash/%E5%B7%A1%E6%B8%B8%E5%B0%8F%E8%BD%A6%E4%BB%BF%E7%9C%9F-%E4%BB%8E%E9%9B%B6%E5%A4%8D%E5%88%BB%E6%89%8B%E5%86%8C/">
+            <span class="tutorial-chapter-number">11</span>
+            <span>巡游小车实战：从零复刻</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/ROS2-bash/README/">ROS2 基础教程</a><span>/</span>
+      <span>ROS2基础</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS2 基础教程 · 第 9 章</div>
+      <h1>附录：勘误与速查</h1>
+      <p>汇总常见错误与可复制的 ROS2 命令。</p>
+    </header>
+    <div class="post-content tutorial-content"><!-- nav -->
+<blockquote>
+  <p>📖 <a href="/tutorials/ROS2-bash/README/">ROS 2 学习随笔</a> ｜ ⬅️ 上一章：<a href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">七、仿真与导航</a> ｜ ➡️ 已是最后一章</p>
+</blockquote>
+
+<h2 id="a-勘误清单">A. 勘误清单</h2>
+
+<h3 id="a1-会直接导致报错的问题14-处均已在正文修正">A.1 会直接导致报错的问题（14 处，均已在正文修正）</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>位置</th>
+      <th>原文</th>
+      <th>修正</th>
+      <th>不修的后果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>人脸检测服务端</td>
+      <td><code class="language-plaintext highlighter-rouge">self.get_patamete(...)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self.get_parameter(...)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">AttributeError</code>，节点起不来</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>第一个 Qt 界面</td>
+      <td><code class="language-plaintext highlighter-rouge">label.setText = ('Hello Qt!')</code></td>
+      <td><code class="language-plaintext highlighter-rouge">label.setText('Hello Qt!')</code></td>
+      <td>方法被覆盖成字符串，界面空白</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>第一个 Qt 界面</td>
+      <td><code class="language-plaintext highlighter-rouge">from pyQt5.QtWidgets</code></td>
+      <td><code class="language-plaintext highlighter-rouge">from PyQt5.QtWidgets</code></td>
+      <td>Linux 下 <code class="language-plaintext highlighter-rouge">ModuleNotFoundError</code></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>CMakeLists.txt</td>
+      <td><code class="language-plaintext highlighter-rouge">find_package(ament_camke ...)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ament_cmake</code></td>
+      <td>CMake 配置失败</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Patrol.srv</td>
+      <td><code class="language-plaintext highlighter-rouge">int8 FALL = 0</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int8 FAIL = 0</code></td>
+      <td>代码用 <code class="language-plaintext highlighter-rouge">Patrol.Response.FAIL</code> → <code class="language-plaintext highlighter-rouge">AttributeError</code></td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>demo.launch.py</td>
+      <td><code class="language-plaintext highlighter-rouge">package='demo_python_service1'</code></td>
+      <td><code class="language-plaintext highlighter-rouge">demo_python_service</code></td>
+      <td>launch 找不到包</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>加载参数文件</td>
+      <td><code class="language-plaintext highlighter-rouge">--ros-arg --params-file</code></td>
+      <td><code class="language-plaintext highlighter-rouge">--ros-args --params-file</code></td>
+      <td>参数不生效</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>创建发布包</td>
+      <td><code class="language-plaintext highlighter-rouge">--dependencies ... status_interface</code></td>
+      <td><code class="language-plaintext highlighter-rouge">status_interfaces</code></td>
+      <td>依赖解析失败</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>验证接口</td>
+      <td><code class="language-plaintext highlighter-rouge">chapt4_interface/srv/...</code></td>
+      <td><code class="language-plaintext highlighter-rouge">chapt4_interfaces</code></td>
+      <td>查不到接口</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>SystemStatus.msg</td>
+      <td><code class="language-plaintext highlighter-rouge">float32 cup_percent</code></td>
+      <td><code class="language-plaintext highlighter-rouge">float32 cpu_percent</code></td>
+      <td>与代码 <code class="language-plaintext highlighter-rouge">msg.cpu_percent</code> 不匹配</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>接口文件名</td>
+      <td><code class="language-plaintext highlighter-rouge">SyStemStatus.msg</code></td>
+      <td><code class="language-plaintext highlighter-rouge">SystemStatus.msg</code></td>
+      <td>与消息名大小写不一致</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>命令行</td>
+      <td><code class="language-plaintext highlighter-rouge">ros topic pub</code> / <code class="language-plaintext highlighter-rouge">ros topic echo</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ros2 topic ...</code></td>
+      <td>命令不存在（<code class="language-plaintext highlighter-rouge">ros</code> 是 ROS 1）</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>话题名</td>
+      <td><code class="language-plaintext highlighter-rouge">/tuerle1/cmd_vel</code>、<code class="language-plaintext highlighter-rouge">/turtles1/cmd_vel</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/turtle1/cmd_vel</code></td>
+      <td>话题不存在</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>第一节注释</td>
+      <td><code class="language-plaintext highlighter-rouge">rclpy.init() # 初始化节点</code></td>
+      <td>初始化 rclpy 客户端库</td>
+      <td>概念混淆，与 <code class="language-plaintext highlighter-rouge">Node()</code> 分不清</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="a2-不会报错但建议改进的地方">A.2 不会报错但建议改进的地方</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>位置</th>
+      <th>问题</th>
+      <th>建议</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Patrol 客户端</td>
+      <td>在定时器回调里用 <code class="language-plaintext highlighter-rouge">while</code> 阻塞等 <code class="language-plaintext highlighter-rouge">wait_for_service</code></td>
+      <td>单线程 executor 下会卡死整个节点，改用 <code class="language-plaintext highlighter-rouge">service_is_ready()</code> 非阻塞检查</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Patrol 客户端/服务端</td>
+      <td>客户端随机 <code class="language-plaintext highlighter-rouge">0~14</code>，服务端限制 <code class="language-plaintext highlighter-rouge">&lt; 12.0</code>，画布实际 <code class="language-plaintext highlighter-rouge">~11.09</code></td>
+      <td>范围对齐，如 <code class="language-plaintext highlighter-rouge">randint(1, 11)</code></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>小说朗读节点</td>
+      <td><code class="language-plaintext highlighter-rouge">import espeakng</code> 易装错包</td>
+      <td>正确的 pip 包名是 <strong><code class="language-plaintext highlighter-rouge">py-espeak-ng</code></strong>，且需系统装 <code class="language-plaintext highlighter-rouge">espeak-ng</code></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>小说朗读节点</td>
+      <td>线程没加 <code class="language-plaintext highlighter-rouge">daemon=True</code></td>
+      <td>退出时可能卡住，建议加上</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>小说朗读节点</td>
+      <td>方法名 <code class="language-plaintext highlighter-rouge">speake_thread</code> 拼写错误</td>
+      <td>改为 <code class="language-plaintext highlighter-rouge">speak_thread</code></td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>多个示例</td>
+      <td>缺少 <code class="language-plaintext highlighter-rouge">if __name__ == '__main__': main()</code></td>
+      <td>无法直接 <code class="language-plaintext highlighter-rouge">python xxx.py</code> 调试</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>全文</td>
+      <td>包名在 4 个名字间跳来跳去</td>
+      <td>统一包名，或明确标注”本示例用 xxx 包”</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>人脸检测</td>
+      <td><code class="language-plaintext highlighter-rouge">cv2_to_imgmsg(self.image)</code> 未指定 encoding</td>
+      <td>显式写 <code class="language-plaintext highlighter-rouge">encoding='bgr8'</code>，避免颜色通道错乱</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>人脸检测</td>
+      <td><code class="language-plaintext highlighter-rouge">resource/</code> 图片未在 <code class="language-plaintext highlighter-rouge">setup.py</code> 登记</td>
+      <td>加 <code class="language-plaintext highlighter-rouge">data_files</code> 条目，否则 install 后找不到图</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>类名</td>
+      <td><code class="language-plaintext highlighter-rouge">TurtleCricleNode</code> / <code class="language-plaintext highlighter-rouge">turtleCricle_publisher</code> 拼写错误</td>
+      <td>改为 <code class="language-plaintext highlighter-rouge">Circle</code>（前后一致所以能跑，但会误导）</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>Patrol 客户端</td>
+      <td><code class="language-plaintext highlighter-rouge">random.seed(time.time())</code></td>
+      <td>多余，Python 默认已自动播种</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>SystemStatus.msg</td>
+      <td>内存/流量用 <code class="language-plaintext highlighter-rouge">float32</code> 存 MB</td>
+      <td>建议改用 <code class="language-plaintext highlighter-rouge">uint64</code> 直接存字节，免换算免精度顾虑</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>服务概念</td>
+      <td>“多种通信方式都是话题通信的变种”</td>
+      <td>实现层对，但话题/服务/动作语义不同，建议分开理解</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>接口设计</td>
+      <td>FaceDetector 用 4 个并行数组传人脸位置</td>
+      <td>字段一多容易下标错位，建议定义独立的 <code class="language-plaintext highlighter-rouge">.msg</code> 类型</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="a3-新增-tf-代码章节中的问题均已在正文修正">A.3 新增 TF 代码章节中的问题（均已在正文修正）</h3>
+
+<p><strong>会直接阻塞的问题：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>位置</th>
+      <th>问题</th>
+      <th>后果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><code class="language-plaintext highlighter-rouge">setup.py</code></td>
+      <td>用了 <code class="language-plaintext highlighter-rouge">os.path.join</code> 和 <code class="language-plaintext highlighter-rouge">glob</code>，<strong>但没补 <code class="language-plaintext highlighter-rouge">import os</code> / <code class="language-plaintext highlighter-rouge">from glob import glob</code></strong></td>
+      <td><code class="language-plaintext highlighter-rouge">colcon build</code> 直接失败：<code class="language-plaintext highlighter-rouge">NameError: name 'os' is not defined</code>（本机实测复现）</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>Jazzy 用 <code class="language-plaintext highlighter-rouge">ros2 pkg create</code> 生成的 <code class="language-plaintext highlighter-rouge">setup.py</code> 开头<strong>只有</strong> <code class="language-plaintext highlighter-rouge">from setuptools import find_packages, setup</code>——<strong>没有</strong> <code class="language-plaintext highlighter-rouge">os</code> 和 <code class="language-plaintext highlighter-rouge">glob</code>。这是很容易漏的一步。</p>
+</blockquote>
+
+<p><strong>不会报错但会误导：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>位置</th>
+      <th>问题</th>
+      <th>建议</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2</td>
+      <td>launch 目录名</td>
+      <td><code class="language-plaintext highlighter-rouge">lanch/demo_tf.launch.py</code></td>
+      <td>改为 <code class="language-plaintext highlighter-rouge">launch/</code>（拼写错误）</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><code class="language-plaintext highlighter-rouge">tf_listener.py</code></td>
+      <td>变量名 <code class="language-plaintext highlighter-rouge">tranform</code>（少了 <code class="language-plaintext highlighter-rouge">s</code>）</td>
+      <td>改为 <code class="language-plaintext highlighter-rouge">transform</code>（前后一致所以能跑，但会误导）</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><code class="language-plaintext highlighter-rouge">tf_listener.py</code></td>
+      <td>缺 <code class="language-plaintext highlighter-rouge">if __name__ == '__main__': main()</code></td>
+      <td>补上，与另外两个节点保持一致</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>章节标题</td>
+      <td><code class="language-plaintext highlighter-rouge">### python中的坐标转化</code> 没编号</td>
+      <td>改为 <code class="language-plaintext highlighter-rouge">### 8、Python 代码中的坐标变换</code>，与该章其余小节（1~7）统一</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>依赖说明</td>
+      <td><code class="language-plaintext highlighter-rouge">&gt; 安装依赖</code> 引用块后直接跟代码块，缺空行</td>
+      <td>已整理为独立小节</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>已实测确认正确的部分</strong>（无需改动）：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>项</th>
+      <th>验证结果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">StaticTransformBroadcaster(node)</code></td>
+      <td>✓ 签名匹配</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TransformBroadcaster(node)</code></td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Buffer()</code> / <code class="language-plaintext highlighter-rouge">TransformListener(buffer, node)</code></td>
+      <td>✓ 能跑（建议改为 <code class="language-plaintext highlighter-rouge">Buffer(node=self)</code>）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lookup_transform(target, source, time, timeout)</code> 参数顺序</td>
+      <td>✓ 正确</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rclpy.time.Time(seconds=0)</code> 表示”最新可用变换”</td>
+      <td>✓ 正确用法</td>
+    </tr>
+    <tr>
+      <td>变换链最终结果 <code class="language-plaintext highlighter-rouge">(0.7, 0.3, 0.1)</code> / <code class="language-plaintext highlighter-rouge">(π, 0, 0)</code></td>
+      <td>✓ 与理论值完全一致</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h3 id="a4-新增仿真与导航章节中的问题均已在正文修正">A.4 新增「仿真与导航」章节中的问题（均已在正文修正）</h3>
+
+<p><strong>会直接阻塞的问题</strong>（实测报错原文见<a href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">第七章</a>对应小节）：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>位置</th>
+      <th>问题</th>
+      <th>后果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><code class="language-plaintext highlighter-rouge">first_robot.urdf</code></td>
+      <td><code class="language-plaintext highlighter-rouge">imu_link</code> 漏写 <code class="language-plaintext highlighter-rouge">&lt;/link&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">XML_ERROR_MISMATCHED_ELEMENT</code>，<code class="language-plaintext highlighter-rouge">check_urdf</code> 直接失败</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><code class="language-plaintext highlighter-rouge">imu.urdf.xacro</code></td>
+      <td>link 名 <code class="language-plaintext highlighter-rouge">imu_base</code>，joint 的 child 写 <code class="language-plaintext highlighter-rouge">imu_link</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Failed to build tree: child link [imu_link] of joint [imu_joint] not found</code></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><code class="language-plaintext highlighter-rouge">camera.urdf.xacro</code></td>
+      <td>宏参数名 <code class="language-plaintext highlighter-rouge">parame="xyz"</code></td>
+      <td><code class="language-plaintext highlighter-rouge">xacro: Invalid parameter "xyz"</code></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><code class="language-plaintext highlighter-rouge">display_robot.launch.py</code></td>
+      <td><code class="language-plaintext highlighter-rouge">from ament_index_python.package import ...</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ModuleNotFoundError: No module named 'ament_index_python.package'</code></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><code class="language-plaintext highlighter-rouge">display_robot.launch.py</code></td>
+      <td><code class="language-plaintext highlighter-rouge">DeclarelaunchArgument</code></td>
+      <td><code class="language-plaintext highlighter-rouge">AttributeError</code>（应为 <code class="language-plaintext highlighter-rouge">DeclareLaunchArgument</code>）</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><code class="language-plaintext highlighter-rouge">display_robot.launch.py</code></td>
+      <td><code class="language-plaintext highlighter-rouge">launch_ros.parameterValue</code></td>
+      <td>属性不存在，正确写法 <code class="language-plaintext highlighter-rouge">launch_ros.parameter_descriptions.ParameterValue</code></td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><code class="language-plaintext highlighter-rouge">CMakeLists.txt</code></td>
+      <td><code class="language-plaintext highlighter-rouge">DESTIANTION</code></td>
+      <td><code class="language-plaintext highlighter-rouge">CMake Error: install DIRECTORY given no DESTINATION!</code></td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>总装文件</td>
+      <td>文件名 <code class="language-plaintext highlighter-rouge">firstbot.urdf.xacro</code>、内容含 <code class="language-plaintext highlighter-rouge">...</code> 省略号</td>
+      <td>include 不到 / 模型残缺</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td><code class="language-plaintext highlighter-rouge">common_inertia.xzcro</code></td>
+      <td>扩展名拼错</td>
+      <td>include 找不到文件</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>不会报错但会误导：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>位置</th>
+      <th>问题</th>
+      <th>建议</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>10</td>
+      <td><code class="language-plaintext highlighter-rouge">base.urdf.xacro</code></td>
+      <td>collision 里 <code class="language-plaintext highlighter-rouge">radius="${length}"</code></td>
+      <td>改成 <code class="language-plaintext highlighter-rouge">${radius}</code>，否则碰撞体比车体还大</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td><code class="language-plaintext highlighter-rouge">base.urdf.xacro</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;collision&gt;</code> 里放了 <code class="language-plaintext highlighter-rouge">&lt;material&gt;</code></td>
+      <td>删除：URDF 规范里材质属于 <code class="language-plaintext highlighter-rouge">&lt;visual&gt;</code></td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td><code class="language-plaintext highlighter-rouge">wheel.urdf.xacro</code></td>
+      <td>圆柱 visual 未旋转，几何轴（z）与转轴（y）不一致</td>
+      <td>加 <code class="language-plaintext highlighter-rouge">&lt;origin rpy="1.5707963 0 0"/&gt;</code></td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td><code class="language-plaintext highlighter-rouge">wheel.urdf.xacro</code></td>
+      <td>轮宽 <code class="language-plaintext highlighter-rouge">length="0.32"</code>（32cm）比车体直径（20cm）还宽</td>
+      <td>疑为笔误，建议核对（正文保留原值）</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td><code class="language-plaintext highlighter-rouge">caster.urdf.xacro</code></td>
+      <td>fixed 关节写了 <code class="language-plaintext highlighter-rouge">&lt;axis&gt;</code></td>
+      <td>删除：fixed 没有自由度，axis 无意义</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>全文代码块</td>
+      <td>URDF 标成 <code class="language-plaintext highlighter-rouge">```html</code></td>
+      <td>改为 <code class="language-plaintext highlighter-rouge">```xml</code>（URDF 是 XML，不是 HTML）</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>实测确认正确的部分</strong>（原本看着可疑，实际没问题）：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>项</th>
+      <th>验证结果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$(find fishbot_description)</code> 写法</td>
+      <td>✓ <strong>正确</strong>。xacro 只认 <code class="language-plaintext highlighter-rouge">find/env/optenv/dirname/arg</code>；把 launch 的 <code class="language-plaintext highlighter-rouge">$(find-pkg-share ...)</code> 抄进来反而报 <code class="language-plaintext highlighter-rouge">Unknown substitution command</code></td>
+    </tr>
+    <tr>
+      <td>同一个宏文件被 include 两次</td>
+      <td>✓ 不报错（xacro 重复定义宏、后者覆盖），但没必要</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">urdf_to_graphviz &lt;urdf&gt;</code></td>
+      <td>✓ 生成 <code class="language-plaintext highlighter-rouge">.gv</code> + <code class="language-plaintext highlighter-rouge">.pdf</code>；指定输出名是<strong>第二个位置参数</strong>，不是 <code class="language-plaintext highlighter-rouge">-o</code></td>
+    </tr>
+    <tr>
+      <td>完整模型 <code class="language-plaintext highlighter-rouge">xacro</code> 展开 + <code class="language-plaintext highlighter-rouge">check_urdf</code></td>
+      <td>✓ 解析通过，TF 结构为”1 个根 link + 7 个直接子 link”</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">display_robot.launch.py</code></td>
+      <td>✓ <code class="language-plaintext highlighter-rouge">ros2 launch ... --show-args</code> 正常列出 <code class="language-plaintext highlighter-rouge">model</code> 参数</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="a5-新增仿真与导航部分的坑gazebo-harmonic--ros2_control--nav2">A.5 新增「仿真与导航」部分的坑（Gazebo Harmonic / ros2_control / Nav2）</h3>
+
+<blockquote>
+  <p>第 9 节的仿真命令已在<strong>本机实测</strong>（Ubuntu 24.04 + ROS 2 Jazzy + Gazebo Harmonic 8.15.0）；
+<code class="language-plaintext highlighter-rouge">gz_ros2_control</code>、Nav2、slam_toolbox 本机<strong>未安装</strong>，按官方文档核对。
+完整清单见<a href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">第七章</a>第 16.2 节，这里只留最常撞上的。</p>
+</blockquote>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>现象</th>
+      <th>原因</th>
+      <th>正确做法</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><code class="language-plaintext highlighter-rouge">gazebo：未找到命令</code></td>
+      <td>Gazebo Classic 已 EOL，24.04 没有这个包</td>
+      <td>改用 <code class="language-plaintext highlighter-rouge">gz sim</code>，并先 <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><code class="language-plaintext highlighter-rouge">gz sim</code> 像没装（只有 help/sdf）</td>
+      <td>这个终端没 source ROS，<code class="language-plaintext highlighter-rouge">GZ_CONFIG_PATH</code> 不全</td>
+      <td>source 后用 <code class="language-plaintext highlighter-rouge">gz --commands</code> 自查</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>模型进仿真了，ROS 里没话题</td>
+      <td>Harmonic 不再往仿真器塞 ROS 插件</td>
+      <td>起 <code class="language-plaintext highlighter-rouge">ros_gz_bridge/parameter_bridge</code></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>桥起了但数据不动</td>
+      <td>方向符写反</td>
+      <td><code class="language-plaintext highlighter-rouge">[</code> = gz→ROS，<code class="language-plaintext highlighter-rouge">]</code> = ROS→gz；<strong>写反不报错</strong></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>有话题但 RViz 没坐标系</td>
+      <td>TF 桥过来是 <code class="language-plaintext highlighter-rouge">/model/&lt;名&gt;/tf</code></td>
+      <td>用 <code class="language-plaintext highlighter-rouge">remappings</code> 映射到 <code class="language-plaintext highlighter-rouge">/tf</code></td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>里程计差一倍</td>
+      <td>照抄了 Classic 的 <code class="language-plaintext highlighter-rouge">wheel_diameter</code></td>
+      <td>Harmonic 用 <code class="language-plaintext highlighter-rouge">wheel_radius</code>（半径）</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>相机 / 雷达无数据</td>
+      <td>世界没挂 <code class="language-plaintext highlighter-rouge">Sensors</code> 插件</td>
+      <td>加 <code class="language-plaintext highlighter-rouge">gz-sim-sensors-system</code> + <code class="language-plaintext highlighter-rouge">ogre2</code></td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>IMU 无数据</td>
+      <td>世界没挂 IMU 插件</td>
+      <td>加 <code class="language-plaintext highlighter-rouge">gz-sim-imu-system</code></td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>机器人走不直</td>
+      <td>万向轮摩擦没设 0</td>
+      <td>主动轮 <code class="language-plaintext highlighter-rouge">mu1/mu2=20</code>，万向轮 <code class="language-plaintext highlighter-rouge">0</code></td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>相机方向不对</td>
+      <td>缺光学坐标系</td>
+      <td>加 <code class="language-plaintext highlighter-rouge">camera_optical_link</code>（<code class="language-plaintext highlighter-rouge">rpy="-1.5708 0 -1.5708"</code>）</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>差速插件与 ros2_control 打架</td>
+      <td>两者抢同一批关节</td>
+      <td>用 ros2_control 时注释掉差速插件宏</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td><code class="language-plaintext highlighter-rouge">gz_ros2_control</code> 报找不到库</td>
+      <td>照抄了 Classic 的插件名</td>
+      <td><code class="language-plaintext highlighter-rouge">gz_ros2_control/GazeboSimSystem</code> + <code class="language-plaintext highlighter-rouge">libgz_ros2_control-system.so</code></td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>RViz 里轮子变白</td>
+      <td>缺 <code class="language-plaintext highlighter-rouge">joint_state_broadcaster</code> 的 TF</td>
+      <td>加载并激活该控制器</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>控制器激活失败</td>
+      <td>launch Action 并行抢接口</td>
+      <td><code class="language-plaintext highlighter-rouge">RegisterEventHandler</code>+<code class="language-plaintext highlighter-rouge">OnProcessExit</code> 串行化</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>Nav2 一直报 TF 错误</td>
+      <td>没给初始位姿</td>
+      <td>RViz <code class="language-plaintext highlighter-rouge">2D Pose Estimate</code> 或发 <code class="language-plaintext highlighter-rouge">/initialpose</code></td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>窄道过不去/撞墙</td>
+      <td><code class="language-plaintext highlighter-rouge">robot_radius</code> 与模型不符</td>
+      <td>填建模半径（本项目 0.12）</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>地图上”走错位置”</td>
+      <td>地图 yaml 的 <code class="language-plaintext highlighter-rouge">resolution</code>/<code class="language-plaintext highlighter-rouge">origin</code> 被手改坏</td>
+      <td>用 <code class="language-plaintext highlighter-rouge">map_saver_cli</code> 生成</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="b-常用命令速查">B. 常用命令速查</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ── 包与构建 ──────────────────────────────</span>
+ros2 pkg create &lt;包名&gt; <span class="nt">--build-type</span> ament_python <span class="nt">--dependencies</span> rclpy <span class="nt">--license</span> Apache-2.0
+colcon build <span class="nt">--symlink-install</span>      <span class="c"># 调试期推荐，改 Python 代码免重编译</span>
+<span class="nb">source install</span>/setup.bash           <span class="c"># 每个新终端都要执行</span>
+
+<span class="c"># ── 节点 ─────────────────────────────────</span>
+ros2 node list
+ros2 node info /节点名
+ros2 run &lt;包名&gt; &lt;可执行名&gt;
+ros2 launch &lt;包名&gt; &lt;xxx.launch.py&gt;
+
+<span class="c"># ── 话题 ─────────────────────────────────</span>
+ros2 topic list <span class="nt">-t</span>                  <span class="c"># -t 显示消息类型（用于反推 import）</span>
+ros2 topic info /话题名 <span class="nt">--verbose</span>    <span class="c"># --verbose 看 QoS，排查"收不到消息"</span>
+ros2 topic <span class="nb">echo</span> /话题名
+ros2 topic hz /话题名               <span class="c"># 实际发布频率</span>
+ros2 topic pub /话题名 类型 <span class="s2">"{...}"</span>  <span class="c"># 默认 1Hz 持续发布，--once 只发一次</span>
+
+<span class="c"># ── 服务 ─────────────────────────────────</span>
+ros2 service list <span class="nt">-t</span>
+ros2 service call /服务名 类型 <span class="s2">"{...}"</span>
+ros2 interface show &lt;包名&gt;/srv/&lt;名字&gt;   <span class="c"># msg 则换成 msg</span>
+
+<span class="c"># ── 参数 ─────────────────────────────────</span>
+ros2 param list
+ros2 param get /节点名 参数名
+ros2 param <span class="nb">set</span> /节点名 参数名 值
+ros2 param describe /节点名 参数名
+ros2 param dump /节点名 <span class="o">&gt;</span> params.yaml
+ros2 run &lt;包名&gt; &lt;可执行名&gt; <span class="nt">--ros-args</span> <span class="nt">--params-file</span> params.yaml
+ros2 run &lt;包名&gt; &lt;可执行名&gt; <span class="nt">--ros-args</span> <span class="nt">-p</span> 参数名:<span class="o">=</span>值    <span class="c"># 注意是 :=</span>
+
+<span class="c"># ── TF 坐标变换 ───────────────────────────</span>
+ros2 run tf2_ros static_transform_publisher <span class="nt">--x</span> 0.1 <span class="nt">--z</span> 0.2 <span class="se">\</span>
+  <span class="nt">--frame-id</span> base_link <span class="nt">--child-frame-id</span> base_laser   <span class="c"># 发布静态变换（注意 --）</span>
+ros2 run tf2_ros tf2_echo base_link base_laser       <span class="c"># 查询两坐标系关系</span>
+ros2 topic <span class="nb">echo</span> /tf_static                           <span class="c"># 静态变换原始消息</span>
+ros2 topic info /tf_static <span class="nt">--verbose</span>                 <span class="c"># 看 Durability: TRANSIENT_LOCAL</span>
+ros2 run tf2_tools view_frames                       <span class="c"># 生成坐标系树 PDF（落在当前目录）</span>
+ros2 run tf2_tools view_frames <span class="nt">-o</span> ~/tf图/frames       <span class="c"># 指定输出（不带扩展名）</span>
+dot <span class="nt">-Tpng</span> frames.gv <span class="nt">-o</span> frames.png                    <span class="c"># .gv 转其它格式</span>
+
+<span class="c"># ── 可视化 ───────────────────────────────</span>
+rviz2                               <span class="c"># 三维可视化（首次启动报 Fixed Frame 错是正常的）</span>
+rviz2 <span class="nt">-d</span> ~/tf_demo.rviz             <span class="c"># 加载指定的配置文件</span>
+rqt                                 <span class="c"># plugins → service → service call</span>
+rqt_graph                           <span class="c"># 看节点与话题的连接关系，排查通信问题神器</span>
+
+<span class="c"># ── 仿真 / URDF 模型 ──────────────────────</span>
+ros2 pkg create &lt;包名&gt; <span class="nt">--build-type</span> ament_cmake <span class="nt">--license</span> Apache-2.0   <span class="c"># 模型包用 cmake</span>
+xacro 模型.xacro <span class="o">&gt;</span> /tmp/model.urdf        <span class="c"># 先展开：URDF 工具不认 xacro</span>
+check_urdf /tmp/model.urdf                <span class="c"># 校验结构（失败常见于名字对不上/父子成环）</span>
+urdf_to_graphviz /tmp/model.urdf 输出名    <span class="c"># 生成 .gv + .pdf（输出名是位置参数）</span>
+ros2 launch &lt;包名&gt; display_robot.launch.py
+ros2 launch &lt;包名&gt; display_robot.launch.py <span class="nt">--show-args</span>   <span class="c"># 只列参数，不启动</span>
+ros2 topic <span class="nb">echo</span> /robot_description <span class="nt">--once</span>                <span class="c"># 确认模型参数发出来了</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-joint-state-publisher-gui</span>  <span class="c"># 滑块手调关节</span>
+
+<span class="c"># ── Gazebo Harmonic 仿真（Jazzy）──────────</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-ros-gz</span>      <span class="c"># 仿真器 + ROS 桥（gz sim 就在里面）</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash             <span class="c"># ★ 必须，否则 gz 里没有 sim 子命令</span>
+gz sim <span class="nt">--version</span> <span class="o">&amp;&amp;</span> gz <span class="nt">--commands</span>            <span class="c"># 自检</span>
+gz sim <span class="nt">-r</span> 你的世界.sdf                        <span class="c"># 启动（-s 只起服务端，不开界面）</span>
+gz topic <span class="nt">-l</span>                                  <span class="c"># ① 先看 gz 侧有没有数据</span>
+gz topic <span class="nt">-e</span> <span class="nt">-t</span> /clock <span class="nt">-n</span> 1                   <span class="c"># 仿真时间在不在走</span>
+ros2 run ros_gz_sim create <span class="nt">-world</span> default <span class="nt">-file</span> 模型.urdf <span class="nt">-name</span> fishbot <span class="nt">-z</span> 0.1   <span class="c"># 生成机器人</span>
+ros2 run ros_gz_bridge parameter_bridge <span class="se">\</span>
+  /clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock <span class="se">\</span>
+  /model/fishbot/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist <span class="se">\</span>
+  /model/fishbot/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry <span class="se">\</span>
+  /model/fishbot/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
+<span class="c">#   [ = gz→ROS    ] = ROS→gz    @ = 双向   （写反不报错，只是数据不动）</span>
+ros2 topic list | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s2">"cmd_vel|odom|scan"</span>   <span class="c"># ② 再看桥过来没有</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-teleop-twist-keyboard</span> <span class="o">&amp;&amp;</span> ros2 run teleop_twist_keyboard teleop_twist_keyboard
+
+<span class="c"># ── ros2_control ─────────────────────────</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-ros2-control</span> ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-ros2-controllers</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-gz-ros2-control</span>   <span class="c"># Harmonic 用这个（不是 gazebo-ros2-control）</span>
+ros2 control list_hardware_interfaces         <span class="c"># 看接口 [available][unclaimed]</span>
+ros2 control list_hardware_components
+ros2 control list_controller_types
+ros2 control load_controller fishbot_joint_state_broadcaster <span class="nt">--set-state</span> active
+ros2 control list_controllers
+ros2 control set_controller_state &lt;控制器&gt; inactive   <span class="c"># 卸载前先失活</span>
+ros2 control unload_controller &lt;控制器&gt;
+
+<span class="c"># ── 建图（slam_toolbox）──────────────────</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-slam-toolbox</span>
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:<span class="o">=</span>True
+ros2 topic <span class="nb">echo</span> /map <span class="nt">--once</span>                   <span class="c"># 地图在不在发</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-nav2-map-server</span>
+ros2 run nav2_map_server map_saver_cli <span class="nt">-f</span> room   <span class="c"># 生成 room.pgm + room.yaml</span>
+
+<span class="c"># ── 导航（Nav2）──────────────────────────</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-navigation2</span> ros-<span class="nv">$ROS_DISTRO</span><span class="nt">-nav2-bringup</span>
+ros2 launch fishbot_navigation2 navigation2.launch.py
+ros2 topic pub /initialpose geometry_msgs/msg/PoseWithCovarianceStamped <span class="se">\</span>
+  <span class="s2">"{header: {frame_id: map}, pose: {pose: {position: {x: 0.0, y: 0.0}, orientation: {w: 1.0}}}}"</span> <span class="nt">--once</span>
+ros2 action list | <span class="nb">grep</span> <span class="nt">-i</span> navigate           <span class="c"># /navigate_to_pose、/follow_waypoints</span>
+ros2 action send_goal /navigate_to_pose nav2_msgs/action/NavigateToPose <span class="se">\</span>
+  <span class="s2">"{pose: {header: {frame_id: map}, pose: {position: {x: 2.0, y: 2.0}, orientation: {w: 1.0}}}}"</span> <span class="nt">--feedback</span>
+ros2 run tf2_ros tf2_echo map base_footprint  <span class="c"># 查机器人在地图里的位姿</span>
+ros2 topic <span class="nb">echo</span> /cmd_vel                      <span class="c"># 看导航输出的速度指令</span>
+
+<span class="c"># ── 排查 ─────────────────────────────────</span>
+ros2 doctor                         <span class="c"># 环境体检</span>
+<span class="nb">echo</span> <span class="nv">$ROS_DOMAIN_ID</span>                 <span class="c"># 多机/多容器通信时，域 ID 必须一致</span>
+pgrep <span class="nt">-af</span> static_transform_publisher <span class="c"># 找残留的 tf 发布器</span>
+pkill <span class="nt">-f</span> static_transform_publisher  <span class="c"># 一次清干净（kill 外壳杀不掉子进程）</span>
+</code></pre></div></div>
+
+<!-- nav -->
+
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">⬅️ 上一章</th>
+      <th style="text-align: center">🏠 目录</th>
+      <th style="text-align: right">下一章 ➡️</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><a href="/tutorials/ROS2-bash/07-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA/">七、仿真与导航</a></td>
+      <td style="text-align: center"><a href="/tutorials/ROS2-bash/README/">返回目录</a></td>
+      <td style="text-align: right">—</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/ROS2-bash/07B-%E4%BB%BF%E7%9C%9F%E4%B8%8E%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%93%8D%E6%89%8B%E5%86%8C/"><span>← 上一章</span><strong>仿真与导航实操手册</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/ROS2-bash/ROS2%E5%AE%9E%E6%88%98%E9%83%A8%E5%88%86%E8%AF%A6%E7%BB%86%E8%AE%B0%E5%BD%95/"><span>下一章 →</span><strong>ROS2 实战：海龟案例与通信练习</strong></a>
+          
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

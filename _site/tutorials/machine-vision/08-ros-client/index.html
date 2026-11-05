@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    ROS 2 订阅客户端 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS 2 机器视觉实战</div>
+    <p class="tutorial-course-subtitle">从颜色检测到视觉服务</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">课程导读</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/00-overview/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程介绍与学习路线</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">基础与接口</div>
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/01-interfaces/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>接口包与消息定义</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/02-hsv-config/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>包骨架与 HSV 配置</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">纯 Python 视觉模块</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/03-color-detector/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>颜色检测与目标跟踪</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/04-visualization/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>检测结果可视化</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/05-gui/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>交互调参与控制面板</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/06-image-sources/">
+            <span class="tutorial-chapter-number">06</span>
+            <span>合成图像与测试场景</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">接入 ROS 2</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/07-ros-server/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>ROS 2 视觉服务端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/machine-vision/08-ros-client/" aria-current="page">
+            <span class="tutorial-chapter-number">08</span>
+            <span>ROS 2 订阅客户端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/09-launch-testing/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>配置、启动与测试</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    <a class="tutorial-source" href="https://github.com/VoVL773/Machine_vision-_color_sorting_system" target="_blank" rel="noopener">项目源码 ↗</a>
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/machine-vision/00-overview/">ROS 2 机器视觉实战</a><span>/</span>
+      <span>接入 ROS 2</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS 2 机器视觉实战 · 第 8 章</div>
+      <h1>ROS 2 订阅客户端</h1>
+      <p>订阅检测结果，验证机器人侧接收到的目标数据。</p>
+    </header>
+    <div class="post-content tutorial-content"><blockquote>
+  <p>上一章已经发布目标列表，这一章编写订阅端，检查机器人侧能收到哪些数据。
+客户端负责打印消息，不包含机械臂控制或像素坐标到机器人坐标的转换。</p>
+</blockquote>
+
+<h2 id="一-创建客户端并注册入口">一. 创建客户端并注册入口</h2>
+
+<p>在 <code class="language-plaintext highlighter-rouge">src/Mvc_sorting/Mvc_sorting/</code> 下创建 <code class="language-plaintext highlighter-rouge">Mvc_sorting_client.py</code>。
+使用已有的 <code class="language-plaintext highlighter-rouge">rclpy</code> 和 <code class="language-plaintext highlighter-rouge">color_sorting_interfaces</code> 依赖，不需要新增 OpenCV 或图像订阅。</p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">setup.py</code> 的 <code class="language-plaintext highlighter-rouge">console_scripts</code> 中保留 server，再追加 client：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sh">'</span><span class="s">console_scripts</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span>
+    <span class="sh">'</span><span class="s">Mvc_sorting_server = Mvc_sorting.Mvc_sorting_server:main</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">Mvc_sorting_client = Mvc_sorting.Mvc_sorting_client:main</span><span class="sh">'</span><span class="p">,</span>
+<span class="p">],</span>
+</code></pre></div></div>
+
+<h2 id="二-逐步讲解-mvc_sorting_clientpy订阅客户端">二. 逐步讲解 Mvc_sorting_client.py（订阅客户端）</h2>
+
+<h3 id="1-导入模块">1. 导入模块</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="n">json</span>
+
+<span class="kn">from</span> <span class="n">color_sorting_interfaces.msg</span> <span class="kn">import</span> <span class="n">ColorTargetArray</span>
+<span class="kn">import</span> <span class="n">rclpy</span>
+<span class="kn">from</span> <span class="n">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>模块或对象</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">json</code></td>
+      <td>将目标列表整理为 JSON 字符串</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ColorTargetArray</code></td>
+      <td>服务端发布的自定义消息类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rclpy</code>、<code class="language-plaintext highlighter-rouge">Node</code></td>
+      <td>节点初始化、订阅、日志与退出</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="2-mvcsortingclient-类初始化参数与订阅">2. MvcSortingClient 类：初始化参数与订阅</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MvcSortingClient</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">Subscribe to ColorTargetArray and print the received target list.</span><span class="sh">"""</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Declare parameters and start the subscription.</span><span class="sh">"""</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="sh">'</span><span class="s">Mvc_sorting_client</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_targets_topic</span> <span class="o">=</span> <span class="nf">str</span><span class="p">(</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">targets_topic</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">/color_targets</span><span class="sh">'</span><span class="p">).</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_max_messages</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">max_messages</span><span class="sh">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">).</span><span class="n">value</span><span class="p">))</span>
+        <span class="n">print_json_value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">declare_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">print_json</span><span class="sh">'</span><span class="p">,</span> <span class="bp">False</span><span class="p">).</span><span class="n">value</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">print_json_value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_print_json</span> <span class="o">=</span> <span class="n">print_json_value</span><span class="p">.</span><span class="nf">strip</span><span class="p">().</span><span class="nf">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="sh">'</span><span class="s">1</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">true</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">yes</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">on</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_print_json</span> <span class="o">=</span> <span class="nf">bool</span><span class="p">(</span><span class="n">print_json_value</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_message_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_subscription</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">create_subscription</span><span class="p">(</span>
+            <span class="n">ColorTargetArray</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_targets_topic</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_on_targets</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="sh">'</span><span class="s">listening for colour targets on </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_targets_topic</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>参数</th>
+      <th>默认值</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">targets_topic</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/color_targets</code></td>
+      <td>订阅的话题名，需与服务端输出一致</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">max_messages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">0</code></td>
+      <td>收到多少条消息后停止，0 表示持续运行</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">print_json</code></td>
+      <td><code class="language-plaintext highlighter-rouge">False</code></td>
+      <td>是否把每条消息的内容整理为 JSON</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">max_messages</code> 被限制为非负数；<code class="language-plaintext highlighter-rouge">print_json</code> 兼容布尔值和 <code class="language-plaintext highlighter-rouge">true/yes/on/1</code> 等字符串。
+订阅使用默认 QoS、队列深度 10，与服务端目标话题匹配。
+这里订阅的是目标数组，和 Best Effort 的调试图像话题是两条不同的数据链路。</p>
+
+<h3 id="3-_on_targets处理一帧目标列表">3. _on_targets()：处理一帧目标列表</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_on_targets</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">ColorTargetArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Print one received target array.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_message_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">stamp</span> <span class="o">=</span> <span class="n">message</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">stamp</span><span class="p">.</span><span class="n">sec</span> <span class="o">+</span> <span class="n">message</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">stamp</span><span class="p">.</span><span class="n">nanosec</span> <span class="o">*</span> <span class="mf">1e-9</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_print_json</span><span class="p">:</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="sh">'</span><span class="s">sequence</span><span class="sh">'</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">_message_count</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">stamp</span><span class="sh">'</span><span class="p">:</span> <span class="n">stamp</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">frame_id</span><span class="sh">'</span><span class="p">:</span> <span class="n">message</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">frame_id</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">targets</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="sh">'</span><span class="s">id</span><span class="sh">'</span><span class="p">:</span> <span class="nf">int</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="nb">id</span><span class="p">),</span>
+                        <span class="sh">'</span><span class="s">color</span><span class="sh">'</span><span class="p">:</span> <span class="n">target</span><span class="p">.</span><span class="n">color</span><span class="p">,</span>
+                        <span class="sh">'</span><span class="s">x</span><span class="sh">'</span><span class="p">:</span> <span class="nf">round</span><span class="p">(</span><span class="nf">float</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">x</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span>
+                        <span class="sh">'</span><span class="s">y</span><span class="sh">'</span><span class="p">:</span> <span class="nf">round</span><span class="p">(</span><span class="nf">float</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">y</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span>
+                        <span class="sh">'</span><span class="s">area</span><span class="sh">'</span><span class="p">:</span> <span class="nf">round</span><span class="p">(</span><span class="nf">float</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">area</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span>
+                    <span class="p">}</span>
+                    <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">message</span><span class="p">.</span><span class="n">targets</span>
+                <span class="p">],</span>
+            <span class="p">}</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="nf">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">frame </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_message_count</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">message</span><span class="p">.</span><span class="n">targets</span><span class="p">)</span><span class="si">}</span><span class="s"> target(s), </span><span class="sh">'</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">stamp=</span><span class="si">{</span><span class="n">stamp</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">, frame_id=</span><span class="si">{</span><span class="n">message</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">frame_id</span><span class="si">!r}</span><span class="sh">'</span>
+            <span class="p">]</span>
+            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">message</span><span class="p">.</span><span class="n">targets</span><span class="p">:</span>
+                <span class="n">lines</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">  id=</span><span class="si">{</span><span class="nf">int</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span><span class="si">:</span><span class="o">&gt;</span><span class="mi">3</span><span class="n">d</span><span class="si">}</span><span class="s">  </span><span class="si">{</span><span class="n">target</span><span class="p">.</span><span class="n">color</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">6</span><span class="n">s</span><span class="si">}</span><span class="s">  </span><span class="sh">'</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">x=</span><span class="si">{</span><span class="nf">float</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">x</span><span class="p">)</span><span class="si">:</span><span class="mf">8.2</span><span class="n">f</span><span class="si">}</span><span class="s">  y=</span><span class="si">{</span><span class="nf">float</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">y</span><span class="p">)</span><span class="si">:</span><span class="mf">8.2</span><span class="n">f</span><span class="si">}</span><span class="s">  </span><span class="sh">'</span>
+                    <span class="sa">f</span><span class="sh">'</span><span class="s">area=</span><span class="si">{</span><span class="nf">float</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">area</span><span class="p">)</span><span class="si">:</span><span class="mf">9.2</span><span class="n">f</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span><span class="sh">'</span><span class="se">\n</span><span class="sh">'</span> <span class="o">+</span> <span class="sh">'</span><span class="se">\n</span><span class="sh">'</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_max_messages</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">_message_count</span> <span class="o">&gt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">_max_messages</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">get_logger</span><span class="p">().</span><span class="nf">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="sh">'</span><span class="s">received max_messages=</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_max_messages</span><span class="si">}</span><span class="s">; stopping</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+                <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h4 id="1-消息计数与时间戳">1. 消息计数与时间戳</h4>
+
+<p>每收到一条数组消息，<code class="language-plaintext highlighter-rouge">_message_count</code> 加 <code class="language-plaintext highlighter-rouge">1</code>。
+它表示客户端实际收到的消息数，不是服务端的原始帧号；空数组也算一条。</p>
+
+<p>ROS 时间戳拆成秒和纳秒，这里计算 <code class="language-plaintext highlighter-rouge">sec + nanosec × 1e-9</code>，便于日志显示。
+转换成浮点数便于阅读，但不适合要求纳秒精度的时间计算。</p>
+
+<h4 id="2-json-与普通文本输出">2. JSON 与普通文本输出</h4>
+
+<p>JSON 包含本地序号、时间戳、坐标系和目标数组，坐标/面积保留两位小数。
+普通文本按目标逐行显示 ID、颜色、质心坐标和轮廓面积。</p>
+
+<p>注意：JSON 通过 ROS logger 输出，控制台通常还包含日志前缀，不能把整行直接当纯 JSON 解析。
+业务程序应直接订阅消息；需要纯 JSON 文件时，可以另外编写不带日志前缀的导出逻辑。</p>
+
+<h4 id="3-达到消息数量后退出">3. 达到消息数量后退出</h4>
+
+<p><code class="language-plaintext highlighter-rouge">max_messages &gt; 0</code> 且计数达到上限时调用 <code class="language-plaintext highlighter-rouge">rclpy.shutdown()</code>。
+没有发布者或没有收到足够消息时会继续等待，这不是按秒计时的超时功能。</p>
+
+<h3 id="4-main启动spin-与清理">4. main()：启动、spin 与清理</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Run the colour target monitor node.</span><span class="sh">"""</span>
+    <span class="n">rclpy</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="nc">MvcSortingClient</span><span class="p">()</span>
+        <span class="n">rclpy</span><span class="p">.</span><span class="nf">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">node</span><span class="p">.</span><span class="nf">destroy_node</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">rclpy</span><span class="p">.</span><span class="nf">ok</span><span class="p">():</span>
+            <span class="n">rclpy</span><span class="p">.</span><span class="nf">shutdown</span><span class="p">()</span>
+    <span class="k">return</span> <span class="mi">0</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">rclpy.init()</code> 初始化 ROS 上下文，<code class="language-plaintext highlighter-rouge">rclpy.spin(node)</code> 等待订阅回调。
+<code class="language-plaintext highlighter-rouge">Ctrl+C</code> 或达到消息上限后，在 <code class="language-plaintext highlighter-rouge">finally</code> 中销毁节点，并在上下文仍有效时执行关闭。</p>
+
+<blockquote>
+  <p>自此，Mvc_sorting_client.py 的订阅客户端部分结束。</p>
+</blockquote>
+
+<h2 id="检测成果">检测成果</h2>
+
+<p>先重新构建，确认两个入口都已安装：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> <span class="s2">"</span><span class="nv">$WS</span><span class="s2">"</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+<span class="nb">source install</span>/setup.bash
+colcon build <span class="nt">--packages-select</span> Mvc_sorting
+<span class="nb">source install</span>/setup.bash
+ros2 pkg executables Mvc_sorting
+</code></pre></div></div>
+
+<p>预期包含 <code class="language-plaintext highlighter-rouge">Mvc_sorting_server</code> 和 <code class="language-plaintext highlighter-rouge">Mvc_sorting_client</code>。
+保持上一章的合成服务端运行，在另一个加载环境的终端执行：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run Mvc_sorting Mvc_sorting_client <span class="nt">--ros-args</span>   <span class="nt">-p</span> targets_topic:<span class="o">=</span>/color_targets <span class="nt">-p</span> max_messages:<span class="o">=</span>5
+
+<span class="c"># 普通文本验收完成后，再验证 JSON 格式日志</span>
+ros2 run Mvc_sorting Mvc_sorting_client <span class="nt">--ros-args</span>   <span class="nt">-p</span> targets_topic:<span class="o">=</span>/color_targets <span class="nt">-p</span> print_json:<span class="o">=</span><span class="nb">true</span> <span class="nt">-p</span> max_messages:<span class="o">=</span>2
+</code></pre></div></div>
+
+<p>预期：稳定帧中每条消息包含 8 个目标；普通模式收到 5 条消息退出，JSON 模式收到 2 条退出。
+日志中的时间戳与 ID 以实际运行结果为准；客户端较晚启动时，序号仍从 1 开始。</p>
+
+<p>如果没有输出，依次检查服务端是否运行、话题名、两个终端是否加载相同工作区，以及 <code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code> 是否一致：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic list
+ros2 topic info /color_targets
+ros2 topic <span class="nb">echo</span> /color_targets <span class="nt">--once</span>
+</code></pre></div></div>
+
+<hr />
+</div>
+    <div class="tutorial-edit"><a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/md/%E5%85%AB.%E8%AE%A2%E9%98%85%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%9AMvc_sorting_client.py.md" target="_blank" rel="noopener">在 GitHub 查看原文 ↗</a></div>
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/machine-vision/07-ros-server/"><span>← 上一章</span><strong>ROS 2 视觉服务端</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/machine-vision/09-launch-testing/"><span>下一章 →</span><strong>配置、启动与测试</strong></a>
+          
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

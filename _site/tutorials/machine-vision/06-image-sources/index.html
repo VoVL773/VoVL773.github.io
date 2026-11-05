@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 站点图标(Favicon) -->
+  <link rel="icon" type="image/png" href="/assets/images/icon&blanner/favicon.png">
+  <link rel="shortcut icon" href="/assets/images/icon&blanner/favicon.png">
+  <title>
+    合成图像与测试场景 – VoVL的博客
+  </title>
+
+  <!-- ===== 防闪烁脚本(必须内联在 head 早期、CSS 之前)=====
+       作用:在浏览器首次绘制页面前,根据已保存的偏好设置暗色主题。
+       为什么必须内联:外链 JS 会延迟加载,会先闪一下白色再变暗;
+       内联同步脚本在首次绘制前执行,所以不会闪。 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- ===== Banner 预设图列表(由 Jekyll 处理 relative_url,兼容 baseurl)===== -->
+  <script>
+    // 预设图路径用 relative_url 处理,项目站点(baseurl 非空)时也能正确加载。
+    // theme.js 会从 window.bannerPresets 读取列表进行循环切换。
+    window.bannerPresets = [
+      '/assets/images/icon&blanner/0.jpg',
+      '/assets/images/icon&blanner/1.jpg',
+      '/assets/images/icon&blanner/2.jpg'
+    ];
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="VoVL的博客" href="/feed.xml">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=1793839202">
+  
+  <link rel="stylesheet" href="/assets/css/tutorials.css?v=1793839202">
+  
+</head>
+<body class="tutorial-page">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="/">VoVL的博客</a>
+
+    <nav class="site-nav">
+      <a href="/">首页</a>
+      <a href="/projects/">项目</a>
+      <a href="/algorithm/">算法</a>
+      <a href="/tutorials/" aria-current="page">教程</a>
+      <a href="/posts/">文章</a>
+      <a href="/about/">关于</a>
+    </nav>
+
+    <!-- 主题切换 + Banner 切换 -->
+    <div class="header-actions">
+      <button id="banner-toggle" class="banner-toggle" aria-label="切换 Banner 图片" title="切换 Banner 图片" type="button">
+        <img src="/assets/images/icons/banner.png" alt="切换 Banner">
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" type="button">
+        <img src="/assets/images/icons/moon.png" alt="切换主题">
+      </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="site-main">
+    
+
+<div class="tutorial-shell">
+  <aside class="tutorial-sidebar" aria-label="课程目录">
+    <a class="tutorial-back" href="/tutorials/">← 全部教程</a>
+    <div class="tutorial-course-name">ROS 2 机器视觉实战</div>
+    <p class="tutorial-course-subtitle">从颜色检测到视觉服务</p>
+    <details class="tutorial-chapters" open>
+      <summary>课程目录</summary>
+      <nav aria-label="章节导航">
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">课程导读</div>
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/00-overview/">
+            <span class="tutorial-chapter-number">序</span>
+            <span>课程介绍与学习路线</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">基础与接口</div>
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/01-interfaces/">
+            <span class="tutorial-chapter-number">01</span>
+            <span>接口包与消息定义</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/02-hsv-config/">
+            <span class="tutorial-chapter-number">02</span>
+            <span>包骨架与 HSV 配置</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">纯 Python 视觉模块</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/03-color-detector/">
+            <span class="tutorial-chapter-number">03</span>
+            <span>颜色检测与目标跟踪</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/04-visualization/">
+            <span class="tutorial-chapter-number">04</span>
+            <span>检测结果可视化</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/05-gui/">
+            <span class="tutorial-chapter-number">05</span>
+            <span>交互调参与控制面板</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter is-current" href="/tutorials/machine-vision/06-image-sources/" aria-current="page">
+            <span class="tutorial-chapter-number">06</span>
+            <span>合成图像与测试场景</span>
+          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+        
+        <div class="tutorial-group">
+          <div class="tutorial-group-title">接入 ROS 2</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/07-ros-server/">
+            <span class="tutorial-chapter-number">07</span>
+            <span>ROS 2 视觉服务端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/08-ros-client/">
+            <span class="tutorial-chapter-number">08</span>
+            <span>ROS 2 订阅客户端</span>
+          </a>
+          
+          
+          
+          <a class="tutorial-chapter" href="/tutorials/machine-vision/09-launch-testing/">
+            <span class="tutorial-chapter-number">09</span>
+            <span>配置、启动与测试</span>
+          </a>
+          
+          
+        </div>
+        
+      </nav>
+    </details>
+    <a class="tutorial-source" href="https://github.com/VoVL773/Machine_vision-_color_sorting_system" target="_blank" rel="noopener">项目源码 ↗</a>
+  </aside>
+
+  <article class="tutorial-article">
+    <nav class="tutorial-breadcrumb" aria-label="页面路径">
+      <a href="/tutorials/">教程</a><span>/</span>
+      <a href="/tutorials/machine-vision/00-overview/">ROS 2 机器视觉实战</a><span>/</span>
+      <span>纯 Python 视觉模块</span>
+    </nav>
+    <header class="tutorial-title-block">
+      <div class="tutorial-eyebrow">ROS 2 机器视觉实战 · 第 6 章</div>
+      <h1>合成图像与测试场景</h1>
+      <p>没有相机也能测试：生成多色移动目标与噪点，验证完整视觉流水线。</p>
+    </header>
+    <div class="post-content tutorial-content"><blockquote>
+  <p>没有相机时，用程序生成图像作为检测输入。
+合成场景包含四色各两个移动目标和随机噪点，用来验证检测、跟踪与可视化。</p>
+</blockquote>
+
+<h2 id="一-创建-image_sourcespy">一. 创建 image_sources.py</h2>
+
+<p>在 <code class="language-plaintext highlighter-rouge">src/Mvc_sorting/Mvc_sorting/</code> 下创建 <code class="language-plaintext highlighter-rouge">image_sources.py</code>。
+本章仍然只用到标准库、OpenCV 和 NumPy，无需新增 ROS 依赖。</p>
+
+<h2 id="二-逐步讲解-image_sourcespy合成测试场景">二. 逐步讲解 image_sources.py（合成测试场景）</h2>
+
+<h3 id="1-导入模块与颜色表">1. 导入模块与颜色表</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="n">math</span>
+
+<span class="kn">import</span> <span class="n">cv2</span>
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">SYNTHETIC_COLORS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">red</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+    <span class="sh">'</span><span class="s">green</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>代码</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">math</code></td>
+      <td>使用正弦、余弦生成平滑运动</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cv2</code></td>
+      <td>绘制背景、圆形目标、噪点和帧号</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">np</code></td>
+      <td>创建图像、渐变背景和随机数生成器</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SYNTHETIC_COLORS</code></td>
+      <td>定义目标的 BGR 绘制颜色</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>这里的颜色表负责生成测试图片；HSV 配置层中的阈值负责从图片中识别这些颜色。</p>
+
+<h3 id="2-syntheticscene-类管理合成画面">2. SyntheticScene 类（管理合成画面）</h3>
+
+<p>方法片段保留类内缩进，整理到文件时放在同一个类中。</p>
+
+<h4 id="初始化">初始化</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SyntheticScene</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">
+    Generate a moving multi-colour scene without a camera.
+
+    Four colours are provided with two blobs each, so the server publishes
+    eight targets. Small speckles are added to exercise morphology filtering.
+    </span><span class="sh">"""</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">640</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">480</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Create the scene with two blobs per colour.</span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="o">&lt;</span> <span class="mi">320</span> <span class="ow">or</span> <span class="n">height</span> <span class="o">&lt;</span> <span class="mi">240</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">'</span><span class="s">synthetic frame size must be at least 320x240</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_scale_x</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">width</span> <span class="o">/</span> <span class="mf">640.0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_scale_y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mf">480.0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_scale</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_scale_x</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale_y</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_rng</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="nf">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_frame_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_blobs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_make_blobs</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>参数或属性</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">width</code> / <code class="language-plaintext highlighter-rouge">height</code></td>
+      <td>输出图像宽高，默认 640×480，最小 320×240</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">seed</code></td>
+      <td>随机种子，默认 7，便于重复生成相同序列</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_scale_x</code> / <code class="language-plaintext highlighter-rouge">_scale_y</code></td>
+      <td>相对 640×480 基准画面的宽、高比例</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_scale</code></td>
+      <td>两个比例中的较小值，用于缩放半径等尺寸</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_rng</code></td>
+      <td>独立的 NumPy 随机数生成器</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_frame_index</code></td>
+      <td>已生成的帧号</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_blobs</code></td>
+      <td>保存八个目标的布局信息</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>相同尺寸和种子的新场景，按相同顺序调用 <code class="language-plaintext highlighter-rouge">read()</code> 会生成相同图像序列。
+尺寸变化会影响目标面积；过小分辨率配合较高 <code class="language-plaintext highlighter-rouge">min_area</code> 时，不一定还能检出全部目标。</p>
+
+<h3 id="3-_make_blobs设置八个目标的初始布局">3. _make_blobs()：设置八个目标的初始布局</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_make_blobs</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+        <span class="sh">"""</span><span class="s">Lay out eight blobs with non-overlapping base positions.</span><span class="sh">"""</span>
+        <span class="n">layouts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="sh">'</span><span class="s">red</span><span class="sh">'</span><span class="p">,</span> <span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">105</span><span class="p">),</span> <span class="mi">30</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">'</span><span class="s">red</span><span class="sh">'</span><span class="p">,</span> <span class="p">(</span><span class="mi">530</span><span class="p">,</span> <span class="mi">105</span><span class="p">),</span> <span class="mi">20</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">'</span><span class="s">green</span><span class="sh">'</span><span class="p">,</span> <span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">375</span><span class="p">),</span> <span class="mi">20</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">'</span><span class="s">green</span><span class="sh">'</span><span class="p">,</span> <span class="p">(</span><span class="mi">530</span><span class="p">,</span> <span class="mi">375</span><span class="p">),</span> <span class="mi">30</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">,</span> <span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">105</span><span class="p">),</span> <span class="mi">30</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">'</span><span class="s">blue</span><span class="sh">'</span><span class="p">,</span> <span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">240</span><span class="p">),</span> <span class="mi">20</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">,</span> <span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">375</span><span class="p">),</span> <span class="mi">20</span><span class="p">),</span>
+            <span class="p">(</span><span class="sh">'</span><span class="s">yellow</span><span class="sh">'</span><span class="p">,</span> <span class="p">(</span><span class="mi">530</span><span class="p">,</span> <span class="mi">240</span><span class="p">),</span> <span class="mi">30</span><span class="p">),</span>
+        <span class="p">]</span>
+        <span class="n">blobs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="p">(</span><span class="n">base_x</span><span class="p">,</span> <span class="n">base_y</span><span class="p">),</span> <span class="n">radius</span><span class="p">)</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">layouts</span><span class="p">):</span>
+            <span class="n">blobs</span><span class="p">.</span><span class="nf">append</span><span class="p">({</span>
+                <span class="sh">'</span><span class="s">color</span><span class="sh">'</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span>
+                <span class="sh">'</span><span class="s">base_x</span><span class="sh">'</span><span class="p">:</span> <span class="nf">int</span><span class="p">(</span><span class="nf">round</span><span class="p">(</span><span class="n">base_x</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale_x</span><span class="p">)),</span>
+                <span class="sh">'</span><span class="s">base_y</span><span class="sh">'</span><span class="p">:</span> <span class="nf">int</span><span class="p">(</span><span class="nf">round</span><span class="p">(</span><span class="n">base_y</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale_y</span><span class="p">)),</span>
+                <span class="sh">'</span><span class="s">radius</span><span class="sh">'</span><span class="p">:</span> <span class="nf">max</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="nf">round</span><span class="p">(</span><span class="n">radius</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale</span><span class="p">))),</span>
+                <span class="sh">'</span><span class="s">phase</span><span class="sh">'</span><span class="p">:</span> <span class="n">index</span> <span class="o">*</span> <span class="mf">0.79</span><span class="p">,</span>
+            <span class="p">})</span>
+        <span class="k">return</span> <span class="n">blobs</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">layouts</code> 为每种颜色安排两个不同半径的圆，基准位置分散在画面中，避免初始布局重叠。
+随后按图像尺寸缩放中心和半径，并给每个目标设置不同的 <code class="language-plaintext highlighter-rouge">phase</code>（相位）。</p>
+
+<p>例如第一项 <code class="language-plaintext highlighter-rouge">('red', (110, 105), 30)</code> 表示：基准图像中，一个红色圆的中心为
+<code class="language-plaintext highlighter-rouge">(110, 105)</code>、半径为 <code class="language-plaintext highlighter-rouge">30</code>。使用 1280×960 时，对应位置和半径均放大两倍。
+半径至少为 <code class="language-plaintext highlighter-rouge">8</code>，避免缩放后过小。</p>
+
+<h3 id="4-read生成下一帧-bgr-图像">4. read()：生成下一帧 BGR 图像</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Return the next synthetic BGR frame.</span><span class="sh">"""</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_frame_index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_background</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">_blobs</span><span class="p">:</span>
+            <span class="n">phase</span> <span class="o">=</span> <span class="n">blob</span><span class="p">[</span><span class="sh">'</span><span class="s">phase</span><span class="sh">'</span><span class="p">]</span>
+            <span class="n">offset_x</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span>
+                <span class="mf">22.0</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale_x</span>
+                <span class="o">*</span> <span class="n">math</span><span class="p">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_frame_index</span> <span class="o">*</span> <span class="mf">0.030</span> <span class="o">+</span> <span class="n">phase</span><span class="p">))</span>
+            <span class="n">offset_y</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span>
+                <span class="mf">12.0</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale_y</span>
+                <span class="o">*</span> <span class="n">math</span><span class="p">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_frame_index</span> <span class="o">*</span> <span class="mf">0.024</span> <span class="o">+</span> <span class="n">phase</span> <span class="o">*</span> <span class="mf">1.7</span><span class="p">))</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nf">int</span><span class="p">(</span><span class="n">blob</span><span class="p">[</span><span class="sh">'</span><span class="s">base_x</span><span class="sh">'</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset_x</span><span class="p">),</span>
+                <span class="nf">int</span><span class="p">(</span><span class="n">blob</span><span class="p">[</span><span class="sh">'</span><span class="s">base_y</span><span class="sh">'</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset_y</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">SYNTHETIC_COLORS</span><span class="p">[</span><span class="n">blob</span><span class="p">[</span><span class="sh">'</span><span class="s">color</span><span class="sh">'</span><span class="p">]]</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">blob</span><span class="p">[</span><span class="sh">'</span><span class="s">radius</span><span class="sh">'</span><span class="p">])</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">circle</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">245</span><span class="p">,</span> <span class="mi">245</span><span class="p">,</span> <span class="mi">245</span><span class="p">),</span>
+                       <span class="n">cv2</span><span class="p">.</span><span class="n">FILLED</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">LINE_AA</span><span class="p">)</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">circle</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">FILLED</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">LINE_AA</span><span class="p">)</span>
+            <span class="n">highlight</span> <span class="o">=</span> <span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">radius</span> <span class="o">//</span> <span class="mi">3</span><span class="p">,</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">radius</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">circle</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">highlight</span><span class="p">,</span> <span class="nf">max</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">radius</span> <span class="o">//</span> <span class="mi">5</span><span class="p">),</span>
+                       <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">cv2</span><span class="p">.</span><span class="n">FILLED</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">LINE_AA</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">_draw_speckles</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">putText</span><span class="p">(</span>
+            <span class="n">frame</span><span class="p">,</span> <span class="sa">f</span><span class="sh">'</span><span class="s">SYNTHETIC #</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">_frame_index</span><span class="si">}</span><span class="sh">'</span><span class="p">,</span>
+            <span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale</span><span class="p">)),</span> <span class="n">self</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="nf">max</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="mi">16</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale</span><span class="p">))),</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="nf">max</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">),</span> <span class="nf">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_scale</span><span class="p">)),</span> <span class="n">cv2</span><span class="p">.</span><span class="n">LINE_AA</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">frame</span>
+</code></pre></div></div>
+
+<p>每次调用先增加帧号、生成背景，再遍历八个目标并绘制。</p>
+
+<h4 id="使用正弦余弦计算偏移">使用正弦、余弦计算偏移</h4>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>水平偏移 = 22 × 宽度比例 × sin(帧号 × 0.030 + 相位)
+垂直偏移 = 12 × 高度比例 × cos(帧号 × 0.024 + 相位 × 1.7)
+</code></pre></div></div>
+
+<p>在 640×480 下，水平振幅约为 22 像素、垂直振幅约为 12 像素。
+运动随调用帧号变化，不按真实时间推进；调用越快，播放时看起来移动越快。
+不同相位让八个目标不会完全同步移动。</p>
+
+<h4 id="画出边缘高光和噪点">画出边缘、高光和噪点</h4>
+
+<p>先画浅色外圈，再画彩色圆，再添加左上方白色高光。
+高光会在颜色掩码中形成小孔，可观察形态学处理的效果。
+最后加入噪点和 <code class="language-plaintext highlighter-rouge">SYNTHETIC #帧号</code> 文字，返回形状为 <code class="language-plaintext highlighter-rouge">(高, 宽, 3)</code> 的 BGR 数组。</p>
+
+<p>注意：这里的 <code class="language-plaintext highlighter-rouge">read()</code> 直接返回图像，不像 <code class="language-plaintext highlighter-rouge">cv2.VideoCapture.read()</code> 那样返回 <code class="language-plaintext highlighter-rouge">(成功标志, 图像)</code>。</p>
+
+<h3 id="5-_background绘制传送带风格的背景">5. _background()：绘制传送带风格的背景</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_background</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Build a dark conveyor-like background with a subtle gradient.</span><span class="sh">"""</span>
+        <span class="n">ramp</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">linspace</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="mi">62</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">tile</span><span class="p">(</span><span class="n">ramp</span><span class="p">,</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="nf">merge</span><span class="p">([</span><span class="n">frame</span> <span class="o">*</span> <span class="mf">0.85</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">frame</span> <span class="o">*</span> <span class="mf">1.10</span><span class="p">])</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">clip</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">).</span><span class="nf">astype</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="mi">80</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">line</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">height</span><span class="p">),</span> <span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">height</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">line</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">band_top</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="mi">198</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale_y</span><span class="p">)</span>
+        <span class="n">band_bottom</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="mi">292</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale_y</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">rectangle</span><span class="p">(</span>
+            <span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">band_top</span><span class="p">),</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">band_bottom</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="mi">58</span><span class="p">,</span> <span class="mi">58</span><span class="p">),</span> <span class="n">cv2</span><span class="p">.</span><span class="n">FILLED</span><span class="p">)</span>
+        <span class="n">thickness</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale</span><span class="p">))</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">line</span><span class="p">(</span>
+            <span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">band_top</span><span class="p">),</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">band_top</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">95</span><span class="p">,</span> <span class="mi">95</span><span class="p">,</span> <span class="mi">95</span><span class="p">),</span> <span class="n">thickness</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="nf">line</span><span class="p">(</span>
+            <span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">band_bottom</span> <span class="o">-</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">band_bottom</span> <span class="o">-</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">95</span><span class="p">,</span> <span class="mi">95</span><span class="p">,</span> <span class="mi">95</span><span class="p">),</span> <span class="n">thickness</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">frame</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>步骤</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">linspace(26, 62, width)</code></td>
+      <td>从左到右生成深灰到浅灰的亮度渐变</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">tile()</code></td>
+      <td>把一行渐变复制为整张图</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">merge()</code></td>
+      <td>给 B/G/R 通道稍微不同的比例，形成暗色背景</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">clip(...).astype(uint8)</code></td>
+      <td>限制像素值并转为标准 8 位图像</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">line()</code> / <code class="language-plaintext highlighter-rouge">rectangle()</code></td>
+      <td>画网格、传送带条带和边界线</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>背景饱和度较低，与彩色圆形成对比，便于先验证理想条件下的检测链路。
+它不能代替真实相机在复杂光照、反光和运动模糊下的测试。</p>
+
+<h3 id="6-_draw_speckles加入小噪点">6. _draw_speckles()：加入小噪点</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">_draw_speckles</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Draw small colour speckles that must not survive area filtering.</span><span class="sh">"""</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="mi">70</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale_x</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale_y</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_rng</span><span class="p">.</span><span class="nf">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">width</span><span class="p">))</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_rng</span><span class="p">.</span><span class="nf">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">height</span><span class="p">))</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nf">int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_rng</span><span class="p">.</span><span class="nf">integers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">_scale</span><span class="p">))</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nf">tuple</span><span class="p">(</span><span class="nf">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">_rng</span><span class="p">.</span><span class="nf">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="nf">circle</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">FILLED</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>根据画面面积缩放噪点数量，至少绘制 30 个；随机选择位置、半径和 BGR 颜色。
+这个函数直接修改传入的 <code class="language-plaintext highlighter-rouge">frame</code>。</p>
+
+<p>默认 640×480 时，噪点半径为 1–3 像素，通常会被形态学处理和最小面积过滤。
+分辨率、阈值或形态学参数变化后，需要重新观察过滤效果，不能仅凭“合成场景”保证没有误检。</p>
+
+<blockquote>
+  <p>自此，image_sources.py 的合成测试场景部分结束。</p>
+</blockquote>
+
+<h2 id="检测成果">检测成果</h2>
+
+<p>下面用默认尺寸连续处理 30 帧，检查每色两个目标、ID 保持和固定种子的可重复性，并保存第一帧：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> <span class="s2">"</span><span class="nv">$WS</span><span class="s2">"</span>
+<span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"src/Mvc_sorting"</span> python3 - <span class="o">&lt;&lt;</span><span class="sh">'</span><span class="no">PY</span><span class="sh">'
+from collections import Counter
+import cv2
+import numpy as np
+from Mvc_sorting.color_detector import ColorDetector
+from Mvc_sorting.hsv_config import HSVConfig
+from Mvc_sorting.image_sources import SyntheticScene
+from Mvc_sorting.visualization import annotate_frame
+
+scene = SyntheticScene()
+replica = SyntheticScene()
+detector = ColorDetector(HSVConfig.default())
+expected = Counter({'red': 2, 'green': 2, 'blue': 2, 'yellow': 2})
+previous_ids = None
+for index in range(30):
+    frame = scene.read()
+    assert frame.shape == (480, 640, 3) and frame.dtype == np.uint8
+    assert np.array_equal(frame, replica.read())
+    detections, masks = detector.detect(frame)
+    assert Counter(item.color for item in detections) == expected
+    ids = {item.id for item in detections}
+    if previous_ids is not None:
+        assert ids == previous_ids
+    previous_ids = ids
+    if index == 0:
+        annotated = annotate_frame(frame, detections, detector.config, frame_index=1)
+        assert cv2.imwrite('/tmp/color_sorting_synthetic.png', annotated)
+print('frames: 30, targets per frame: 8')
+print('reproducible: True, stable ids: True')
+print('saved: /tmp/color_sorting_synthetic.png')
+</span><span class="no">PY
+</span></code></pre></div></div>
+
+<p>预期：30 帧均得到 8 个目标、每色两个，固定种子的图像一致，目标 ID 集合保持不变。
+打开 <code class="language-plaintext highlighter-rouge">/tmp/color_sorting_synthetic.png</code> 可以查看第一帧标注。
+这只验证当前默认配置和场景，不等同于复杂遮挡或交叉运动下的跟踪验收。</p>
+
+<hr />
+</div>
+    <div class="tutorial-edit"><a href="https://github.com/VoVL773/Machine_vision-_color_sorting_system/blob/main/md/%E5%85%AD.%E5%90%88%E6%88%90%E6%B5%8B%E8%AF%95%E5%9C%BA%E6%99%AF%EF%BC%9Aimage_sources.py.md" target="_blank" rel="noopener">在 GitHub 查看原文 ↗</a></div>
+    <nav class="tutorial-pagination" aria-label="章节翻页">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+            <a href="/tutorials/machine-vision/05-gui/"><span>← 上一章</span><strong>交互调参与控制面板</strong></a>
+          
+          
+            
+            
+            <a class="tutorial-next" href="/tutorials/machine-vision/07-ros-server/"><span>下一章 →</span><strong>ROS 2 视觉服务端</strong></a>
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    </nav>
+  </article>
+
+  <aside class="tutorial-toc" aria-label="本页目录">
+    <div class="tutorial-toc-title">本页内容</div>
+    <nav id="tutorial-toc-nav"></nav>
+  </aside>
+</div>
+<script src="/assets/js/tutorials.js" defer></script>
+
+    
+  </main>
+
+  <footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-col footer-brand">
+      <h3 class="footer-title">VoVL的博客</h3>
+      <p class="footer-subtitle">间接性踌躇满志，持续性记录生活。</p>
+      <div class="footer-social">
+        <a href="https://github.com/VoVL773" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        </a>
+        
+        <a href="https://space.bilibili.com/3546792683637323" target="_blank" rel="noopener" aria-label="Bilibili" title="Bilibili">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.586 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+        </a>
+        
+        <a href="mailto:3152398081@qq.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+        </a>
+        <a href="/feed.xml" aria-label="RSS" title="RSS">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/posts/">文章</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/algorithm/">算法</a></li>
+        <li><a href="/tutorials/">教程</a></li>
+        <li><a href="/about/">关于</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">技术栈</h4>
+      <ul class="footer-links footer-tech">
+        <li><img class="tech-icon-img" src="/assets/images/technology/ROS2.png" alt="ROS 2"> ROS 2</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Python.png" alt="Python"> Python</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Opencv.png" alt="OpenCV"> OpenCV</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Yolov8.png" alt="YOLOv8"> YOLOv8</li>
+        <li><img class="tech-icon-img" src="/assets/images/technology/Docker.png" alt="Docker"> Docker</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">友情链接</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/VoVL773" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:3152398081@qq.com">邮箱</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 VoVL773. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- 主题切换按钮的交互逻辑(外链,defer 延迟加载,不影响首屏) -->
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/transitions.js" defer></script>
+  <script src="/assets/js/background-fx.js" defer></script>
+</body>
+</html>

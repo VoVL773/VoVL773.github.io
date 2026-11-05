@@ -1,6 +1,7 @@
 ---
 title: "钉钉博客自动统计工具"
 tags: [Python]
+order: 9
 cover: "assets/images/demo/钉钉机器人.png"
 github: "https://github.com/VoVL773/dingtalk_blog_statistics"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "差速小车建图/巡检/前沿探索"
 tags: [Python,ROS2,NAV2]
+order: 4
 cover: "assets/images/demo/patrol.png"
 github: "https://github.com/VoVL773/patrol"
 ---
