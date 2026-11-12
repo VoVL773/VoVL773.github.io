@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "欢迎来到我的博客"
-tags: [随笔, 公告]
+tags: [随笔]
 cover: ""
 ---
 

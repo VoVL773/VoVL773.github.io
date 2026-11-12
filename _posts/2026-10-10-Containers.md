@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "从零开始的容器教程"
-tags: [随笔, 教程]
+tags: [随笔, 学习笔记]
 cover: "assets/images/2026_10_10/Docker.png"
 ---
 

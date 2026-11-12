@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "ChatGPT 与 Container Tools 插件的配置记录"
-tags: [随笔, 教程]
+tags: [随笔, 学习笔记]
 cover: "assets/images/2026_10_08/容器面板新手指南.png"
 ---
 

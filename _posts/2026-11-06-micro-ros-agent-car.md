@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "小车不装 ROS 2，也能进 ROS 2：micro-ROS Agent 连接实战"
-tags: [ROS 2, micro-ROS, ESP32, 机器人]
+tags: [机器人]
 cover: "assets/images/2026_11_06/micro-ros-agent-cover.png"
 ---
 

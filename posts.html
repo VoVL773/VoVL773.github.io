@@ -148,6 +148,10 @@ permalink: /posts/
   // 读取 URL ?tag= 参数自动筛选
   var params = new URLSearchParams(window.location.search);
   var urlTag = params.get('tag');
+  var tagAliases = {{ site.data.tag_aliases | jsonify }};
+  if (urlTag && Object.prototype.hasOwnProperty.call(tagAliases, urlTag)) {
+    urlTag = tagAliases[urlTag];
+  }
   if (urlTag) {
     var matchBtn = filterBar.querySelector('.tag-filter-btn[data-tag="' + urlTag.replace(/"/g, '\\"') + '"]');
     if (matchBtn) {

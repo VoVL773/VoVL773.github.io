@@ -121,14 +121,11 @@ layout: default
             {% when '图像处理' or 'OpenCV' %}<img src="{{ '/assets/images/technology/Opencv.png' | relative_url }}" alt="{{ tag_name }}">
             {% when '算法' or '回溯' %}🧮
             {% when '随笔' %}✍️
-            {% when '教程' %}📖
-            {% when '笔记' %}📝
-            {% when '公告' %}📢
-            {% when '大模型' %}🤖
-            {% when '具身智能' %}🦾
+            {% when '学习笔记' %}📖
+            {% when '人工智能' %}🧠
+            {% when '机器人' %}🤖
             {% when '物联网' %}📡
-            {% when 'MQTT' %}🔗
-            {% else %}📌
+            {% else %}📁
             {% endcase %}
           </div>
           <div class="category-name">{{ tag_name }}</div>

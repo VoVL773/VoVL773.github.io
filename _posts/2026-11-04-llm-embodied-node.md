@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "一句话，让节点动起来：大模型如何控制具身智能设备"
-tags: [大模型, 具身智能, MQTT, 物联网]
+tags: [人工智能, 物联网]
 cover: "assets/images/2026_11_04/llm-embodied-cover.png"
 ---
 
